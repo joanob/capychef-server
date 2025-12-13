@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Capychef;
 using DotNetEnv;
+using YourOwnBoss.Common.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,8 @@ else
 {
     app.UseHttpsRedirection();
 }
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllers();
 
