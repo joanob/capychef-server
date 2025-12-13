@@ -1,0 +1,23 @@
+# Environment variables and logs
+*.env* 
+!.env.example
+*.log
+
+# Build outputs
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.app
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# Packages folder
+packages/
+
+# Dotnet tools
+.tools/

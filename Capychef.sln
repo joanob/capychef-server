@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capychef", "Capychef\Capychef.csproj", "{FEB5C64F-06A0-4713-80BB-DA0983530872}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capychef.Api", "Capychef.Api\Capychef.Api.csproj", "{CBB8C554-39D5-4A6A-BBA4-F87F5DEBBA74}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEB5C64F-06A0-4713-80BB-DA0983530872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB5C64F-06A0-4713-80BB-DA0983530872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB5C64F-06A0-4713-80BB-DA0983530872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB5C64F-06A0-4713-80BB-DA0983530872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBB8C554-39D5-4A6A-BBA4-F87F5DEBBA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBB8C554-39D5-4A6A-BBA4-F87F5DEBBA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBB8C554-39D5-4A6A-BBA4-F87F5DEBBA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBB8C554-39D5-4A6A-BBA4-F87F5DEBBA74}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
