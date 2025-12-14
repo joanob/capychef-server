@@ -2,12 +2,16 @@
 
 public class EntityType
 {
-    private readonly string _value;
-    
     private const string _userType = "USER";
+    private readonly string _value;
+
+    private EntityType(string value)
+    {
+        _value = value;
+    }
 
     public static EntityType User => new(_userType);
-    
+
     public static EntityType from(string value)
     {
         return value switch
@@ -15,11 +19,6 @@ public class EntityType
             _userType => User,
             _ => null
         };
-    }
-    
-    private EntityType(string value)
-    {
-        _value = value;
     }
 
     public override string ToString()

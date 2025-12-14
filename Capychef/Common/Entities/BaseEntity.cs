@@ -1,8 +1,12 @@
-﻿namespace YourOwnBoss.Common.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace YourOwnBoss.Common.Entities;
 
 public class BaseEntity
 {
-    public int Id { get; private set; }
-    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
-    public int RowVersion { get; private set; }
+    [Column("id")] public int Id { get; private set; }
+
+    [Column("created_at")] public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+
+    [Column("row_version")] public int RowVersion { get; private set; }
 }

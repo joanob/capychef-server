@@ -1,0 +1,1 @@
+flyway migrate -configFiles="flyway.toml,flyway.user.toml" -schemaModelLocation="schema-model" -schemaModelSchemas=public -environment=development

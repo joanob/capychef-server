@@ -1,0 +1,6 @@
+[environments.development]
+url = "jdbc:postgresql://localhost:5432/capychef"
+user = "user"
+password = "password"
+schemas = [ "public" ]
+displayName = "Capychef DB"

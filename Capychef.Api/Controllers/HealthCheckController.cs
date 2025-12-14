@@ -7,10 +7,10 @@ namespace Capychef.Api.Controllers;
 public class HealthCheckController(HealthCheckService healthCheckService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<String>> CheckServerHealth()
+    public async Task<ActionResult<string>> CheckServerHealth()
     {
         var status = await healthCheckService.checkServiceHealth();
-        
+
         return Ok(status);
     }
 }

@@ -1,10 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Capychef.Users.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Capychef.Persistence;
 
 public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : DbContext(options)
 {
+    public DbSet<User> Users => Set<User>();
+    public DbSet<UserPassword> UsersPasswords => Set<UserPassword>();
+    public DbSet<UserSession> UsersSessions => Set<UserSession>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -13,6 +19,12 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         foreach (var property in entityType.GetProperties())
         {
+            if (property.Name == "RowVersion")
+            {
+                property.IsConcurrencyToken = true;
+                property.ValueGenerated = ValueGenerated.Never;
+            }
+
             if (property.ClrType == typeof(DateTime))
                 property.SetValueConverter(new ValueConverter<DateTime, DateTime>(
                     v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
@@ -25,5 +37,21 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
                     v => v == null ? null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc)
                 ));
         }
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker.Entries()
+                     .Where(e => e.State == EntityState.Modified))
+        {
+            var prop = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "RowVersion");
+            if (prop != null)
+            {
+                var current = (int?)(prop.OriginalValue ?? 0);
+                entry.CurrentValues["RowVersion"] = (current ?? 0) + 1;
+            }
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
