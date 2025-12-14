@@ -1,4 +1,5 @@
 ﻿using Capychef.Common.Auth;
+using Capychef.Infrastructure.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Cmd.Auth;
 using Capychef.Users.Domain.DTO;
@@ -13,7 +14,9 @@ public class AuthService(
     CapychefDbContext dbContext,
     IUserRepository userRepository,
     IUserPasswordRepository userPasswordRepository,
-    IUserSessionRepository userSessionRepository) : IAuthService
+    IUserSessionRepository userSessionRepository,
+    IUserTokenRepository userTokenRepository,
+    IEmailSender emailSender) : IAuthService
 {
     public async Task<Result<(UserDTO, AuthUserDetails)>> Signup(SignupCmd cmd)
     {
@@ -34,6 +37,15 @@ public class AuthService(
         var session = new UserSession(user);
 
         await userSessionRepository.AddUserSessionAsync(session);
+
+        if (cmd.Email != null)
+        {
+            var userToken = UserToken.CreateEmailValidationUserToken(user);
+
+            await userTokenRepository.AddUserTokenAsync(userToken);
+
+            await emailSender.SendEmailVerificationEmailAsync(cmd.Email, userToken.Token);
+        }
 
         await dbContext.SaveChangesAsync();
 

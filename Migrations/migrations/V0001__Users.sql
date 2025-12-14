@@ -28,12 +28,12 @@ CREATE RULE "users_soft_deletion" AS ON DELETE TO "users" DO INSTEAD (
 
 CREATE TABLE users_passwords
 (
-    id             SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    password TEXT NOT NULL,
-    created_at     TIMESTAMP NOT NULL,
-    is_active     BOOLEAN   NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    id         SERIAL PRIMARY KEY,
+    user_id    INTEGER   NOT NULL,
+    password   TEXT      NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    is_active  BOOLEAN   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE INDEX idx_users_passwords_user_id ON users_passwords(user_id);
@@ -44,14 +44,33 @@ CREATE RULE "users_passwords_delete" AS ON DELETE TO "users_passwords" DO INSTEA
 
 CREATE TABLE users_sessions
 (
-    id             SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    created_at     TIMESTAMP NOT NULL,
-    last_connection_at     TIMESTAMP,
-    is_revoked     BOOLEAN   NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    id                 SERIAL PRIMARY KEY,
+    user_id            INTEGER   NOT NULL,
+    created_at         TIMESTAMP NOT NULL,
+    last_connection_at TIMESTAMP,
+    is_revoked         BOOLEAN   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE INDEX idx_users_sessions_user_id ON users_sessions(user_id);
 
 CREATE RULE "users_sessions_delete" AS ON DELETE TO "users_sessions" DO INSTEAD NOTHING;
+
+
+CREATE TABLE users_tokens
+(
+    id         SERIAL PRIMARY KEY,
+    user_id    INTEGER   NOT NULL,
+    token      TEXT      NOT NULL,
+    token_type INTEGER   NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP,
+    used_at    TIMESTAMP,
+    is_active  BOOLEAN   NOT NULL,
+    is_used    BOOLEAN   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE INDEX idx_users_tokens_token ON users_tokens(token);
+
+CREATE RULE "users_tokens_delete" AS ON DELETE TO "users_tokens" DO INSTEAD NOTHING;

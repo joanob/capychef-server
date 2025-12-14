@@ -10,6 +10,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<User> Users => Set<User>();
     public DbSet<UserPassword> UsersPasswords => Set<UserPassword>();
     public DbSet<UserSession> UsersSessions => Set<UserSession>();
+    public DbSet<UserToken> UsersTokens => Set<UserToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

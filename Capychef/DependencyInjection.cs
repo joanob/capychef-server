@@ -1,4 +1,6 @@
-﻿using Capychef.Persistence;
+﻿using Capychef.Infrastructure.DevImplementations;
+using Capychef.Infrastructure.Interfaces;
+using Capychef.Persistence;
 using Capychef.Users.Domain.Interfaces;
 using Capychef.Users.Repositories;
 using Capychef.Users.Services;
@@ -21,6 +23,10 @@ public static class DependencyInjection
         services.AddDbContext<CapychefDbContext>(options =>
             options.UseNpgsql(connectionString));
 
+        // EMAIL
+
+        services.AddScoped<IEmailSender, Smtp4DevSender>();
+
         // HEALTH
 
         services.AddScoped<HealthCheckService, HealthCheckService>();
@@ -30,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
+        services.AddScoped<IUserTokenRepository, UserTokenRepository>();
         services.AddScoped<IAuthService, AuthService>();
 
         return services;

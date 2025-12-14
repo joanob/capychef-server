@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 
 namespace Capychef.Users.Domain.Entities;
 
@@ -23,7 +24,7 @@ public class UserPassword
     [ForeignKey(nameof(User))]
     public int UserId { get; private set; }
 
-    [Column("password")] public string Password { get; }
+    [UsedImplicitly] [Column("password")] public string Password { get; private set; }
 
     [Column("created_at")] public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
