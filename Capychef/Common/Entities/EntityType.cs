@@ -3,6 +3,7 @@
 public class EntityType
 {
     private const string _userType = "USER";
+    private const string _tokenType = "TOKEN";
     private readonly string _value;
 
     private EntityType(string value)
@@ -11,6 +12,7 @@ public class EntityType
     }
 
     public static EntityType User => new(_userType);
+    public static EntityType Token => new(_tokenType);
 
     public static EntityType from(string value)
     {

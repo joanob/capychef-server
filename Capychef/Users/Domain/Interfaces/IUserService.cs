@@ -1,6 +1,9 @@
-﻿namespace Capychef.Users.Domain.Interfaces;
+﻿using YourOwnBoss.Common.Errors;
+
+namespace Capychef.Users.Domain.Interfaces;
 
 public interface IUserService
 {
     Task<bool> CheckUserByUsernameAsync(string username);
+    Task<AppError?> ValidateEmailAsync(string token);
 }

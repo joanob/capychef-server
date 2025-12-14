@@ -1,8 +1,6 @@
-﻿using Capychef.Users.Domain.Cmd.Auth;
-using Capychef.Users.Domain.DTO;
+﻿using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourOwnBoss.Common.Auth;
 using YourOwnBoss.Common.Result;
 
 namespace Capychef.Api.Controllers;
@@ -11,11 +9,21 @@ namespace Capychef.Api.Controllers;
 [Route("users")]
 public class UserController(IUserService userService) : ControllerBase
 {
-    [HttpGet("check/username/{username}")]
+    [HttpGet("username/check/{username}")]
     public async Task<ActionResult<UserDTO>> Signup(string username)
     {
         var result = await userService.CheckUserByUsernameAsync(username);
 
-        return result ? Ok(): NotFound();
+        return result ? Ok() : NotFound();
+    }
+
+    [HttpGet("email/validate/{token}")]
+    public async Task<ActionResult<UserDTO>> ValidateEmail(string token)
+    {
+        var error = await userService.ValidateEmailAsync(token);
+
+        if (error != null) return GlobalErrorHandler.handleError(error);
+
+        return Ok();
     }
 }

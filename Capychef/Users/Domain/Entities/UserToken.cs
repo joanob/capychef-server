@@ -81,6 +81,13 @@ public class UserToken
         return userToken;
     }
 
+    public void markUsed()
+    {
+        IsUsed = true;
+        UsedAt = DateTime.Now;
+        IsActive = false;
+    }
+
     private void createRandomToken(int length, string characterSet)
     {
         var resut = new char[length];
@@ -99,4 +106,12 @@ public enum UserTokenType
     PasswordRecovery = 1,
     EmailValidation = 2,
     GuestAccountTransfer = 3
+}
+
+public static class UserTokenExtensions
+{
+    public static IQueryable<UserToken> Usable(this IQueryable<UserToken> userTokens)
+    {
+        return userTokens.Where(x => x.IsActive && (x.ExpiresAt == null || x.ExpiresAt > DateTime.UtcNow));
+    }
 }
