@@ -38,4 +38,14 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return user;
     }
+
+    [HttpGet("recover-password/{email}")]
+    public async Task<ActionResult<UserDTO>> RecoverPassword(string email)
+    {
+        var error = await authService.RecoverPassword(email);
+
+        if (error != null) return GlobalErrorHandler.handleError(error);
+
+        return Ok();
+    }
 }

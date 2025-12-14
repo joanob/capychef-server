@@ -18,7 +18,7 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("email/validate/{token}")]
-    public async Task<ActionResult<UserDTO>> ValidateEmail(string token)
+    public async Task<ActionResult> ValidateEmail(string token)
     {
         var error = await userService.ValidateEmailAsync(token);
 

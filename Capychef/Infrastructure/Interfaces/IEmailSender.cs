@@ -3,4 +3,5 @@
 public interface IEmailSender
 {
     Task SendEmailVerificationEmailAsync(string email, string token);
+    Task SendPasswordRecoveryEmailAsync(string email, string token);
 }

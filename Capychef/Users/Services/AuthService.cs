@@ -80,4 +80,22 @@ public class AuthService(
 
         return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
     }
+
+    public async Task<AppError> RecoverPassword(string email)
+    {
+        var user = await userRepository.FindUserByEmailAsync(email);
+        if (user == null) return new NotFoundError(EntityType.User, email);
+
+        if (!user.IsEmailValid) return new NotFoundError(EntityType.User, user.Id + "email is not verified");
+
+        var userToken = UserToken.CreatePasswordRecoveryUserToken(user);
+
+        await userTokenRepository.AddUserTokenAsync(userToken);
+
+        await emailSender.SendPasswordRecoveryEmailAsync(email, userToken.Token);
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
 }
