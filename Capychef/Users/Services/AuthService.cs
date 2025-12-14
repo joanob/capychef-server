@@ -6,6 +6,8 @@ using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Entities;
 using Capychef.Users.Domain.Errors;
 using Capychef.Users.Domain.Interfaces;
+using YourOwnBoss.Common.Entities;
+using YourOwnBoss.Common.Errors;
 using YourOwnBoss.Common.Result;
 
 namespace Capychef.Users.Services;
@@ -46,6 +48,33 @@ public class AuthService(
 
             await emailSender.SendEmailVerificationEmailAsync(cmd.Email, userToken.Token);
         }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
+    }
+
+    public async Task<Result<(UserDTO, AuthUserDetails)>> Login(LoginCmd cmd)
+    {
+        var user = await userRepository.FindUserByUsernameAsync(cmd.Username);
+        if (user == null)
+        {
+            user = await userRepository.FindUserByEmailAsync(cmd.Username);
+            if (user == null)
+                return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, cmd.Username));
+        }
+
+        var password = await userPasswordRepository.GetActiveUserPasswordByUserIdAsync(user.Id);
+        if (password == null)
+            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, user.Id));
+
+        if (!password.checkPassword(cmd.Password))
+            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User,
+                user.Id + " password mismatch"));
+
+        var session = new UserSession(user);
+
+        await userSessionRepository.AddUserSessionAsync(session);
 
         await dbContext.SaveChangesAsync();
 

@@ -24,4 +24,18 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return user;
     }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<UserDTO>> Login(LoginCmd cmd)
+    {
+        var result = await authService.Login(cmd);
+
+        if (result.failed()) return GlobalErrorHandler.handleError(result.error());
+
+        var (user, userDetails) = result.get();
+
+        JWTService.CreateAndSendJWT(userDetails, Response);
+
+        return user;
+    }
 }

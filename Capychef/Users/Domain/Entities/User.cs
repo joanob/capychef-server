@@ -33,3 +33,11 @@ public class User : BaseDeletableEntity
 
     [Column("block_reason")] public string? BlockReason { get; set; }
 }
+
+public static class UserExtensions
+{
+    public static IQueryable<User> Active(this IQueryable<User> users)
+    {
+        return users.Where(x => !x.IsDeleted && !x.IsBlocked);
+    }
+}

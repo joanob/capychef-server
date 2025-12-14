@@ -16,4 +16,14 @@ public class UserRepository(CapychefDbContext dbContext) : IUserRepository
     {
         return await dbContext.Users.Where(x => x.Username == username).AnyAsync();
     }
+
+    public async Task<User?> FindUserByUsernameAsync(string username)
+    {
+        return await dbContext.Users.Active().Where(x => x.Username == username).FirstOrDefaultAsync();
+    }
+
+    public async Task<User?> FindUserByEmailAsync(string email)
+    {
+        return await dbContext.Users.Active().Where(x => x.Email == email).FirstOrDefaultAsync();
+    }
 }
