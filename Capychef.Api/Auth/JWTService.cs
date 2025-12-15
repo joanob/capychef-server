@@ -14,10 +14,11 @@ public class JWTService
     private const int JWT_REFRESH_EXPIRATION_YEARS = 100;
     private const string JWT_SESSION_COOKIE_NAME = "CAPYCHEF_AUTH_SESSION";
     private const string JWT_REFRESH_COOKIE_NAME = "CAPYCHEF_AUTH_REFRESH";
+    private const string JWT_SECRET_NAME = "JWT_SECRET_KEY";
 
     public static void CreateAndSendJWT(AuthUserDetails authUserDetails, HttpResponse response)
     {
-        var jwtSecret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY"));
+        var jwtSecret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(JWT_SECRET_NAME));
 
         var jwtSessionExpiration = DateTime.Now.AddMinutes(JWT_SESSION_EXPIRATION_MINUTES);
         var jwtSession = createJWT(authUserDetails, jwtSecret, jwtSessionExpiration);
@@ -85,7 +86,7 @@ public class JWTService
         var cookie = request.Cookies[cookieName];
         if (string.IsNullOrEmpty(cookie)) return null;
 
-        var jwtSecret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET"));
+        var jwtSecret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(JWT_SECRET_NAME));
         var handler = new JwtSecurityTokenHandler();
         var validationParameters = new TokenValidationParameters
         {

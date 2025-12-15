@@ -14,6 +14,12 @@ public class UserPasswordRepository(CapychefDbContext dbContext) : IUserPassword
 
     public async Task<UserPassword?> GetActiveUserPasswordByUserIdAsync(int userId)
     {
+        return await dbContext.UsersPasswords.AsNoTracking().Where(x => x.UserId == userId && x.IsActive)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<UserPassword?> GetTrackedActiveUserPasswordByUserIdAsync(int userId)
+    {
         return await dbContext.UsersPasswords.Where(x => x.UserId == userId && x.IsActive).FirstOrDefaultAsync();
     }
 }

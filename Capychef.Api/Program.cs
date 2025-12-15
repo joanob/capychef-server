@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Capychef;
 using DotNetEnv;
+using YourOwnBoss.Common.Auth;
 using YourOwnBoss.Common.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,8 @@ else
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseMiddleware<AuthMiddleware>();
 
 app.MapControllers();
 

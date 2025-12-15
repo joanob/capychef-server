@@ -7,6 +7,8 @@ using Capychef.Users.Services;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using YourOwnBoss.Game.Users.Domain.Interfaces;
+using YourOwnBoss.Game.Users.Services;
 
 namespace Capychef;
 
@@ -39,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IUserTokenRepository, UserTokenRepository>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserSessionService, UserSessionService>();
 
         return services;
     }

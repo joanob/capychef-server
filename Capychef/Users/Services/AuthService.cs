@@ -56,10 +56,10 @@ public class AuthService(
 
     public async Task<Result<(UserDTO, AuthUserDetails)>> Login(LoginCmd cmd)
     {
-        var user = await userRepository.FindUserByUsernameAsync(cmd.Username);
+        var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null)
         {
-            user = await userRepository.FindUserByEmailAsync(cmd.Username);
+            user = await userRepository.GetTrackedUserByEmailAsync(cmd.Username);
             if (user == null)
                 return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, cmd.Username));
         }
@@ -83,7 +83,7 @@ public class AuthService(
 
     public async Task<AppError> RecoverPassword(string email)
     {
-        var user = await userRepository.FindUserByEmailAsync(email);
+        var user = await userRepository.GetTrackedUserByEmailAsync(email);
         if (user == null) return new NotFoundError(EntityType.User, email);
 
         if (!user.IsEmailValid) return new NotFoundError(EntityType.User, user.Id + "email is not verified");
@@ -97,5 +97,81 @@ public class AuthService(
         await dbContext.SaveChangesAsync();
 
         return null;
+    }
+
+    public async Task<AppError> ResetPassword(ResetPasswordCmd cmd)
+    {
+        var userToken = await userTokenRepository.GetTrackedUsableUserTokenByTokenAsync(cmd.PasswordRecoveryToken);
+
+        if (userToken == null)
+            return new NotFoundError(EntityType.Token, cmd.PasswordRecoveryToken);
+
+        if (userToken.TokenType != UserTokenType.PasswordRecovery)
+            return new NotFoundError(EntityType.Token, cmd.PasswordRecoveryToken);
+
+        userToken.markUsed();
+
+        var user = await userRepository.GetTrackedUserById(userToken.UserId);
+
+        if (user == null) return new NotFoundError(EntityType.User, userToken.UserId);
+
+        var oldPassword = await userPasswordRepository.GetTrackedActiveUserPasswordByUserIdAsync(user.Id);
+
+        if (oldPassword == null) return new NotFoundError(EntityType.UserPassword, user.Id);
+
+        oldPassword.IsActive = false;
+
+        var password = new UserPassword(user, cmd.Password);
+
+        await userPasswordRepository.AddUserPasswordAsync(password);
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
+    public async Task<Result<string>> GuestTransference(AuthUserDetails userDetails)
+    {
+        var user = await userRepository.GetTrackedUserById(userDetails.UserId);
+
+        if (user == null) return new Result<string>(new NotFoundError(EntityType.User, userDetails.UserId));
+
+        if (!user.IsGuest) return new Result<string>(new NotFoundError(EntityType.User, userDetails.UserId));
+
+        var userToken = UserToken.CreateGuestAccountTransferUserToken(user);
+
+        await userTokenRepository.AddUserTokenAsync(userToken);
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<string>(userToken.Token);
+    }
+
+    public async Task<Result<(UserDTO, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd)
+    {
+        var userToken = await userTokenRepository.GetTrackedUsableUserTokenByTokenAsync(cmd.GuestTransferenceToken);
+
+        if (userToken == null)
+            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.Token,
+                cmd.GuestTransferenceToken));
+
+        if (userToken.TokenType != UserTokenType.GuestAccountTransfer)
+            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.Token,
+                cmd.GuestTransferenceToken));
+
+        userToken.markUsed();
+
+        var user = await userRepository.GetTrackedUserById(userToken.UserId);
+
+        if (user == null)
+            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, userToken.UserId));
+
+        var session = new UserSession(user);
+
+        await userSessionRepository.AddUserSessionAsync(session);
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
     }
 }

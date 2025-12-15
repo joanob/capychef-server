@@ -7,13 +7,17 @@ public class AuthMiddleware(RequestDelegate next)
     private readonly string[] publicRoutes =
     {
         "/auth/signup",
+        "/auth/login",
         "/users/username/check",
-        "/auth/login"
+        "/users/email/validate",
+        "/auth/recover-password",
+        "/auth/reset-password",
+        "/auth/guest-login"
     };
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (publicRoutes.Any(x => x.StartsWith(context.Request.Path.Value)))
+        if (publicRoutes.Any(x => context.Request.Path.Value.StartsWith(x)))
         {
             await next(context);
             return;

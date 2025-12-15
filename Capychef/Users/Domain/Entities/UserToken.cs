@@ -55,9 +55,9 @@ public class UserToken
 
         userToken.User = user;
         userToken.createRandomToken(6, capsAndNumbers);
-        userToken.TokenType = UserTokenType.PasswordRecovery;
+        userToken.TokenType = UserTokenType.EmailValidation;
         userToken.CreatedAt = DateTime.Now;
-        userToken.ExpiresAt = user.CreatedAt.AddHours(24);
+        userToken.ExpiresAt = user.CreatedAt.AddDays(30);
         userToken.UsedAt = null;
         userToken.IsActive = true;
         userToken.IsUsed = false;
@@ -71,7 +71,7 @@ public class UserToken
 
         userToken.User = user;
         userToken.createRandomToken(8, capsAndNumbers);
-        userToken.TokenType = UserTokenType.PasswordRecovery;
+        userToken.TokenType = UserTokenType.GuestAccountTransfer;
         userToken.CreatedAt = DateTime.Now;
         userToken.ExpiresAt = user.CreatedAt.AddHours(24);
         userToken.UsedAt = null;

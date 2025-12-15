@@ -3,6 +3,7 @@
 public class EntityType
 {
     private const string _userType = "USER";
+    private const string _userPasswordType = "USER_PASSWORD";
     private const string _tokenType = "TOKEN";
     private readonly string _value;
 
@@ -12,6 +13,7 @@ public class EntityType
     }
 
     public static EntityType User => new(_userType);
+    public static EntityType UserPassword => new(_userPasswordType);
     public static EntityType Token => new(_tokenType);
 
     public static EntityType from(string value)
@@ -19,6 +21,8 @@ public class EntityType
         return value switch
         {
             _userType => User,
+            _userPasswordType => UserPassword,
+            _tokenType => Token,
             _ => null
         };
     }

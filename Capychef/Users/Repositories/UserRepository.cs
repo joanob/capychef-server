@@ -17,13 +17,33 @@ public class UserRepository(CapychefDbContext dbContext) : IUserRepository
         return await dbContext.Users.Where(x => x.Username == username).AnyAsync();
     }
 
-    public async Task<User?> FindUserByUsernameAsync(string username)
+    public async Task<User?> GetUserByUsernameAsync(string username)
+    {
+        return await dbContext.Users.AsNoTracking().Active().Where(x => x.Username == username).FirstOrDefaultAsync();
+    }
+
+    public async Task<User> GetTrackedUserByUsernameAsync(string username)
     {
         return await dbContext.Users.Active().Where(x => x.Username == username).FirstOrDefaultAsync();
     }
 
-    public async Task<User?> FindUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await dbContext.Users.AsNoTracking().Active().Where(x => x.Email == email).FirstOrDefaultAsync();
+    }
+
+    public async Task<User> GetTrackedUserByEmailAsync(string email)
     {
         return await dbContext.Users.Active().Where(x => x.Email == email).FirstOrDefaultAsync();
+    }
+
+    public async Task<User?> GetUserById(int id)
+    {
+        return await dbContext.Users.AsNoTracking().Active().Where(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<User?> GetTrackedUserById(int id)
+    {
+        return await dbContext.Users.Active().Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 }
