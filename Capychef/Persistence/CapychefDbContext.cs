@@ -1,4 +1,5 @@
-﻿using Capychef.Users.Domain.Entities;
+﻿using Capychef.Households.Domain.Entities;
+using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -11,6 +12,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<UserPassword> UsersPasswords => Set<UserPassword>();
     public DbSet<UserSession> UsersSessions => Set<UserSession>();
     public DbSet<UserToken> UsersTokens => Set<UserToken>();
+    public DbSet<Household> Households => Set<Household>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

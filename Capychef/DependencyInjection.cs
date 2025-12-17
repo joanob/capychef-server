@@ -1,4 +1,7 @@
-﻿using Capychef.Infrastructure.DevImplementations;
+﻿using Capychef.Households.Domain.Interfaces;
+using Capychef.Households.Repositories;
+using Capychef.Households.Services;
+using Capychef.Infrastructure.DevImplementations;
 using Capychef.Infrastructure.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Interfaces;
@@ -42,6 +45,11 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserSessionService, UserSessionService>();
+        
+        // HOUSEHOLD 
+        
+        services.AddScoped<IHouseholdRepository, HouseholdRepository>();
+        services.AddScoped<IHouseholdService, HouseholdService>();
 
         return services;
     }

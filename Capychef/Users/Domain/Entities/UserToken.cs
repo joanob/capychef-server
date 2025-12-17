@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography;
+using Capychef.Common.Utils;
 
 namespace Capychef.Users.Domain.Entities;
 
@@ -38,7 +38,7 @@ public class UserToken
         var userToken = new UserToken();
 
         userToken.User = user;
-        userToken.createRandomToken(10, alphabetAndNumbers);
+        userToken.Token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(10);
         userToken.TokenType = UserTokenType.PasswordRecovery;
         userToken.CreatedAt = DateTime.Now;
         userToken.ExpiresAt = user.CreatedAt.AddHours(24);
@@ -54,7 +54,7 @@ public class UserToken
         var userToken = new UserToken();
 
         userToken.User = user;
-        userToken.createRandomToken(6, capsAndNumbers);
+        userToken.Token = RandomGenerator.GenerateRandomCapsAndNumbersString(6);
         userToken.TokenType = UserTokenType.EmailValidation;
         userToken.CreatedAt = DateTime.Now;
         userToken.ExpiresAt = user.CreatedAt.AddDays(30);
@@ -70,7 +70,7 @@ public class UserToken
         var userToken = new UserToken();
 
         userToken.User = user;
-        userToken.createRandomToken(8, capsAndNumbers);
+        userToken.Token = RandomGenerator.GenerateRandomCapsString(8);
         userToken.TokenType = UserTokenType.GuestAccountTransfer;
         userToken.CreatedAt = DateTime.Now;
         userToken.ExpiresAt = user.CreatedAt.AddHours(24);
@@ -86,18 +86,6 @@ public class UserToken
         IsUsed = true;
         UsedAt = DateTime.Now;
         IsActive = false;
-    }
-
-    private void createRandomToken(int length, string characterSet)
-    {
-        var resut = new char[length];
-        var buffer = new byte[length];
-
-        RandomNumberGenerator.Fill(buffer);
-
-        for (var i = 0; i < length; i++) resut[i] = characterSet[buffer[i] % characterSet.Length];
-
-        Token = new string(resut);
     }
 }
 
