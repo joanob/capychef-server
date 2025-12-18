@@ -45,9 +45,9 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserSessionService, UserSessionService>();
-        
+
         // HOUSEHOLD 
-        
+
         services.AddScoped<IHouseholdRepository, HouseholdRepository>();
         services.AddScoped<IHouseholdService, HouseholdService>();
 

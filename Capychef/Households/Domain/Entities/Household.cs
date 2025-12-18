@@ -25,7 +25,7 @@ public class Household : BaseDeletableEntity
         Name = name;
         PublicId = RandomGenerator.GenerateRandomCapsString(6);
     }
-    
+
     [Column("owner_id")]
     [ForeignKey(nameof(User))]
     public int OwnerId { get; private set; }

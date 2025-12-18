@@ -10,6 +10,7 @@ public class JWTService
 {
     private const string SESSION_ID_CLAIM = "sessionId";
     private const string USER_ID_CLAIM = "userId";
+    private const string HOUSEHOLD_ID_CLAIM = "householdId";
     private const int JWT_SESSION_EXPIRATION_MINUTES = 5;
     private const int JWT_REFRESH_EXPIRATION_YEARS = 100;
     private const string JWT_SESSION_COOKIE_NAME = "CAPYCHEF_AUTH_SESSION";
@@ -42,6 +43,9 @@ public class JWTService
             new(SESSION_ID_CLAIM, authUserDetails.SessionId.ToString()),
             new(USER_ID_CLAIM, authUserDetails.UserId.ToString())
         };
+
+        if (authUserDetails.HouseholdId != null)
+            claims.Add(new Claim(HOUSEHOLD_ID_CLAIM, authUserDetails.HouseholdId.ToString()));
 
         var securityKey = new SymmetricSecurityKey(jwtSecret);
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -105,7 +109,10 @@ public class JWTService
             var userId = principal.Claims.FirstOrDefault(c => c.Type == USER_ID_CLAIM)?.Value;
             if (sessionId == null || userId == null) return null;
 
-            return new AuthUserDetails(int.Parse(userId), int.Parse(sessionId));
+            var householdIdClaim = principal.Claims.FirstOrDefault(c => c.Type == HOUSEHOLD_ID_CLAIM);
+            if (householdIdClaim == null) return new AuthUserDetails(int.Parse(userId), int.Parse(sessionId));
+
+            return new AuthUserDetails(int.Parse(userId), int.Parse(sessionId), int.Parse(householdIdClaim.Value));
         }
         catch (Exception e)
         {

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Utils;
 using Capychef.Users.Domain.Entities;
 using YourOwnBoss.Common.Entities;
 
@@ -21,13 +20,13 @@ public class HouseholdMember : BaseDeletableEntity
     [Column("household_id")]
     [ForeignKey(nameof(Household))]
     public int HouseholdId { get; private set; }
-    
+
     [Column("user_id")]
     [ForeignKey(nameof(User))]
     public int UserId { get; private set; }
 
     public Household Household { get; private set; } = null!;
-    
+
     public User User { get; private set; } = null!;
 }
 

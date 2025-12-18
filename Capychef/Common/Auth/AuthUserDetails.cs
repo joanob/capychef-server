@@ -1,7 +1,21 @@
 ﻿namespace Capychef.Common.Auth;
 
-public class AuthUserDetails(int userId, int sessionId)
+public class AuthUserDetails
 {
-    public int UserId { get; } = userId;
-    public int SessionId { get; } = sessionId;
+    public AuthUserDetails(int userId, int sessionId)
+    {
+        UserId = userId;
+        SessionId = sessionId;
+    }
+
+    public AuthUserDetails(int userId, int sessionId, int householdId)
+    {
+        UserId = userId;
+        SessionId = sessionId;
+        HouseholdId = householdId;
+    }
+
+    public int UserId { get; }
+    public int SessionId { get; }
+    public int? HouseholdId { get; }
 }

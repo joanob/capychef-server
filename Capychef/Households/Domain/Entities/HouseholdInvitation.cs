@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Utils;
 using Capychef.Users.Domain.Entities;
 using YourOwnBoss.Common.Entities;
 
@@ -19,11 +18,11 @@ public class HouseholdInvitation : BaseDeletableEntity
         IsAnswered = false;
         IsAccepted = false;
     }
-    
+
     [Column("household_id")]
     [ForeignKey(nameof(Household))]
     public int HouseholdId { get; private set; }
-    
+
     [Column("user_id")]
     [ForeignKey(nameof(User))]
     public int UserId { get; private set; }
@@ -35,7 +34,7 @@ public class HouseholdInvitation : BaseDeletableEntity
     [Column("is_accepted")] public bool IsAccepted { get; set; }
 
     public Household Household { get; private set; } = null!;
-    
+
     public User User { get; private set; } = null!;
 }
 
@@ -45,7 +44,7 @@ public static class HouseholdInvitationExtensions
     {
         return invitations.Where(x => !x.IsDeleted);
     }
-    
+
     public static IQueryable<HouseholdInvitation> Pending(this IQueryable<HouseholdInvitation> invitations)
     {
         return invitations.Where(x => !x.IsDeleted && !x.IsAnswered);
