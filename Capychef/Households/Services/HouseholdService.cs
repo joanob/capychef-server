@@ -50,4 +50,11 @@ public class HouseholdService(
 
         return new HouseholdMembershipError(userDetails.UserId, userDetails.HouseholdId.Value);
     }
+
+    public async Task<List<HouseholdDTO>> GetAllHouseholds(AuthUserDetails userDetails)
+    {
+        var households = await householdRepository.GetAllHouseholds(userDetails.UserId);
+
+        return HouseholdDTO.ToDTOList(households);
+    }
 }

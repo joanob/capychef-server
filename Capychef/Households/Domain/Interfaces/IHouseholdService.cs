@@ -11,4 +11,5 @@ public interface IHouseholdService
     Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd);
     Task<AppError?> CheckHouseholdOwnership(AuthUserDetails userDetails);
     Task<AppError?> CheckHouseholdMembership(AuthUserDetails userDetails);
+    Task<List<HouseholdDTO>> GetAllHouseholds(AuthUserDetails userDetails);
 }

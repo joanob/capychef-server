@@ -21,9 +21,19 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
         if (household.failed()) return GlobalErrorHandler.handleError(household.error());
 
         userDetails.setHousehold(household.get().Id);
-        
+
         JWTService.CreateAndSendJWT(userDetails, Response);
 
         return Ok(household.get());
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<HouseholdDTO>>> GetAllHouseholds()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var households = await householdService.GetAllHouseholds(userDetails);
+
+        return Ok(households);
     }
 }
