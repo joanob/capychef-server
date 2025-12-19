@@ -17,5 +17,10 @@ public class AuthUserDetails
 
     public int UserId { get; }
     public int SessionId { get; }
-    public int? HouseholdId { get; }
+    public int? HouseholdId { get; private set; }
+
+    public void setHousehold(int householdId)
+    {
+        HouseholdId = householdId;
+    }
 }

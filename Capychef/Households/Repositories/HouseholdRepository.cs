@@ -16,4 +16,9 @@ public class HouseholdRepository(CapychefDbContext dbContext) : IHouseholdReposi
     {
         return await dbContext.Households.Active().Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
     }
+
+    public async Task<bool> CheckHouseholdOwnership(int userId, int householdId)
+    {
+        return await dbContext.Households.Active().Where(x => x.OwnerId == userId && x.Id == householdId).AnyAsync();
+    }
 }

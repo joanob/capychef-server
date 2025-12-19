@@ -14,4 +14,9 @@ public class HouseholdDTO
     public int Id { get; set; }
     public int OwnerId { get; set; }
     public string Name { get; set; }
+
+    public static List<HouseholdDTO> ToDTOList(List<Household> households)
+    {
+        return households.Select(h => new HouseholdDTO(h)).ToList();
+    }
 }

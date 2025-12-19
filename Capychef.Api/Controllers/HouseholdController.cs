@@ -20,6 +20,10 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
 
         if (household.failed()) return GlobalErrorHandler.handleError(household.error());
 
+        userDetails.setHousehold(household.get().Id);
+        
+        JWTService.CreateAndSendJWT(userDetails, Response);
+
         return Ok(household.get());
     }
 }

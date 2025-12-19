@@ -17,6 +17,12 @@ public class HouseholdMember : BaseDeletableEntity
         User = user;
     }
 
+    public HouseholdMember(Household household, int userId)
+    {
+        Household = household;
+        UserId = userId;
+    }
+
     [Column("household_id")]
     [ForeignKey(nameof(Household))]
     public int HouseholdId { get; private set; }

@@ -13,6 +13,9 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<UserSession> UsersSessions => Set<UserSession>();
     public DbSet<UserToken> UsersTokens => Set<UserToken>();
     public DbSet<Household> Households => Set<Household>();
+    public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
+    public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
+    public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
