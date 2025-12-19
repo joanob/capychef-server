@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Capychef;
-using Capychef.Api.Authorization;
 using DotNetEnv;
 using YourOwnBoss.Common.Auth;
 using YourOwnBoss.Common.Errors;
@@ -12,8 +11,6 @@ Env.Load("../.env");
 // Add services to the container.
 
 builder.Services.AddApplicationDI();
-
-builder.Services.RegisterAuthorizationPolicies();
 
 builder.Services.AddControllers();
 

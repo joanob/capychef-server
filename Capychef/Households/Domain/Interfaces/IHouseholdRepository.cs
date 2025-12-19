@@ -9,4 +9,5 @@ public interface IHouseholdRepository
     Task<bool> CheckHouseholdOwnership(int userId, int householdId);
     Task<List<Household>> GetAllHouseholds(int userId);
     Task<Household?> GetHouseholdById(int householdId);
+    Task<Household?> GetTrackedHouseholdById(int householdId);
 }

@@ -13,4 +13,5 @@ public interface IHouseholdService
     Task<AppError?> CheckHouseholdMembership(AuthUserDetails userDetails);
     Task<List<HouseholdDTO>> GetAllHouseholds(AuthUserDetails userDetails);
     Task<Result<HouseholdDTO>> SelectHousehold(AuthUserDetails userDetails, int householdId);
+    Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId, UpdateHouseholdCmd cmd);
 }

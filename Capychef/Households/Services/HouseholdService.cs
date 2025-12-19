@@ -69,4 +69,16 @@ public class HouseholdService(
 
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
+
+    public async Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
+        UpdateHouseholdCmd cmd)
+    {
+        var household = await householdRepository.GetTrackedHouseholdById(householdId);
+
+        household.Name = cmd.Name;
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+    }
 }

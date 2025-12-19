@@ -1,4 +1,5 @@
-﻿using Capychef.Households.Domain.Cmd;
+﻿using Capychef.Api.Authorization;
+using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,19 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
         userDetails.setHousehold(household.get().Id);
 
         JWTService.CreateAndSendJWT(userDetails, Response);
+
+        return Ok(household.get());
+    }
+
+    [CheckOwnership]
+    [HttpPut("{householdId}")]
+    public async Task<ActionResult<HouseholdDTO>> UpdateHousehold(int householdId, UpdateHouseholdCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var household = await householdService.UpdateHousehold(userDetails, householdId, cmd);
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
 
         return Ok(household.get());
     }
