@@ -27,4 +27,9 @@ public class HouseholdRepository(CapychefDbContext dbContext) : IHouseholdReposi
         return await dbContext.HouseholdMembers.Active().Where(x => x.UserId == userId).Include(x => x.Household)
             .Select(x => x.Household).Active().ToListAsync();
     }
+
+    public async Task<Household?> GetHouseholdById(int householdId)
+    {
+        return await dbContext.Households.Active().Where(x => x.Id == householdId).FirstOrDefaultAsync();
+    }
 }

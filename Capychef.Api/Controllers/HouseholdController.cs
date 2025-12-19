@@ -36,4 +36,20 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
 
         return Ok(households);
     }
+
+    [HttpGet("select/{householdId}")]
+    public async Task<ActionResult<HouseholdDTO>> SelectHousehold(int householdId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var household = await householdService.SelectHousehold(userDetails, householdId);
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
+
+        userDetails.setHousehold(household.get().Id);
+
+        JWTService.CreateAndSendJWT(userDetails, Response);
+
+        return Ok(household.get());
+    }
 }

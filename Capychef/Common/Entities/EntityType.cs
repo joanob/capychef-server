@@ -5,6 +5,9 @@ public class EntityType
     private const string _userType = "USER";
     private const string _userPasswordType = "USER_PASSWORD";
     private const string _tokenType = "TOKEN";
+
+    private const string _householdType = "HOUSHOLD";
+
     private readonly string _value;
 
     private EntityType(string value)
@@ -15,6 +18,7 @@ public class EntityType
     public static EntityType User => new(_userType);
     public static EntityType UserPassword => new(_userPasswordType);
     public static EntityType Token => new(_tokenType);
+    public static EntityType Household => new(_householdType);
 
     public static EntityType from(string value)
     {
