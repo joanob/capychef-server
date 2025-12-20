@@ -22,6 +22,9 @@ public class CheckOwnershipFilter(IHouseholdService householdService)
 
         var error = await householdService.CheckHouseholdOwnership(userDetails);
 
-        if (error == null) await next();
+        if (error == null)
+            await next();
+        else
+            context.Result = new NotFoundResult();
     }
 }

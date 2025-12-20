@@ -38,6 +38,19 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
         return Ok(households);
     }
 
+    [CheckMembership]
+    [HttpGet("active")]
+    public async Task<ActionResult<List<HouseholdDTO>>> GetActiveHousehold()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var household = await householdService.GetActiveHousehold(userDetails);
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
+
+        return Ok(household.get());
+    }
+
     [HttpGet("select/{householdId}")]
     public async Task<ActionResult<HouseholdDTO>> SelectHousehold(int householdId)
     {

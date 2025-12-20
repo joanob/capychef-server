@@ -81,4 +81,13 @@ public class HouseholdService(
 
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
+
+    public async Task<Result<HouseholdDTO>> GetActiveHousehold(AuthUserDetails userDetails)
+    {
+        var household = await householdRepository.GetHouseholdById(userDetails.HouseholdId.Value);
+        if (household == null)
+            return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value));
+
+        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+    }
 }
