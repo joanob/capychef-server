@@ -50,7 +50,9 @@ public static class DependencyInjection
 
         services.AddScoped<IHouseholdRepository, HouseholdRepository>();
         services.AddScoped<IHouseholdMemberRepository, HouseholdMemberRepository>();
+        services.AddScoped<IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<IHouseholdService, HouseholdService>();
+        services.AddScoped<IHouseholdInvitationService, HouseholdInvitationService>();
 
         return services;
     }
