@@ -1,5 +1,6 @@
 ﻿using Capychef.Common.Auth;
 using Capychef.Households.Domain.Cmd;
+using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
@@ -30,5 +31,12 @@ public class HouseholdInvitationService(
         await dbContext.SaveChangesAsync();
 
         return null;
+    }
+
+    public async Task<List<HouseholdInvitationDTO>> GetAllHouseholdInvitations(AuthUserDetails userDetails)
+    {
+        var invitations = await invitationRepository.GetHouseholdInvitations(userDetails.HouseholdId.Value);
+
+        return HouseholdInvitationDTO.toList(invitations);
     }
 }

@@ -5,4 +5,5 @@ namespace Capychef.Households.Domain.Interfaces;
 public interface IHouseholdInvitationRepository
 {
     Task AddInvitationAsync(HouseholdInvitation invitation);
+    Task<List<HouseholdInvitation>> GetHouseholdInvitations(int householdId);
 }

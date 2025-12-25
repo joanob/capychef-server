@@ -1,5 +1,6 @@
 ﻿using Capychef.Api.Authorization;
 using Capychef.Households.Domain.Cmd;
+using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using YourOwnBoss.Common.Auth;
@@ -22,5 +23,16 @@ public class HouseholdInvitationController(IHouseholdInvitationService household
         if (error != null) return GlobalErrorHandler.handleError(error);
 
         return Ok();
+    }
+
+    [CheckOwnership]
+    [HttpGet("household")]
+    public async Task<ActionResult<List<HouseholdInvitationDTO>>> GetHousholdInvitations()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var invitations = await householdInvitationService.GetAllHouseholdInvitations(userDetails);
+
+        return Ok(invitations);
     }
 }
