@@ -39,4 +39,11 @@ public class HouseholdInvitationService(
 
         return HouseholdInvitationDTO.toList(invitations);
     }
+
+    public async Task<List<HouseholdInvitationDTO>> GetHouseholdInvitationsByUser(AuthUserDetails userDetails)
+    {
+        var invitations = await invitationRepository.GetHouseholdInvitationsByUserId(userDetails.UserId);
+
+        return HouseholdInvitationDTO.toList(invitations);
+    }
 }

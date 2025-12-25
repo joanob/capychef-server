@@ -35,4 +35,14 @@ public class HouseholdInvitationController(IHouseholdInvitationService household
 
         return Ok(invitations);
     }
+
+    [HttpGet("user")]
+    public async Task<ActionResult<List<HouseholdInvitationDTO>>> GetHousholdInvitationsByUser()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var invitations = await householdInvitationService.GetHouseholdInvitationsByUser(userDetails);
+
+        return Ok(invitations);
+    }
 }
