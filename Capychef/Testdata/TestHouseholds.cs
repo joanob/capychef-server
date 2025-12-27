@@ -50,6 +50,10 @@ public class TestHouseholds(CapychefDbContext dbContext)
 
             await dbContext.AddAsync(household);
 
+            var householdOwner = new HouseholdMember(household, owner);
+
+            await dbContext.AddAsync(householdOwner);
+
             var householdMembers = new List<HouseholdMember>();
             var householdMembersNumber =
                 RandomGenerator.GenerateRandomNumber(MAX_HOUSEHOLD_MEMBERS - MIN_HOUSEHOLD_MEMBERS) +
