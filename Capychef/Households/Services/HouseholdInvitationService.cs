@@ -13,6 +13,7 @@ namespace Capychef.Households.Services;
 public class HouseholdInvitationService(
     CapychefDbContext dbContext,
     IHouseholdInvitationRepository invitationRepository,
+    IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
     IUserRepository userRepository) : IHouseholdInvitationService
 {
@@ -45,5 +46,41 @@ public class HouseholdInvitationService(
         var invitations = await invitationRepository.GetHouseholdInvitationsByUserId(userDetails.UserId);
 
         return HouseholdInvitationDTO.toList(invitations);
+    }
+
+    public async Task<AppError?> AcceptInvitation(AuthUserDetails userDetails, int invitationId)
+    {
+        var invitation = await invitationRepository.GetTrackedInvitationById(invitationId, userDetails.UserId);
+
+        if (invitation == null || invitation.IsAnswered)
+            return new NotFoundError(EntityType.HouseholdInvitation, userDetails.UserId);
+
+        invitation.IsAnswered = true;
+        invitation.AnsweredAt = DateTime.Now;
+        invitation.IsAccepted = true;
+
+        var member = new HouseholdMember(invitation.HouseholdId, invitation.UserId);
+
+        await householdMemberRepository.AddHouseholdMemberAsync(member);
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
+    public async Task<AppError?> RejectInvitation(AuthUserDetails userDetails, int invitationId)
+    {
+        var invitation = await invitationRepository.GetTrackedInvitationById(invitationId, userDetails.UserId);
+
+        if (invitation == null || invitation.IsAnswered)
+            return new NotFoundError(EntityType.HouseholdInvitation, userDetails.UserId);
+
+        invitation.IsAnswered = true;
+        invitation.AnsweredAt = DateTime.Now;
+        invitation.IsAccepted = false;
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
     }
 }

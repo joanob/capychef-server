@@ -7,4 +7,5 @@ public interface IHouseholdInvitationRepository
     Task AddInvitationAsync(HouseholdInvitation invitation);
     Task<List<HouseholdInvitation>> GetHouseholdInvitations(int householdId);
     Task<List<HouseholdInvitation>> GetHouseholdInvitationsByUserId(int userId);
+    Task<HouseholdInvitation?> GetTrackedInvitationById(int invitationId, int userId);
 }

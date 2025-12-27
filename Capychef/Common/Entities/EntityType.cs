@@ -7,6 +7,7 @@ public class EntityType
     private const string _tokenType = "TOKEN";
 
     private const string _householdType = "HOUSHOLD";
+    private const string _householdInvitationType = "HOUSHOLD_INVITATION";
 
     private readonly string _value;
 
@@ -19,6 +20,7 @@ public class EntityType
     public static EntityType UserPassword => new(_userPasswordType);
     public static EntityType Token => new(_tokenType);
     public static EntityType Household => new(_householdType);
+    public static EntityType HouseholdInvitation => new(_householdInvitationType);
 
     public static EntityType from(string value)
     {
@@ -27,6 +29,8 @@ public class EntityType
             _userType => User,
             _userPasswordType => UserPassword,
             _tokenType => Token,
+            _householdType => Household,
+            _householdInvitationType => HouseholdInvitation,
             _ => null
         };
     }

@@ -10,4 +10,6 @@ public interface IHouseholdInvitationService
     Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd);
     Task<List<HouseholdInvitationDTO>> GetAllHouseholdInvitations(AuthUserDetails userDetails);
     Task<List<HouseholdInvitationDTO>> GetHouseholdInvitationsByUser(AuthUserDetails userDetails);
+    Task<AppError?> AcceptInvitation(AuthUserDetails userDetails, int invitationId);
+    Task<AppError?> RejectInvitation(AuthUserDetails userDetails, int invitationId);
 }

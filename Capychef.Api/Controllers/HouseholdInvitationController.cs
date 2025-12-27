@@ -45,4 +45,28 @@ public class HouseholdInvitationController(IHouseholdInvitationService household
 
         return Ok(invitations);
     }
+
+    [HttpPut("accept/{invitationId}")]
+    public async Task<ActionResult> AcceptInvitation(int invitationId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await householdInvitationService.AcceptInvitation(userDetails, invitationId);
+
+        if (error != null) return GlobalErrorHandler.handleError(error);
+
+        return Ok();
+    }
+
+    [HttpPut("reject/{invitationId}")]
+    public async Task<ActionResult> RejectInvitation(int invitationId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await householdInvitationService.RejectInvitation(userDetails, invitationId);
+
+        if (error != null) return GlobalErrorHandler.handleError(error);
+
+        return Ok();
+    }
 }
