@@ -29,7 +29,7 @@ public class HouseholdJoinRequest : BaseDeletableEntity
 
     [Column("is_answered")] public bool IsAnswered { get; set; }
 
-    [Column("answered_at")] public bool AnsweredAt { get; set; }
+    [Column("answered_at")] public DateTime? AnsweredAt { get; set; }
 
     [Column("is_accepted")] public bool IsAccepted { get; set; }
 

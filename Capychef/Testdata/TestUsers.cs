@@ -18,6 +18,7 @@ public class TestUsers(CapychefDbContext dbContext)
 
     public async Task Generate()
     {
+        Console.WriteLine("Generating users");
         Usernames.Clear();
 
         GenerateUniqueUsernames();
@@ -35,10 +36,13 @@ public class TestUsers(CapychefDbContext dbContext)
         await GenerateDeletedUsers();
 
         await dbContext.SaveChangesAsync();
+
+        Console.WriteLine("Generated users saved");
     }
 
     private async Task GenerateVerifiedEmailUsers()
     {
+        Console.WriteLine("Generating verified email users");
         for (var i = 0; i < VERIFIED_EMAIL_USERS; i++)
         {
             var username = Usernames.ElementAt(0);
@@ -62,10 +66,13 @@ public class TestUsers(CapychefDbContext dbContext)
             userTokens.UsedAt = DateTime.UtcNow;
             dbContext.Add(userTokens);
         }
+
+        Console.WriteLine("Done");
     }
 
     private async Task GenerateNonVerifiedEmailUsers()
     {
+        Console.WriteLine("Generating non verified email users");
         for (var i = 0; i < NON_VERIFIED_EMAIL_USERS; i++)
         {
             var username = Usernames.ElementAt(0);
@@ -85,10 +92,13 @@ public class TestUsers(CapychefDbContext dbContext)
             var userTokens = UserToken.CreateEmailValidationUserToken(user);
             dbContext.Add(userTokens);
         }
+
+        Console.WriteLine("Done");
     }
 
     private async Task GeneratePasswordUsers()
     {
+        Console.WriteLine("Generating password users");
         for (var i = 0; i < PASSWORD_USERS; i++)
         {
             var username = Usernames.ElementAt(0);
@@ -104,10 +114,13 @@ public class TestUsers(CapychefDbContext dbContext)
             var userPassword = new UserPassword(user, username);
             dbContext.Add(userPassword);
         }
+
+        Console.WriteLine("Done");
     }
 
     private async Task GenerateGuestUsers()
     {
+        Console.WriteLine("Generating guest users");
         for (var i = 0; i < GUEST_USERS; i++)
         {
             var username = Usernames.ElementAt(0);
@@ -122,10 +135,13 @@ public class TestUsers(CapychefDbContext dbContext)
             var userTokens = UserToken.CreateGuestAccountTransferUserToken(user);
             dbContext.Add(userTokens);
         }
+
+        Console.WriteLine("Done");
     }
 
     private async Task GenerateBlockedUsers()
     {
+        Console.WriteLine("Generating blocked users");
         for (var i = 0; i < BLOCKED_USERS; i++)
         {
             var username = Usernames.ElementAt(0);
@@ -143,10 +159,13 @@ public class TestUsers(CapychefDbContext dbContext)
             var userPassword = new UserPassword(user, username);
             dbContext.Add(userPassword);
         }
+
+        Console.WriteLine("Done");
     }
 
     private async Task GenerateDeletedUsers()
     {
+        Console.WriteLine("Generating deleted users");
         for (var i = 0; i < DELETED_USERS; i++)
         {
             var username = Usernames.ElementAt(0);
@@ -163,6 +182,8 @@ public class TestUsers(CapychefDbContext dbContext)
             var userPassword = new UserPassword(user, username);
             dbContext.Add(userPassword);
         }
+
+        Console.WriteLine("Done");
     }
 
 

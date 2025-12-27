@@ -58,6 +58,7 @@ public static class DependencyInjection
         // TESTDATA
 
         services.AddScoped<TestUsers, TestUsers>();
+        services.AddScoped<TestHouseholds, TestHouseholds>();
         services.AddScoped<Testdata.Testdata, Testdata.Testdata>();
 
         return services;
