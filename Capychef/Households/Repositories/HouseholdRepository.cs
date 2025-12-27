@@ -37,4 +37,9 @@ public class HouseholdRepository(CapychefDbContext dbContext) : IHouseholdReposi
     {
         return await dbContext.Households.Active().Where(x => x.Id == householdId).FirstOrDefaultAsync();
     }
+
+    public async Task<Household?> GetTrackedHouseholdByPublicId(string publicId)
+    {
+        return await dbContext.Households.Active().Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
+    }
 }
