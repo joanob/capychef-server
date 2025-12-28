@@ -1,4 +1,5 @@
-﻿using Capychef.Households.Domain.Entities;
+﻿using Capychef.Food.Domain.Entities;
+using Capychef.Households.Domain.Entities;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -16,6 +17,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
+    public DbSet<FoodCategory> FoodCategories => Set<FoodCategory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,0 +1,36 @@
+﻿{
+  "foodCategories": [
+    {
+      "id": 1,
+      "name": "Fruta"
+    },
+    {
+      "id": 2,
+      "name": "Verdura"
+    },
+    {
+      "id": 3,
+      "name": "Carne"
+    },
+    {
+      "id": 4,
+      "name": "Pollo",
+      "parentCategoryId": 3
+    },
+    {
+      "id": 5,
+      "name": "Cerdo",
+      "parentCategoryId": 3
+    },
+    {
+      "id": 6,
+      "name": "Ternera",
+      "parentCategoryId": 3
+    },
+    {
+      "id": 7,
+      "name": "Pollo BIO",
+      "parentCategoryId": 4
+    }
+  ]
+}
