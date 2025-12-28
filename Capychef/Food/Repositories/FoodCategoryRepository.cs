@@ -11,4 +11,9 @@ public class FoodCategoryRepository(CapychefDbContext dbContext) : IFoodCategory
     {
         return await dbContext.FoodCategories.ToListAsync();
     }
+
+    public async Task<List<FoodCategory>> GetAllCategories()
+    {
+        return await dbContext.FoodCategories.AsNoTracking().ToListAsync();
+    }
 }

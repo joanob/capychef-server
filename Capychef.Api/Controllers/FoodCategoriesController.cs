@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Capychef.Api.Controllers;
 
 [ApiController]
-[Route("food-admin")]
-public class FoodAdminController(IServiceScopeFactory serviceScopeFactory) : ControllerBase
+[Route("food-categories")]
+public class FoodCategoriesController(
+    IServiceScopeFactory serviceScopeFactory,
+    IFoodCategoryService foodCategoryService) : ControllerBase
 {
-    [HttpPost("categories")]
+    [HttpPost]
     public async Task<ActionResult> LoadFoodCategories(FoodCategoryFileCmd fileCmd)
     {
         Task.Run(async () =>
@@ -28,5 +30,13 @@ public class FoodAdminController(IServiceScopeFactory serviceScopeFactory) : Con
         });
 
         return Ok();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<FoodCategoryDTO>>> GetAllFoodCategories([FromQuery] string? displayMode)
+    {
+        if (displayMode == "tree") return Ok(await foodCategoryService.GetAllCategoriesAsTree());
+
+        return Ok(await foodCategoryService.GetAllCategories());
     }
 }

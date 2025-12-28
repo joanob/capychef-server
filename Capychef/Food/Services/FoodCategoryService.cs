@@ -34,4 +34,31 @@ public class FoodCategoryService(CapychefDbContext dbContext, IFoodCategoryRepos
 
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<FoodCategoryDTO>> GetAllCategories()
+    {
+        var categories = await foodCategoryRepository.GetAllCategories();
+
+        var dtos = new List<FoodCategoryDTO>();
+
+        foreach (var category in categories) dtos.Add(new FoodCategoryDTO(category));
+
+        return dtos;
+    }
+
+    public async Task<List<FoodCategoryDTO>> GetAllCategoriesAsTree()
+    {
+        var categories = await foodCategoryRepository.GetAllCategories();
+
+        var dtos = new List<FoodCategoryDTO>();
+
+        foreach (var category in categories.Where(x => x.ParentCategoryId == null))
+        {
+            var dto = new FoodCategoryDTO(category);
+            dto.AddChildren(categories);
+            dtos.Add(dto);
+        }
+
+        return dtos;
+    }
 }
