@@ -10,42 +10,40 @@ CREATE TABLE food_categories
 
 CREATE RULE "food_categories_soft_deletion" AS ON DELETE TO "food_categories" DO INSTEAD NOTHING;
           
--- GLOBAL FOOD
+-- FOOD
                                                     
-CREATE TABLE global_food (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-    category_id INTEGER NOT NULL,
-  FOREIGN KEY (category_id) REFERENCES food_categories (id)
+CREATE TABLE food
+(
+    id                      SERIAL PRIMARY KEY,
+    name                    TEXT      NOT NULL,
+    category_id             INTEGER   NOT NULL,
+    is_global               BOOLEAN   NOT NULL,
+    global_id               VARCHAR,
+    household_id            INTEGER,
+    modified_global_food_id INTEGER,
+    created_at              TIMESTAMP NOT NULL,
+    created_by              INTEGER,
+    row_version             INTEGER   NOT NULL,
+    is_deleted              BOOLEAN   NOT NULL,
+    deleted_at              TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES food_categories (id),
+    FOREIGN KEY (modified_global_food_id) REFERENCES food (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    UNIQUE (household_id, modifies_global_id),
+    CHECK (
+        (is_global IS TRUE AND global_id IS NOT NULL AND household_id IS NULL AND modified_global_food_id IS NULL AND
+         created_by IS NULL)
+            OR
+        (is_global IS FALSE AND global_id IS NULL AND household_id IS NOT NULL AND created_by IS NOT NULL)
+        )
 );
 
-CREATE RULE "global_food_soft_deletion" AS ON DELETE TO "global_food" DO INSTEAD NOTHING;
-                                                    
--- HOUSEHOLD FOOD                                                     
-                                                         
-CREATE TABLE household_food (
-     id SERIAL PRIMARY KEY,
-     created_at     TIMESTAMP NOT NULL,
-     row_version    INTEGER   NOT NULL,
-     is_deleted     BOOLEAN   NOT NULL,
-     deleted_at     TIMESTAMP,
-     created_by INTEGER NOT NULL,
-     household_id INTEGER NOT NULL,
-     modified_global_food_id INTEGER,
-     name TEXT NOT NULL,
-     category_id INTEGER NOT NULL,
-     FOREIGN KEY (household_id) REFERENCES households (id),
-     FOREIGN KEY (created_by) REFERENCES users (id),
-     FOREIGN KEY (modified_global_food_id) REFERENCES global_food (id),
-     FOREIGN KEY (category_id) REFERENCES food_categories (id)
-);
+CREATE INDEX idx_food_household_id ON food(household_id);
 
-CREATE RULE "household_food_soft_delete" AS ON DELETE TO "household_food" DO INSTEAD (
-    UPDATE household_food
+CREATE RULE "food_soft_deletion" AS ON DELETE TO "food" DO INSTEAD (
+    UPDATE food
     SET is_deleted = true
     WHERE id = old.id
       AND NOT is_deleted
     );
-                                                      
--- HOUSEHOLD FOOD MODIFICATIONS
-
+                                                     
