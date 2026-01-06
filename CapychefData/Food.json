@@ -1,0 +1,29 @@
+﻿{
+  "food": [
+    {
+      "globalId": "TOMATE",
+      "name": "Tomate",
+      "category": 2 
+    },
+    {
+      "globalId": "LECHE",
+      "name": "Leche",
+      "category": 8
+    },
+    {
+      "globalId": "SANDIA",
+      "name": "Sandia",
+      "category": 1
+    },
+    {
+      "globalId": "PECHUGA",
+      "name": "Pechuga de pollo",
+      "category": 4
+    },
+    {
+      "globalId": "LOMO_CERDO",
+      "name": "Lomo de cerdo",
+      "category": 5
+    }
+  ]
+}

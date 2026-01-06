@@ -29,7 +29,7 @@ CREATE TABLE food
     FOREIGN KEY (category_id) REFERENCES food_categories (id),
     FOREIGN KEY (modified_global_food_id) REFERENCES food (id),
     FOREIGN KEY (created_by) REFERENCES users (id),
-    UNIQUE (household_id, modifies_global_id),
+    UNIQUE (household_id, modified_global_food_id),
     CHECK (
         (is_global IS TRUE AND global_id IS NOT NULL AND household_id IS NULL AND modified_global_food_id IS NULL AND
          created_by IS NULL)

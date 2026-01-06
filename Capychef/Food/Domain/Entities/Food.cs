@@ -43,7 +43,7 @@ public class Food : BaseDeletableEntity
 
     [Column("category_id")]
     [ForeignKey(nameof(Category))]
-    public int? CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
     [Column("is_global")] public bool IsGlobal { get; private set; }
 

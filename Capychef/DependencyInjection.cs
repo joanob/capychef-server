@@ -61,8 +61,11 @@ public static class DependencyInjection
         services.AddScoped<IHouseholdJoinRequestService, HouseholdJoinRequestService>();
 
         // FOOD 
+        
         services.AddScoped<IFoodCategoryRepository, FoodCategoryRepository>();
         services.AddScoped<IFoodCategoryService, FoodCategoryService>();
+        services.AddScoped<IFoodRepository, FoodRepository>();
+        services.AddScoped<IFoodService, FoodService>();
 
         // TESTDATA
 

@@ -18,6 +18,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
     public DbSet<FoodCategory> FoodCategories => Set<FoodCategory>();
+    public DbSet<Food.Domain.Entities.Food> Food => Set<Food.Domain.Entities.Food>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
