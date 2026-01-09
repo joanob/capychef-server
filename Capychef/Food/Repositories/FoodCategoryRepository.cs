@@ -16,4 +16,9 @@ public class FoodCategoryRepository(CapychefDbContext dbContext) : IFoodCategory
     {
         return await dbContext.FoodCategories.AsNoTracking().ToListAsync();
     }
+
+    public async Task<bool> CheckCategoryExistsById(int id)
+    {
+        return await dbContext.FoodCategories.AnyAsync(x => x.Id == id);
+    }
 }

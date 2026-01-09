@@ -1,12 +1,34 @@
-﻿using Capychef.Food.Domain.Cmd;
+﻿using Capychef.Common.Auth;
+using Capychef.Food.Domain.Cmd;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Persistence;
+using YourOwnBoss.Common.Entities;
+using YourOwnBoss.Common.Errors;
+using YourOwnBoss.Common.Result;
 
 namespace Capychef.Food.Services;
 
-public class FoodService(CapychefDbContext dbContext, IFoodRepository foodRepository)
+public class FoodService(
+    CapychefDbContext dbContext,
+    IFoodRepository foodRepository,
+    IFoodCategoryRepository foodCategoryRepository)
     : IFoodService
 {
+    public async Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd)
+    {
+        if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
+            return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+
+        var food = new Domain.Entities.Food(userDetails.HouseholdId.Value, cmd.Name, cmd.CategoryId,
+            userDetails.UserId);
+
+        await foodRepository.AddAsync(food);
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<FoodDTO>(new FoodDTO(food));
+    }
+
     public async Task LoadGlobalFood(GlobalFoodFileCmd fileCmd)
     {
         var globalFood = await foodRepository.GetTrackedAllGlobalFood();
