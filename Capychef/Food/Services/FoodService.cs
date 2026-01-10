@@ -14,6 +14,30 @@ public class FoodService(
     IFoodCategoryRepository foodCategoryRepository)
     : IFoodService
 {
+    public async Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails)
+    {
+        var food = await foodRepository.GetAllHouseholdFood(userDetails.HouseholdId.Value);
+
+        var globalFood = await foodRepository.GetAllGlobalFood();
+
+        food.AddRange(globalFood);
+
+        return FoodDTO.ToList(food);
+    }
+
+    public async Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails)
+    {
+        var categories = await foodCategoryRepository.GetAllCategories();
+
+        var food = await foodRepository.GetAllHouseholdFood(userDetails.HouseholdId.Value);
+
+        var globalFood = await foodRepository.GetAllGlobalFood();
+
+        food.AddRange(globalFood);
+
+        return FoodCategoryWithFoodDTO.ToTree(categories, food);
+    }
+
     public async Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd)
     {
         if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))

@@ -20,4 +20,10 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
     {
         return await dbContext.Food.AsNoTracking().Where(x => x.IsGlobal).ToListAsync();
     }
+
+    public async Task<List<Domain.Entities.Food>> GetAllHouseholdFood(int householdId)
+    {
+        return await dbContext.Food.AsNoTracking().Where(x => x.HouseholdId == householdId)
+            .ToListAsync();
+    }
 }

@@ -48,9 +48,14 @@ public class FoodController(
         return Ok();
     }
 
+    [CheckMembership]
     [HttpGet]
-    public async Task<ActionResult<List<FoodCategoryDTO>>> GetAllFoodCategories()
+    public async Task<ActionResult<List<FoodCategoryDTO>>> GetAllHouseholdFood([FromQuery] string? groupBy)
     {
-        return Ok(await foodService.GetAllGlobalFood());
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        if (groupBy == "category") return Ok(await foodService.GetAllHouseholdFoodGroupedByCategory(userDetails));
+
+        return Ok(await foodService.GetAllHouseholdFood(userDetails));
     }
 }

@@ -7,6 +7,7 @@ namespace Capychef.Food.Domain.Interfaces;
 public interface IFoodService
 {
     Task LoadGlobalFood(GlobalFoodFileCmd fileCmd);
-    Task<List<FoodDTO>> GetAllGlobalFood();
     Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd);
+    Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails);
+    Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails);
 }
