@@ -6,4 +6,5 @@ public interface IFoodRepository
     Task<List<Entities.Food>> GetTrackedAllGlobalFood();
     Task<List<Entities.Food>> GetAllGlobalFood();
     Task<List<Entities.Food>> GetAllHouseholdFood(int householdId);
+    Task<Entities.Food> GetTrackedHouseholdFoodById(int foodId, int householdId);
 }

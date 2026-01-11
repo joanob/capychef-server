@@ -44,7 +44,7 @@ public class TestHouseholds(CapychefDbContext dbContext)
 
             var household = new Household(owner, name);
 
-            if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLDS_PERCENTAJE)) household.delete();
+            if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLDS_PERCENTAJE)) household.Delete();
 
             households.Add(household);
 
@@ -81,7 +81,7 @@ public class TestHouseholds(CapychefDbContext dbContext)
                 var householdMember = new HouseholdMember(household, user);
 
                 if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLD_MEMBERS_PERCENT))
-                    householdMember.delete();
+                    householdMember.Delete();
 
                 householdMembers.Add(householdMember);
 
@@ -101,7 +101,7 @@ public class TestHouseholds(CapychefDbContext dbContext)
                 var householdInvitation = new HouseholdInvitation(household, user);
 
                 if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLD_INVITATIONS_PERCENT))
-                    householdInvitation.delete();
+                    householdInvitation.Delete();
 
                 householdInvitations.Add(householdInvitation);
 
@@ -122,7 +122,7 @@ public class TestHouseholds(CapychefDbContext dbContext)
                 var householdJoinRequest = new HouseholdJoinRequest(household, user);
 
                 if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLD_JOIN_REQUESTS_PERCENT))
-                    householdJoinRequest.delete();
+                    householdJoinRequest.Delete();
 
                 householdJoinRequests.Add(householdJoinRequest);
 

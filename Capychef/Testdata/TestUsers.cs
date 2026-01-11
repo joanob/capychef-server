@@ -176,7 +176,7 @@ public class TestUsers(CapychefDbContext dbContext)
             signupCmd.Password = username;
 
             var user = new User(signupCmd);
-            user.delete();
+            user.Delete();
             dbContext.Add(user);
 
             var userPassword = new UserPassword(user, username);

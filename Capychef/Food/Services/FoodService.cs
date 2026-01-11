@@ -38,6 +38,19 @@ public class FoodService(
         return FoodCategoryWithFoodDTO.ToTree(categories, food);
     }
 
+    public async Task<AppError> DeleteHouseholdFood(int foodId, AuthUserDetails userDetails)
+    {
+        var food = await foodRepository.GetTrackedHouseholdFoodById(foodId, userDetails.HouseholdId.Value);
+
+        if (food == null) return new NotFoundError(EntityType.Food, foodId);
+
+        food.Delete();
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
     public async Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd)
     {
         if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))

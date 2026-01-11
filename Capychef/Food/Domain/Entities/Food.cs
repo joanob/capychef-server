@@ -69,3 +69,11 @@ public class Food : BaseDeletableEntity
 
     public User? CreatedByUser { get; private set; }
 }
+
+public static class FoodExtensions
+{
+    public static IQueryable<Food> Active(this IQueryable<Food> food)
+    {
+        return food.Where(x => !x.IsDeleted);
+    }
+}

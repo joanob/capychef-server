@@ -58,4 +58,17 @@ public class FoodController(
 
         return Ok(await foodService.GetAllHouseholdFood(userDetails));
     }
+
+    [CheckMembership]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteHouseholdFood(int id)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await foodService.DeleteHouseholdFood(id, userDetails);
+
+        if (error != null) return GlobalErrorHandler.handleError(error);
+
+        return Ok();
+    }
 }

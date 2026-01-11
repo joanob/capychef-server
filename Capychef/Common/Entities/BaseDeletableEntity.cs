@@ -8,7 +8,7 @@ public class BaseDeletableEntity : BaseEntity
 
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    public void delete()
+    public void Delete()
     {
         IsDeleted = true;
         DeletedAt = DateTime.UtcNow;

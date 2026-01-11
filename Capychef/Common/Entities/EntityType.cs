@@ -10,6 +10,7 @@ public class EntityType
     private const string _householdInvitationType = "HOUSHOLD_INVITATION";
     private const string _householdJoinRequestType = "HOUSHOLD_JOIN_REQUEST";
 
+    private const string _foodType = "FOOD";
     private const string _foodCategoryType = "FOOD_CATEGORY";
 
     private readonly string _value;
@@ -25,6 +26,7 @@ public class EntityType
     public static EntityType Household => new(_householdType);
     public static EntityType HouseholdInvitation => new(_householdInvitationType);
     public static EntityType HouseholdJoinRequest => new(_householdJoinRequestType);
+    public static EntityType Food => new(_foodType);
     public static EntityType FoodCategory => new(_foodCategoryType);
 
     public static EntityType from(string value)
@@ -37,6 +39,7 @@ public class EntityType
             _householdType => Household,
             _householdInvitationType => HouseholdInvitation,
             _householdJoinRequestType => HouseholdJoinRequest,
+            _foodType => Food,
             _foodCategoryType => FoodCategory,
             _ => null
         };
