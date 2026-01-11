@@ -19,10 +19,13 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
     public DbSet<FoodCategory> FoodCategories => Set<FoodCategory>();
     public DbSet<Food.Domain.Entities.Food> Food => Set<Food.Domain.Entities.Food>();
+    public DbSet<FoodModificationHistory> FoodModificationsHistory => Set<FoodModificationHistory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        FoodModificationHistory.OnModelCreating(modelBuilder);
 
         // Save all dates as UTC
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())

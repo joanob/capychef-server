@@ -65,6 +65,7 @@ public static class DependencyInjection
         services.AddScoped<IFoodCategoryRepository, FoodCategoryRepository>();
         services.AddScoped<IFoodCategoryService, FoodCategoryService>();
         services.AddScoped<IFoodRepository, FoodRepository>();
+        services.AddScoped<IFoodModificationHistoryRepository, FoodModificationHistoryRepository>();
         services.AddScoped<IFoodService, FoodService>();
 
         // TESTDATA

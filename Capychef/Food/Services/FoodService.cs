@@ -1,5 +1,6 @@
 ﻿using Capychef.Common.Auth;
 using Capychef.Food.Domain.Cmd;
+using Capychef.Food.Domain.Entities;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Persistence;
 using YourOwnBoss.Common.Entities;
@@ -11,7 +12,8 @@ namespace Capychef.Food.Services;
 public class FoodService(
     CapychefDbContext dbContext,
     IFoodRepository foodRepository,
-    IFoodCategoryRepository foodCategoryRepository)
+    IFoodCategoryRepository foodCategoryRepository,
+    IFoodModificationHistoryRepository foodModificationHistoryRepository)
     : IFoodService
 {
     public async Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails)
@@ -58,12 +60,24 @@ public class FoodService(
 
         if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
 
-        if (food.Name != cmd.Name) food.Name = cmd.Name;
+        if (food.Name != cmd.Name)
+        {
+            await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
+                FoodModifiableColumn.Name, food.Name,
+                cmd.Name, userDetails.UserId));
+
+            food.Name = cmd.Name;
+        }
 
         if (food.CategoryId != cmd.CategoryId)
         {
             if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
                 return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+
+            await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
+                FoodModifiableColumn.CategoryId,
+                food.CategoryId.ToString(),
+                cmd.CategoryId.ToString(), userDetails.UserId));
 
             food.CategoryId = cmd.CategoryId;
         }

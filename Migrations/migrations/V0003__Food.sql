@@ -46,4 +46,24 @@ CREATE RULE "food_soft_deletion" AS ON DELETE TO "food" DO INSTEAD (
     WHERE id = old.id
       AND NOT is_deleted
     );
-                                                     
+            
+-- FOOD MODIFICATIONS HISTORY
+                                  
+CREATE TABLE food_modifications_history
+(
+    id      SERIAL PRIMARY KEY,
+    food_id INTEGER NOT NULL,
+    column_name TEXT NOT NULL,
+    previous_value TEXT,
+    new_value TEXT,
+    modified_at TIMESTAMP NOT NULL,
+    modified_by INTEGER NOT NULL,
+    FOREIGN KEY (food_id) REFERENCES food (id),
+    FOREIGN KEY (modified_by) REFERENCES users (id)
+);
+
+CREATE INDEX idx_food_modifications_history_food_id ON food_modifications_history(food_id);
+
+CREATE RULE "food_modifications_history_soft_deletion" AS ON DELETE TO "food_modifications_history" DO INSTEAD NOTHING;
+                                                                    
+                                                                    
