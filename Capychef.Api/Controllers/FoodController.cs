@@ -60,6 +60,19 @@ public class FoodController(
     }
 
     [CheckMembership]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<FoodDTO>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var food = await foodService.UpdateHouseholdFood(id, cmd, userDetails);
+
+        if (food.failed()) return GlobalErrorHandler.handleError(food.error());
+
+        return Ok(food.get());
+    }
+
+    [CheckMembership]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteHouseholdFood(int id)
     {

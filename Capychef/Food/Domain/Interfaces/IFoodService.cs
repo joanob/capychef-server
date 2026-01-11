@@ -12,4 +12,5 @@ public interface IFoodService
     Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails);
     Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails);
     Task<AppError> DeleteHouseholdFood(int foodId, AuthUserDetails userDetails);
+    Task<Result<FoodDTO>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd, AuthUserDetails userDetails);
 }

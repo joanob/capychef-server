@@ -51,6 +51,28 @@ public class FoodService(
         return null;
     }
 
+    public async Task<Result<FoodDTO>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd,
+        AuthUserDetails userDetails)
+    {
+        var food = await foodRepository.GetTrackedHouseholdFoodById(id, userDetails.HouseholdId.Value);
+
+        if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
+
+        if (food.Name != cmd.Name) food.Name = cmd.Name;
+
+        if (food.CategoryId != cmd.CategoryId)
+        {
+            if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
+                return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+
+            food.CategoryId = cmd.CategoryId;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<FoodDTO>(new FoodDTO(food));
+    }
+
     public async Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd)
     {
         if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
