@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Households.Domain.Entities;
 using Capychef.Users.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Food.Domain.Entities;
@@ -68,6 +69,9 @@ public class Food : BaseDeletableEntity
     public Food? ModifiedGlobalFood { get; private set; }
 
     public User? CreatedByUser { get; private set; }
+
+    [InverseProperty(nameof(FoodUoM.Food))]
+    public ICollection<FoodUoM> UoM { get; } = new List<FoodUoM>();
 }
 
 public static class FoodExtensions
@@ -75,5 +79,10 @@ public static class FoodExtensions
     public static IQueryable<Food> Active(this IQueryable<Food> food)
     {
         return food.Where(x => !x.IsDeleted);
+    }
+
+    public static IQueryable<Food> IncludeUom(this IQueryable<Food> food)
+    {
+        return food.Include(x => x.UoM);
     }
 }
