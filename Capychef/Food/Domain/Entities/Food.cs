@@ -13,27 +13,31 @@ public class Food : BaseDeletableEntity
     {
     }
 
-    public Food(string globalId, string name, int categoryId)
+    public Food(string globalId, string name, int categoryId, string baseUoMCode)
     {
         Name = name;
         CategoryId = categoryId;
+        BaseUoM = baseUoMCode;
         IsGlobal = true;
         GlobalId = globalId;
     }
 
-    public Food(int householdId, string name, int categoryId, int createdBy)
+    public Food(int householdId, string name, int categoryId, string baseUoMCode, int createdBy)
     {
         Name = name;
         CategoryId = categoryId;
+        BaseUoM = baseUoMCode;
         IsGlobal = false;
         HouseholdId = householdId;
         CreatedBy = createdBy;
     }
 
-    public Food(int householdId, int modifiedGlobalFoodId, string name, int categoryId, int createdBy)
+    public Food(int householdId, int modifiedGlobalFoodId, string name, int categoryId, string baseUoMCode,
+        int createdBy)
     {
         Name = name;
         CategoryId = categoryId;
+        BaseUoM = baseUoMCode;
         IsGlobal = false;
         HouseholdId = householdId;
         ModifiedGlobalFoodId = modifiedGlobalFoodId;
@@ -45,6 +49,10 @@ public class Food : BaseDeletableEntity
     [Column("category_id")]
     [ForeignKey(nameof(Category))]
     public int CategoryId { get; set; }
+
+    [Column("base_uom")]
+    [ForeignKey(nameof(BaseUoMInstance))]
+    public string BaseUoM { get; set; }
 
     [Column("is_global")] public bool IsGlobal { get; private set; }
 
@@ -63,6 +71,8 @@ public class Food : BaseDeletableEntity
     public int? CreatedBy { get; private set; }
 
     public FoodCategory Category { get; set; }
+
+    public UoM BaseUoMInstance { get; set; }
 
     public Household? Household { get; private set; }
 

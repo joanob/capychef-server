@@ -3,27 +3,75 @@
     {
       "globalId": "TOMATE",
       "name": "Tomate",
-      "category": 2 
+      "category": 2,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [
+        {
+          "uom": "UN"
+        },
+        {
+          "uom": "KG"
+        },
+        {
+          "uom": "G"
+        }
+      ]
     },
     {
       "globalId": "LECHE",
       "name": "Leche",
-      "category": 8
+      "category": 8,
+      "baseUoM": "L",
+      "unitsOfMeasure": [
+        {
+          "uom": "L"
+        }
+      ]
     },
     {
       "globalId": "SANDIA",
       "name": "Sandia",
-      "category": 1
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [
+        {
+          "uom": "UN"
+        }
+      ]
     },
     {
       "globalId": "PECHUGA",
       "name": "Pechuga de pollo",
-      "category": 4
+      "category": 4,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [
+        {
+          "uom": "UN"
+        },
+        {
+          "uom": "KG"
+        },
+        {
+          "uom": "G"
+        }
+      ]
     },
     {
       "globalId": "LOMO_CERDO",
       "name": "Lomo de cerdo",
-      "category": 5
+      "category": 5,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [
+        {
+          "uom": "UN"
+        },
+        {
+          "uom": "KG"
+        },
+        {
+          "uom": "G"
+        }
+      ]
     }
   ]
 }

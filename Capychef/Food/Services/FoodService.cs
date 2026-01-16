@@ -13,6 +13,7 @@ public class FoodService(
     CapychefDbContext dbContext,
     IFoodRepository foodRepository,
     IFoodCategoryRepository foodCategoryRepository,
+    IFoodUoMRepository foodUoMRepository,
     IFoodModificationHistoryRepository foodModificationHistoryRepository)
     : IFoodService
 {
@@ -92,7 +93,7 @@ public class FoodService(
         if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
             return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
 
-        var food = new Domain.Entities.Food(userDetails.HouseholdId.Value, cmd.Name, cmd.CategoryId,
+        var food = new Domain.Entities.Food(userDetails.HouseholdId.Value, cmd.Name, cmd.CategoryId, cmd.BaseUoM,
             userDetails.UserId);
 
         await foodRepository.AddAsync(food);
@@ -102,6 +103,11 @@ public class FoodService(
         return new Result<FoodDTO>(new FoodDTO(food));
     }
 
+    /**
+     * Create or update global food
+     * 
+     * For compatibility reasons, global food cannot be deleted
+     */
     public async Task LoadGlobalFood(GlobalFoodFileCmd fileCmd)
     {
         var globalFood = await foodRepository.GetTrackedAllGlobalFood();
@@ -113,16 +119,27 @@ public class FoodService(
             {
                 modifiedGlobalFood.Name = food.Name;
                 modifiedGlobalFood.CategoryId = food.Category;
+                modifiedGlobalFood.BaseUoM = food.BaseUoM;
+
+                var globalFoodUoM = await foodUoMRepository.GetTrackedAllUoMByFoodId(modifiedGlobalFood.Id);
+
+                foreach (var uom in food.UnitsOfMeasure)
+                {
+                    var modifiedGlobalFoodUoM = globalFoodUoM.FirstOrDefault(x => x.UoM == uom.UoM);
+                    if (modifiedGlobalFoodUoM == null)
+                        await foodUoMRepository.AddAsync(new FoodUoM(modifiedGlobalFood.Id, uom.UoM, null, null, null));
+                }
             }
             else
             {
-                var newGlobalFood = new Domain.Entities.Food(food.GlobalId, food.Name, food.Category);
+                var newGlobalFood = new Domain.Entities.Food(food.GlobalId, food.Name, food.Category, food.BaseUoM);
 
-                foodRepository.AddAsync(newGlobalFood);
+                await foodRepository.AddAsync(newGlobalFood);
+
+                foreach (var uom in food.UnitsOfMeasure)
+                    await foodUoMRepository.AddAsync(new FoodUoM(newGlobalFood, uom.UoM, null, null, null));
             }
         }
-
-        // TODO: handle deletion
 
         await dbContext.SaveChangesAsync();
     }

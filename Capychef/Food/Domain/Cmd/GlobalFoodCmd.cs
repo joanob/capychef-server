@@ -7,4 +7,7 @@ public class GlobalFoodCmd
     public string Name { get; set; }
 
     public int Category { get; set; }
+    public string BaseUoM { get; set; }
+
+    public List<FoodUoMCmd> UnitsOfMeasure { get; set; }
 }

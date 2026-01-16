@@ -9,10 +9,18 @@ public class FoodUoM
     {
     }
 
-    public FoodUoM(int id, int foodId, string UoM, string? baseUoM, int? numerator, int? denominator)
+    public FoodUoM(int foodId, string UoM, string? baseUoM, int? numerator, int? denominator)
     {
-        Id = id;
         FoodId = foodId;
+        this.UoM = UoM;
+        BaseUoM = baseUoM;
+        Numerator = numerator;
+        Denominator = denominator;
+    }
+
+    public FoodUoM(Food food, string UoM, string? baseUoM, int? numerator, int? denominator)
+    {
+        Food = food;
         this.UoM = UoM;
         BaseUoM = baseUoM;
         Numerator = numerator;
