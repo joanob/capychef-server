@@ -16,7 +16,7 @@ CREATE TABLE uom
     numerator           INTEGER,
     denominator         INTEGER,
     FOREIGN KEY (dimension) REFERENCES uom_dimensions (code),
-    FOREIGN KEY (base_uom) REFERENCES uom (code),
+    FOREIGN KEY (base_uom) REFERENCES uom (code) DEFERRABLE INITIALLY DEFERRED, -- Avoid foreign key errors on mass load
     CHECK (
         (base_uom IS NULL AND numerator IS NULL AND denominator IS NULL) OR
         (base_uom IS NOT NULL AND numerator IS NOT NULL AND denominator IS NOT NULL)

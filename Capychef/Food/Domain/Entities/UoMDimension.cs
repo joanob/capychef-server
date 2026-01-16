@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Capychef.Food.Domain.Entities;
 
@@ -15,7 +16,7 @@ public class UoMDimension
         Name = name;
     }
 
-    [Column("code")] public string Code { get; private set; }
+    [Key] [Column("code")] public string Code { get; private set; }
 
     [Column("name")] public string Name { get; private set; }
 }

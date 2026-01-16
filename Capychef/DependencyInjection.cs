@@ -62,6 +62,9 @@ public static class DependencyInjection
 
         // FOOD 
 
+        services.AddScoped<IUoMDimensionRepository, UoMDimensionRepository>();
+        services.AddScoped<IUoMRepository, UoMRepository>();
+        services.AddScoped<IUoMService, UoMService>();
         services.AddScoped<IFoodCategoryRepository, FoodCategoryRepository>();
         services.AddScoped<IFoodCategoryService, FoodCategoryService>();
         services.AddScoped<IFoodRepository, FoodRepository>();
