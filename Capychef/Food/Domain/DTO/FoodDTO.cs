@@ -7,10 +7,16 @@ public class FoodDTO
         Id = food.Id;
         Name = food.Name;
         CategoryId = food.CategoryId;
+        BaseUoM = food.BaseUoM;
         IsGlobal = food.IsGlobal;
         HouseholdId = food.HouseholdId;
         ModifiedGlobalFoodId = food.ModifiedGlobalFoodId;
         CreatedBy = food.CreatedBy;
+
+        if (food.UoM != null)
+            UoM = food.UoM.Select(x => new FoodUoMDTO(x)).ToList();
+        else
+            UoM = new List<FoodUoMDTO>();
     }
 
     public int Id { get; }
@@ -19,6 +25,8 @@ public class FoodDTO
 
     public int CategoryId { get; }
 
+    public string BaseUoM { get; }
+
     public bool IsGlobal { get; }
 
     public int? HouseholdId { get; }
@@ -26,6 +34,8 @@ public class FoodDTO
     public int? ModifiedGlobalFoodId { get; }
 
     public int? CreatedBy { get; }
+
+    public ICollection<FoodUoMDTO> UoM { get; }
 
     public static List<FoodDTO> ToList(List<Entities.Food> food)
     {

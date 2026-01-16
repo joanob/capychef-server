@@ -40,4 +40,6 @@ public class FoodUoM
     [Column("denominator")] public int? Denominator { get; private set; }
 
     [ForeignKey(nameof(FoodId))] public Food Food { get; private set; }
+
+    [ForeignKey(nameof(UoM))] public UoM UoMInstance { get; private set; }
 }

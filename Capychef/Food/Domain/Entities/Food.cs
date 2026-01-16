@@ -91,7 +91,7 @@ public static class FoodExtensions
         return food.Where(x => !x.IsDeleted);
     }
 
-    public static IQueryable<Food> IncludeUom(this IQueryable<Food> food)
+    public static IQueryable<Food> IncludeUoM(this IQueryable<Food> food)
     {
         return food.Include(x => x.UoM);
     }
