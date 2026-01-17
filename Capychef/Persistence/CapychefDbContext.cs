@@ -17,6 +17,11 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
+    public DbSet<StorageSpace> StorageSpaces => Set<StorageSpace>();
+
+    public DbSet<StorageSpacesModificationHistory> StorageSpacesModificationsHistory =>
+        Set<StorageSpacesModificationHistory>();
+
     public DbSet<FoodCategory> FoodCategories => Set<FoodCategory>();
     public DbSet<UoMDimension> UoMDimensions => Set<UoMDimension>();
     public DbSet<UoM> UoM => Set<UoM>();

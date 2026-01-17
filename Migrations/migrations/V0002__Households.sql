@@ -87,3 +87,50 @@ CREATE RULE "household_join_requests_soft_delete" AS ON DELETE TO "household_joi
     WHERE id = old.id
       AND NOT is_deleted
     );
+
+-- STORAGE SPACES
+
+-- A = ambient
+-- R = refrigerated
+-- F = frozen
+CREATE TYPE storage_condition AS ENUM ('A', 'R', 'F');
+
+CREATE TABLE storage_spaces (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    storage_condition storage_condition NOT NULL,
+    household_id INTEGER NOT NULL,
+    created_at              TIMESTAMP NOT NULL,
+    created_by              INTEGER,
+    row_version             INTEGER   NOT NULL,
+    is_deleted              BOOLEAN   NOT NULL,
+    deleted_at              TIMESTAMP,
+    FOREIGN KEY (household_id) REFERENCES households (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+);
+
+CREATE INDEX idx_storage_spaces_household_id ON storage_spaces(household_id);
+
+CREATE RULE "storage_spaces_soft_deletion" AS ON DELETE TO "storage_spaces" DO INSTEAD (
+    UPDATE storage_spaces
+    SET is_deleted = true
+    WHERE id = old.id
+      AND NOT is_deleted
+    );
+
+CREATE TABLE storage_spaces_modifications_history
+(
+    id      SERIAL PRIMARY KEY,
+    storage_space_id INTEGER NOT NULL,
+    column_name TEXT NOT NULL,
+    previous_value TEXT,
+    new_value TEXT,
+    modified_at TIMESTAMP NOT NULL,
+    modified_by INTEGER NOT NULL,
+    FOREIGN KEY (storage_space_id) REFERENCES storage_spaces (id),
+    FOREIGN KEY (modified_by) REFERENCES users (id)
+);
+
+CREATE INDEX idx_storage_spaces_modifications_history_food_id ON storage_spaces_modifications_history(storage_space_id);
+
+CREATE RULE "storage_spaces_modifications_history_soft_deletion" AS ON DELETE TO "storage_spaces_modifications_history" DO INSTEAD NOTHING;
