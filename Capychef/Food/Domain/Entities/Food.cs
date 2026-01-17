@@ -82,6 +82,18 @@ public class Food : BaseDeletableEntity
 
     [InverseProperty(nameof(FoodUoM.Food))]
     public ICollection<FoodUoM> UoM { get; } = new List<FoodUoM>();
+
+    public void AddUoM(string uom)
+    {
+        UoM.Add(new FoodUoM(this, uom, null, null, null));
+    }
+
+    public void DeleteUom(string uom)
+    {
+        var uoM = UoM.FirstOrDefault(x => x.UoM == uom);
+
+        if (uoM != null) UoM.Remove(uoM);
+    }
 }
 
 public static class FoodExtensions

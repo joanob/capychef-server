@@ -112,6 +112,4 @@ CREATE TABLE food_uom
         (base_uom IS NULL AND numerator IS NULL AND denominator IS NULL) OR
         (base_uom IS NOT NULL AND numerator IS NOT NULL AND denominator IS NOT NULL)
         )
-);
-
-CREATE RULE "food_uom_soft_delete" AS ON DELETE TO "food_uom" DO INSTEAD NOTHING;                                                                    
+);                                                                 

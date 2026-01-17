@@ -3,6 +3,7 @@ using Capychef.Food.Domain.Cmd;
 using Capychef.Food.Domain.Entities;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Persistence;
+using Capychef.Users.Domain.Errors;
 using YourOwnBoss.Common.Entities;
 using YourOwnBoss.Common.Errors;
 using YourOwnBoss.Common.Result;
@@ -14,6 +15,7 @@ public class FoodService(
     IFoodRepository foodRepository,
     IFoodCategoryRepository foodCategoryRepository,
     IFoodUoMRepository foodUoMRepository,
+    IUoMRepository uoMRepository,
     IFoodModificationHistoryRepository foodModificationHistoryRepository)
     : IFoodService
 {
@@ -83,6 +85,53 @@ public class FoodService(
             food.CategoryId = cmd.CategoryId;
         }
 
+        if (food.BaseUoM != cmd.BaseUoM)
+        {
+            if (!await uoMRepository.CheckUoMExists(cmd.BaseUoM))
+                return new Result<FoodDTO>(new NotFoundError(EntityType.UoM, cmd.BaseUoM));
+
+            if (food.UoM.All(x => x.UoM != cmd.BaseUoM) && cmd.UoM.All(x => x.UoM != cmd.BaseUoM))
+                return new Result<FoodDTO>(new FoodBaseUoMNotFound(food.Id, cmd.BaseUoM));
+
+            await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
+                FoodModifiableColumn.BaseUoM,
+                food.BaseUoM,
+                cmd.BaseUoM, userDetails.UserId));
+
+            food.BaseUoM = cmd.BaseUoM;
+        }
+
+        foreach (var uom in cmd.UoM)
+        {
+            if (!await uoMRepository.CheckUoMExists(uom.UoM))
+                return new Result<FoodDTO>(new NotFoundError(EntityType.UoM, uom.UoM));
+
+            if (food.UoM.All(x => x.UoM != uom.UoM))
+            {
+                food.AddUoM(uom.UoM);
+
+                await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
+                    FoodModifiableColumn.UoM,
+                    "",
+                    uom.UoM, userDetails.UserId));
+            }
+        }
+
+        var deletedUoM = new List<string>();
+
+        foreach (var uom in food.UoM)
+            if (cmd.UoM.All(x => x.UoM != uom.UoM))
+            {
+                deletedUoM.Add(uom.UoM);
+
+                await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
+                    FoodModifiableColumn.UoM, uom.UoM,
+                    "",
+                    userDetails.UserId));
+            }
+
+        foreach (var uom in deletedUoM) food.DeleteUom(uom);
+
         await dbContext.SaveChangesAsync();
 
         return new Result<FoodDTO>(new FoodDTO(food));
@@ -93,10 +142,22 @@ public class FoodService(
         if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
             return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
 
+        if (cmd.UoM.All(x => x.UoM != cmd.BaseUoM))
+            return new Result<FoodDTO>(new FoodBaseUoMNotFound(0, cmd.BaseUoM));
+
         var food = new Domain.Entities.Food(userDetails.HouseholdId.Value, cmd.Name, cmd.CategoryId, cmd.BaseUoM,
             userDetails.UserId);
 
         await foodRepository.AddAsync(food);
+
+        if (cmd.UoM != null)
+            foreach (var uom in cmd.UoM)
+            {
+                if (!await uoMRepository.CheckUoMExists(uom.UoM))
+                    return new Result<FoodDTO>(new NotFoundError(EntityType.UoM, uom.UoM));
+
+                await foodUoMRepository.AddAsync(new FoodUoM(food, uom.UoM, null, null, null));
+            }
 
         await dbContext.SaveChangesAsync();
 
