@@ -90,15 +90,10 @@ CREATE RULE "household_join_requests_soft_delete" AS ON DELETE TO "household_joi
 
 -- STORAGE SPACES
 
--- A = ambient
--- R = refrigerated
--- F = frozen
-CREATE TYPE storage_condition AS ENUM ('A', 'R', 'F');
-
 CREATE TABLE storage_spaces (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    storage_condition storage_condition NOT NULL,
+    storage_condition CHAR(1) NOT NULL,
     household_id INTEGER NOT NULL,
     created_at              TIMESTAMP NOT NULL,
     created_by              INTEGER,
@@ -107,6 +102,7 @@ CREATE TABLE storage_spaces (
     deleted_at              TIMESTAMP,
     FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (created_by) REFERENCES users (id),
+    CHECK (storage_condition IN ('A', 'R', 'F')) -- A = ambient, R = refrigerated, F = frozen
 );
 
 CREATE INDEX idx_storage_spaces_household_id ON storage_spaces(household_id);

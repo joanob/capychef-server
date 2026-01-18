@@ -13,7 +13,8 @@ public class StorageSpacesModificationHistory
     {
     }
 
-    public StorageSpacesModificationHistory(int storageSpaceId, FoodModifiableColumn columnName, string previousValue,
+    public StorageSpacesModificationHistory(int storageSpaceId, StorageSpaceModifiableColumn columnName,
+        string previousValue,
         string newValue,
         int modifiedBy)
     {
@@ -29,7 +30,7 @@ public class StorageSpacesModificationHistory
 
     [Column("storage_space_id")] public int StorageSpaceId { get; private set; }
 
-    [Column("column_name")] public FoodModifiableColumn ColumnName { get; private set; }
+    [Column("column_name")] public StorageSpaceModifiableColumn ColumnName { get; private set; }
 
     [Column("previous_value")] public string PreviousValue { get; private set; }
 

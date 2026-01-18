@@ -9,6 +9,10 @@ public class StorageSpaceModifiableColumn
 
     private readonly string _value;
 
+    private StorageSpaceModifiableColumn()
+    {
+    }
+
     private StorageSpaceModifiableColumn(string value)
     {
         _value = value;

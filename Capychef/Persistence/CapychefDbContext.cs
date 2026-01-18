@@ -33,6 +33,9 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     {
         base.OnModelCreating(modelBuilder);
 
+        StorageSpace.OnModelCreating(modelBuilder);
+
+        StorageSpacesModificationHistory.OnModelCreating(modelBuilder);
         FoodModificationHistory.OnModelCreating(modelBuilder);
 
         // Save all dates as UTC

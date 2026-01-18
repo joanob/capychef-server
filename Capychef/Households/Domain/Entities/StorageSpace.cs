@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Users.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Households.Domain.Entities;
@@ -38,6 +39,13 @@ public class StorageSpace : BaseDeletableEntity
     [ForeignKey(nameof(HouseholdId))] public Household Household { get; private set; }
 
     [ForeignKey(nameof(CreatedBy))] public User User { get; private set; }
+
+    public static void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<StorageSpace>()
+            .Property(f => f.StorageCondition)
+            .HasConversion(new StorageConditionsConverter());
+    }
 }
 
 public static class StorageSpaceExtensions

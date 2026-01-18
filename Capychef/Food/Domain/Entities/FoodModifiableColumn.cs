@@ -11,6 +11,10 @@ public class FoodModifiableColumn
 
     private readonly string _value;
 
+    private FoodModifiableColumn()
+    {
+    }
+
     private FoodModifiableColumn(string value)
     {
         _value = value;

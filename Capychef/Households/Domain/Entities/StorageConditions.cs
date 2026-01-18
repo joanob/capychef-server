@@ -10,6 +10,10 @@ public class StorageConditions
 
     private readonly string _value;
 
+    private StorageConditions()
+    {
+    }
+
     private StorageConditions(string value)
     {
         _value = value;
