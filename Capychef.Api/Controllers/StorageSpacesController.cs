@@ -1,5 +1,6 @@
 ﻿using Capychef.Api.Authorization;
 using Capychef.Households.Domain.Cmd;
+using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using YourOwnBoss.Common.Auth;
@@ -15,7 +16,7 @@ public class StorageSpacesController(
 {
     [CheckOwnership]
     [HttpPost]
-    public async Task<ActionResult> CreateStorageSpace(CreateStorageSpaceCmd cmd)
+    public async Task<ActionResult<StorageSpaceDTO>> CreateStorageSpace(CreateStorageSpaceCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -24,5 +25,31 @@ public class StorageSpacesController(
         if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error());
 
         return Ok(storageSpace.get());
+    }
+
+    [CheckMembership]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<StorageSpaceDTO>> UpdateStorageSpace(int id, UpdateStorageSpaceCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var storageSpace = await storageSpaceService.UpdateStorageSpace(id, cmd, userDetails);
+
+        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error());
+
+        return Ok(storageSpace.get());
+    }
+
+    [CheckOwnership]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteStorageSpace(int id)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await storageSpaceService.DeleteStorageSpace(id, userDetails);
+
+        if (error != null) return GlobalErrorHandler.handleError(error);
+
+        return Ok();
     }
 }

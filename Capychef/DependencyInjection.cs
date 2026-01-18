@@ -57,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<IHouseholdInvitationRepository, HouseholdInvitationRepository>();
         services.AddScoped<IHouseholdJoinRequestRepository, HouseholdJoinRequestRepository>();
         services.AddScoped<IStorageSpaceRepository, StorageSpaceRepository>();
+        services.AddScoped<IStorageSpaceModificationHistoryRepository, StorageSpaceModificationHistoryRepository>();
         services.AddScoped<IHouseholdService, HouseholdService>();
         services.AddScoped<IHouseholdInvitationService, HouseholdInvitationService>();
         services.AddScoped<IHouseholdJoinRequestService, HouseholdJoinRequestService>();

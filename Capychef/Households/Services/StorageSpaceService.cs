@@ -1,4 +1,6 @@
 ﻿using Capychef.Common.Auth;
+using Capychef.Food.Domain.Entities;
+using Capychef.Food.Domain.Interfaces;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
@@ -10,7 +12,10 @@ using YourOwnBoss.Common.Result;
 
 namespace Capychef.Households.Services;
 
-public class StorageSpaceService(CapychefDbContext dbContext, IStorageSpaceRepository storageSpaceRepository)
+public class StorageSpaceService(
+    CapychefDbContext dbContext,
+    IStorageSpaceRepository storageSpaceRepository,
+    IStorageSpaceModificationHistoryRepository storageSpaceModificationHistoryRepository)
     : IStorageSpaceService
 {
     public async Task<Result<StorageSpaceDTO>> CreateStorageSpace(CreateStorageSpaceCmd cmd,
@@ -29,5 +34,53 @@ public class StorageSpaceService(CapychefDbContext dbContext, IStorageSpaceRepos
         await dbContext.SaveChangesAsync();
 
         return new Result<StorageSpaceDTO>(new StorageSpaceDTO(storageSpace));
+    }
+
+    public async Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, UpdateStorageSpaceCmd cmd,
+        AuthUserDetails userDetails)
+    {
+        var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.HouseholdId.Value);
+
+        if (storageSpace == null) return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageSpace, id));
+
+        if (storageSpace.Name != cmd.Name)
+        {
+            await storageSpaceModificationHistoryRepository.AddAsync(new StorageSpacesModificationHistory(
+                storageSpace.Id, StorageSpaceModifiableColumn.Name, storageSpace.Name, cmd.Name, userDetails.UserId));
+
+            storageSpace.Name = cmd.Name;
+        }
+
+        if (storageSpace.StorageCondition.ToString() != cmd.StorageConditions)
+        {
+            var storageCondition = StorageConditions.from(cmd.StorageConditions);
+
+            if (storageCondition == null)
+                return new Result<StorageSpaceDTO>(
+                    new NotFoundError(EntityType.StorageCondition, cmd.StorageConditions));
+
+            await storageSpaceModificationHistoryRepository.AddAsync(new StorageSpacesModificationHistory(
+                storageSpace.Id, StorageSpaceModifiableColumn.StorageCondition,
+                storageSpace.StorageCondition.ToString(), cmd.StorageConditions, userDetails.UserId));
+
+            storageSpace.StorageCondition = storageCondition;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<StorageSpaceDTO>(new StorageSpaceDTO(storageSpace));
+    }
+
+    public async Task<AppError> DeleteStorageSpace(int id, AuthUserDetails userDetails)
+    {
+        var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.HouseholdId.Value);
+
+        if (storageSpace == null) return new NotFoundError(EntityType.StorageSpace, id);
+
+        storageSpace.Delete();
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
     }
 }
