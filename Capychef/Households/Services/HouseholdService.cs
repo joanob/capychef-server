@@ -14,7 +14,8 @@ namespace Capychef.Households.Services;
 public class HouseholdService(
     CapychefDbContext dbContext,
     IHouseholdRepository householdRepository,
-    IHouseholdMemberRepository householdMemberRepository
+    IHouseholdMemberRepository householdMemberRepository,
+    IStorageSpaceRepository storageSpaceRepository
 ) : IHouseholdService
 {
     public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
@@ -22,6 +23,8 @@ public class HouseholdService(
         var household = new Household(userDetails.UserId, cmd.Name);
 
         await householdRepository.AddHouseholdAsync(household);
+
+        await createDefaultStorageSpaces(household, userDetails);
 
         var member = new HouseholdMember(household, userDetails.UserId);
 
@@ -89,5 +92,17 @@ public class HouseholdService(
             return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value));
 
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
+    }
+
+    private async Task createDefaultStorageSpaces(Household household, AuthUserDetails userDetails)
+    {
+        await storageSpaceRepository.AddAsync(new StorageSpace("Despensa", StorageConditions.AmbientTemperature,
+            household, userDetails.UserId));
+
+        await storageSpaceRepository.AddAsync(new StorageSpace("Nevera", StorageConditions.Refrigerated, household,
+            userDetails.UserId));
+
+        await storageSpaceRepository.AddAsync(new StorageSpace("Congelador", StorageConditions.Frozen, household,
+            userDetails.UserId));
     }
 }
