@@ -11,4 +11,5 @@ public interface IHouseholdRepository
     Task<Household?> GetHouseholdById(int householdId);
     Task<Household?> GetTrackedHouseholdById(int householdId);
     Task<Household?> GetTrackedHouseholdByPublicId(string publicId);
+    Task<Household?> GetHouseholdByIdIncludingStorageSpaces(int householdId);
 }

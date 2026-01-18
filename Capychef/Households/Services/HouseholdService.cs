@@ -87,7 +87,7 @@ public class HouseholdService(
 
     public async Task<Result<HouseholdDTO>> GetActiveHousehold(AuthUserDetails userDetails)
     {
-        var household = await householdRepository.GetHouseholdById(userDetails.HouseholdId.Value);
+        var household = await householdRepository.GetHouseholdByIdIncludingStorageSpaces(userDetails.HouseholdId.Value);
         if (household == null)
             return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value));
 
@@ -96,13 +96,19 @@ public class HouseholdService(
 
     private async Task createDefaultStorageSpaces(Household household, AuthUserDetails userDetails)
     {
-        await storageSpaceRepository.AddAsync(new StorageSpace("Despensa", StorageConditions.AmbientTemperature,
-            household, userDetails.UserId));
+        var storageSpace = new StorageSpace("Despensa", StorageConditions.AmbientTemperature,
+            household, userDetails.UserId);
+        household.AddStorageSpace(storageSpace);
+        await storageSpaceRepository.AddAsync(storageSpace);
 
-        await storageSpaceRepository.AddAsync(new StorageSpace("Nevera", StorageConditions.Refrigerated, household,
-            userDetails.UserId));
+        storageSpace = new StorageSpace("Nevera", StorageConditions.Refrigerated,
+            household, userDetails.UserId);
+        household.AddStorageSpace(storageSpace);
+        await storageSpaceRepository.AddAsync(storageSpace);
 
-        await storageSpaceRepository.AddAsync(new StorageSpace("Congelador", StorageConditions.Frozen, household,
-            userDetails.UserId));
+        storageSpace = new StorageSpace("Congelador", StorageConditions.Frozen,
+            household, userDetails.UserId);
+        household.AddStorageSpace(storageSpace);
+        await storageSpaceRepository.AddAsync(storageSpace);
     }
 }

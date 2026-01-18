@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Utils;
 using Capychef.Users.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Households.Domain.Entities;
@@ -34,7 +35,17 @@ public class Household : BaseDeletableEntity
 
     [Column("public_id")] public string PublicId { get; set; }
 
+    [InverseProperty(nameof(StorageSpace.Household))]
+    public ICollection<StorageSpace> StorageSpaces { get; private set; } = new List<StorageSpace>();
+
     public User User { get; private set; } = null!;
+
+    public void AddStorageSpace(StorageSpace storageSpace)
+    {
+        if (StorageSpaces == null) StorageSpaces = new List<StorageSpace>();
+
+        StorageSpaces.Add(storageSpace);
+    }
 }
 
 public static class HouseholdExtensions
@@ -42,5 +53,10 @@ public static class HouseholdExtensions
     public static IQueryable<Household> Active(this IQueryable<Household> households)
     {
         return households.Where(x => !x.IsDeleted);
+    }
+
+    public static IQueryable<Household> IncludeStorageSpaces(this IQueryable<Household> household)
+    {
+        return household.Include(x => x.StorageSpaces);
     }
 }

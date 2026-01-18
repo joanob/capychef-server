@@ -9,11 +9,15 @@ public class HouseholdDTO
         Id = household.Id;
         OwnerId = household.OwnerId;
         Name = household.Name;
+
+        if (household.StorageSpaces != null)
+            StorageSpaces = household.StorageSpaces.Select(x => new StorageSpaceDTO(x)).ToList();
     }
 
     public int Id { get; set; }
     public int OwnerId { get; set; }
     public string Name { get; set; }
+    public List<StorageSpaceDTO> StorageSpaces { get; set; }
 
     public static List<HouseholdDTO> ToDTOList(List<Household> households)
     {
