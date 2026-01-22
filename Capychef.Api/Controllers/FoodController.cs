@@ -11,7 +11,8 @@ namespace Capychef.Api.Controllers;
 [Route("food")]
 public class FoodController(
     IServiceScopeFactory serviceScopeFactory,
-    IFoodService foodService) : ControllerBase
+    IFoodService foodService,
+    ILoggerFactory loggerFactory) : ControllerBase
 {
     [CheckMembership]
     [HttpPost]
@@ -21,7 +22,9 @@ public class FoodController(
 
         var food = await foodService.CreateHouseholdFood(userDetails, cmd);
 
-        if (food.failed()) return GlobalErrorHandler.handleError(food.error());
+        var logger = loggerFactory.CreateLogger("FoodService.CreateHousehold");
+
+        if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
 
         return Ok(food.get());
     }
@@ -67,7 +70,9 @@ public class FoodController(
 
         var food = await foodService.UpdateHouseholdFood(id, cmd, userDetails);
 
-        if (food.failed()) return GlobalErrorHandler.handleError(food.error());
+        var logger = loggerFactory.CreateLogger("FoodService.UpdateHouseholdFood");
+
+        if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
 
         return Ok(food.get());
     }
@@ -80,7 +85,9 @@ public class FoodController(
 
         var error = await foodService.DeleteHouseholdFood(id, userDetails);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("FoodService.DeleteHouseholdFood");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }

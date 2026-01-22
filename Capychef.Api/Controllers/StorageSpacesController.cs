@@ -11,7 +11,8 @@ namespace Capychef.Api.Controllers;
 [ApiController]
 [Route("storage-spaces")]
 public class StorageSpacesController(
-    IStorageSpaceService storageSpaceService
+    IStorageSpaceService storageSpaceService,
+    ILoggerFactory loggerFactory
 ) : ControllerBase
 {
     [CheckOwnership]
@@ -22,7 +23,9 @@ public class StorageSpacesController(
 
         var storageSpace = await storageSpaceService.CreateStorageSpace(cmd, userDetails);
 
-        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error());
+        var logger = loggerFactory.CreateLogger("StorageSpaceService.CreateStorageSpace");
+
+        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error(), logger);
 
         return Ok(storageSpace.get());
     }
@@ -35,7 +38,9 @@ public class StorageSpacesController(
 
         var storageSpace = await storageSpaceService.UpdateStorageSpace(id, cmd, userDetails);
 
-        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error());
+        var logger = loggerFactory.CreateLogger("StorageSpaceService.UpdateStorageSpace");
+
+        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error(), logger);
 
         return Ok(storageSpace.get());
     }
@@ -48,7 +53,9 @@ public class StorageSpacesController(
 
         var error = await storageSpaceService.DeleteStorageSpace(id, userDetails);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("StorageSpaceService.DeleteStorageSpace");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }

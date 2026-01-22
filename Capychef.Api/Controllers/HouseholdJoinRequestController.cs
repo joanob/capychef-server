@@ -10,7 +10,9 @@ namespace Capychef.Api.Controllers;
 
 [ApiController]
 [Route("household-join-requests")]
-public class HouseholdJoinRequestController(IHouseholdJoinRequestService householdJoinRequestService) : ControllerBase
+public class HouseholdJoinRequestController(
+    IHouseholdJoinRequestService householdJoinRequestService,
+    ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult> CreateHouseholdJoinRequest(CreateHouseholdJoinRequestCmd cmd)
@@ -19,7 +21,9 @@ public class HouseholdJoinRequestController(IHouseholdJoinRequestService househo
 
         var error = await householdJoinRequestService.CreateJoinRequest(userDetails, cmd);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.CreateJoinRequest");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
@@ -52,7 +56,9 @@ public class HouseholdJoinRequestController(IHouseholdJoinRequestService househo
 
         var error = await householdJoinRequestService.AcceptJoinRequest(userDetails, joinRequestId);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.AcceptJoinRequest");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
@@ -64,7 +70,9 @@ public class HouseholdJoinRequestController(IHouseholdJoinRequestService househo
 
         var error = await householdJoinRequestService.RejectJoinRequest(userDetails, joinRequestId);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.RejectJoinRequest");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }

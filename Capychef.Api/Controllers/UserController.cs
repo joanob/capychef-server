@@ -7,7 +7,7 @@ namespace Capychef.Api.Controllers;
 
 [ApiController]
 [Route("users")]
-public class UserController(IUserService userService) : ControllerBase
+public class UserController(IUserService userService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpGet("username/check/{username}")]
     public async Task<ActionResult<UserDTO>> Signup(string username)
@@ -22,7 +22,9 @@ public class UserController(IUserService userService) : ControllerBase
     {
         var error = await userService.ValidateEmailAsync(token);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("UserService.ValidateEmailAsync");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }

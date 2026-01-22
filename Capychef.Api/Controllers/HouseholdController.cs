@@ -10,7 +10,7 @@ namespace Capychef.Api.Controllers;
 
 [ApiController]
 [Route("households")]
-public class HouseholdController(IHouseholdService householdService) : ControllerBase
+public class HouseholdController(IHouseholdService householdService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult<HouseholdDTO>> CreateHousehold(CreateHouseholdCmd cmd)
@@ -19,7 +19,9 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
 
         var household = await householdService.CreateHousehold(userDetails, cmd);
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
+        var logger = loggerFactory.CreateLogger("HouseholdService.CreateHousehold");
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
 
         userDetails.setHousehold(household.get().Id);
 
@@ -46,7 +48,9 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
 
         var household = await householdService.GetActiveHousehold(userDetails);
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
+        var logger = loggerFactory.CreateLogger("HouseholdService.GetActiveHousehold");
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
 
         return Ok(household.get());
     }
@@ -58,7 +62,9 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
 
         var household = await householdService.SelectHousehold(userDetails, householdId);
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
+        var logger = loggerFactory.CreateLogger("HouseholdService.SelectHousehold");
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
 
         userDetails.setHousehold(household.get().Id);
 
@@ -75,7 +81,9 @@ public class HouseholdController(IHouseholdService householdService) : Controlle
 
         var household = await householdService.UpdateHousehold(userDetails, householdId, cmd);
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error());
+        var logger = loggerFactory.CreateLogger("HouseholdService.UpdateHousehold");
+
+        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
 
         return Ok(household.get());
     }

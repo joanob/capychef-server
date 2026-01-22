@@ -5,7 +5,7 @@ namespace YourOwnBoss.Common.Result;
 
 public class GlobalErrorHandler
 {
-    public static ActionResult handleError(AppError error)
+    public static ActionResult handleError(AppError error, ILogger logger)
     {
         if (error is NotFoundError) return new StatusCodeResult(404);
 

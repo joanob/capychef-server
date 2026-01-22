@@ -9,14 +9,16 @@ namespace Capychef.Api.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthService authService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost("signup")]
     public async Task<ActionResult<UserDTO>> Signup(SignupCmd cmd)
     {
         var result = await authService.Signup(cmd);
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error());
+        var logger = loggerFactory.CreateLogger("AuthService.Signup");
+
+        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
 
         var (user, userDetails) = result.get();
 
@@ -30,7 +32,9 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var result = await authService.Login(cmd);
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error());
+        var logger = loggerFactory.CreateLogger("AuthService.Login");
+
+        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
 
         var (user, userDetails) = result.get();
 
@@ -44,7 +48,9 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var error = await authService.RecoverPassword(email);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("AuthService.RecoverPassword");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
@@ -54,7 +60,9 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var error = await authService.ResetPassword(cmd);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("AuthService.ResetPassword");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
@@ -72,7 +80,9 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         var result = await authService.GuestTransference(userDetails);
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error());
+        var logger = loggerFactory.CreateLogger("AuthService.GuestTransference");
+
+        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
 
         return Ok(result.get());
     }
@@ -82,7 +92,9 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var result = await authService.GuestLogin(cmd);
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error());
+        var logger = loggerFactory.CreateLogger("AuthService.GuestLogin");
+
+        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
 
         var (user, userDetails) = result.get();
 

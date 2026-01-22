@@ -10,7 +10,9 @@ namespace Capychef.Api.Controllers;
 
 [ApiController]
 [Route("household-invitations")]
-public class HouseholdInvitationController(IHouseholdInvitationService householdInvitationService) : ControllerBase
+public class HouseholdInvitationController(
+    IHouseholdInvitationService householdInvitationService,
+    ILoggerFactory loggerFactory) : ControllerBase
 {
     [CheckOwnership]
     [HttpPost]
@@ -20,7 +22,9 @@ public class HouseholdInvitationController(IHouseholdInvitationService household
 
         var error = await householdInvitationService.CreateInvitation(userDetails, cmd);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.CreateInvitation");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
@@ -53,7 +57,9 @@ public class HouseholdInvitationController(IHouseholdInvitationService household
 
         var error = await householdInvitationService.AcceptInvitation(userDetails, invitationId);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.AcceptInvitation");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
@@ -65,7 +71,9 @@ public class HouseholdInvitationController(IHouseholdInvitationService household
 
         var error = await householdInvitationService.RejectInvitation(userDetails, invitationId);
 
-        if (error != null) return GlobalErrorHandler.handleError(error);
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.RejectInvitation");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }
