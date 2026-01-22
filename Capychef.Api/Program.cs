@@ -1,6 +1,8 @@
 using System.Text.Json;
 using Capychef;
+using Capychef.Api.Logging;
 using DotNetEnv;
+using Serilog;
 using YourOwnBoss.Common.Auth;
 using YourOwnBoss.Common.Errors;
 
@@ -9,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 Env.Load("../.env");
 
 // Add services to the container.
+
+SerilogSetup.SetupSerilog(builder.Environment);
+
+builder.Host.UseSerilog();
 
 builder.Services.AddApplicationDI();
 
@@ -35,6 +41,8 @@ else
 {
     app.UseHttpsRedirection();
 }
+
+app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 

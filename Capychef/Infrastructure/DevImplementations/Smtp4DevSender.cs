@@ -1,10 +1,11 @@
 ﻿using Capychef.Infrastructure.Interfaces;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace Capychef.Infrastructure.DevImplementations;
 
-public class Smtp4DevSender : IEmailSender
+public class Smtp4DevSender(ILogger<Smtp4DevSender> logger) : IEmailSender
 {
     public async Task SendEmailVerificationEmailAsync(string email, string token)
     {
@@ -34,9 +35,16 @@ public class Smtp4DevSender : IEmailSender
         msg.Subject = subject;
         msg.Body = new TextPart("plain") { Text = body };
 
-        using var smtp = new SmtpClient();
-        await smtp.ConnectAsync("localhost", 2525, false);
-        await smtp.SendAsync(msg);
-        await smtp.DisconnectAsync(true);
+        try
+        {
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync("localhost", 2525, false);
+            await smtp.SendAsync(msg);
+            await smtp.DisconnectAsync(true);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error sending email");
+        }
     }
 }

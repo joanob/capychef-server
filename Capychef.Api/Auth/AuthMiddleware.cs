@@ -1,8 +1,9 @@
-﻿using YourOwnBoss.Game.Users.Domain.Interfaces;
+﻿using Capychef.Common.Auth;
+using YourOwnBoss.Game.Users.Domain.Interfaces;
 
 namespace YourOwnBoss.Common.Auth;
 
-public class AuthMiddleware(RequestDelegate next)
+public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger)
 {
     private readonly string[] publicRoutes =
     {
@@ -26,6 +27,7 @@ public class AuthMiddleware(RequestDelegate next)
         var userDetails = JWTService.getUserDetailsFromSessionJWT(context.Request);
         if (userDetails != null)
         {
+            LogAuthUserDetails(userDetails);
             AuthUserDetailsService.AddAuthUserDetailsToContext(context, userDetails);
             await next(context);
             return;
@@ -37,13 +39,25 @@ public class AuthMiddleware(RequestDelegate next)
             var userSesionService = context.RequestServices.GetRequiredService<IUserSessionService>();
             if (await userSesionService.ValidateAuthUserSession(userDetails))
             {
+                LogAuthUserDetails(userDetails);
                 JWTService.CreateAndSendJWT(userDetails, context.Response);
                 AuthUserDetailsService.AddAuthUserDetailsToContext(context, userDetails);
                 await next(context);
                 return;
             }
+
+            logger.LogWarning($"invalid session {userDetails.SessionId} for user {userDetails.UserId}");
         }
 
         context.Response.StatusCode = 401;
+    }
+
+    private void LogAuthUserDetails(AuthUserDetails userDetails)
+    {
+        if (userDetails.HouseholdId.HasValue)
+            logger.LogInformation(
+                $"user {userDetails.UserId} - session {userDetails.SessionId} - household {userDetails.HouseholdId.Value}");
+        else
+            logger.LogInformation($"user {userDetails.UserId} - session {userDetails.SessionId}");
     }
 }
