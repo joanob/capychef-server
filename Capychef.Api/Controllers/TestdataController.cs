@@ -7,7 +7,7 @@ namespace Capychef.Api.Controllers;
 public class TestdataController(IServiceScopeFactory serviceScopeFactory) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult> GenerateTestdata()
+    public ActionResult GenerateTestdata()
     {
         if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development") return NotFound();
 

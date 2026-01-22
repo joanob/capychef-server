@@ -6,7 +6,7 @@ using YourOwnBoss.Common.Result;
 
 namespace Capychef.Api.Authorization;
 
-public class CheckMembershipFilter(IHouseholdService householdService)
+public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFactory loggerFactory)
     : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(
@@ -23,9 +23,11 @@ public class CheckMembershipFilter(IHouseholdService householdService)
 
         var error = await householdService.CheckHouseholdMembership(userDetails);
 
+        var logger = loggerFactory.CreateLogger("MembershipFilter");
+
         if (error == null)
             await next();
         else
-            GlobalErrorHandler.handleError(error);
+            GlobalErrorHandler.handleError(error, logger);
     }
 }
