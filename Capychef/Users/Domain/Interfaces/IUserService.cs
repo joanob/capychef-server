@@ -1,4 +1,4 @@
-﻿using YourOwnBoss.Common.Errors;
+﻿using Capychef.Common.Errors;
 
 namespace Capychef.Users.Domain.Interfaces;
 

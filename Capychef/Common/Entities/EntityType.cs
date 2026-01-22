@@ -1,4 +1,4 @@
-﻿namespace YourOwnBoss.Common.Entities;
+﻿namespace Capychef.Common.Entities;
 
 public class EntityType
 {

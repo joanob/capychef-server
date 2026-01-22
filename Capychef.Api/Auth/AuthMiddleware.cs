@@ -1,7 +1,7 @@
 ﻿using Capychef.Common.Auth;
-using YourOwnBoss.Game.Users.Domain.Interfaces;
+using Capychef.Users.Domain.Interfaces;
 
-namespace YourOwnBoss.Common.Auth;
+namespace Capychef.Api.Auth;
 
 public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger)
 {

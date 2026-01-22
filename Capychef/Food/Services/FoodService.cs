@@ -1,12 +1,13 @@
 ﻿using Capychef.Common.Auth;
+using Capychef.Common.Entities;
+using Capychef.Common.Errors;
+using Capychef.Common.Result;
 using Capychef.Food.Domain.Cmd;
+using Capychef.Food.Domain.DTO;
 using Capychef.Food.Domain.Entities;
+using Capychef.Food.Domain.Errors;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Persistence;
-using Capychef.Users.Domain.Errors;
-using YourOwnBoss.Common.Entities;
-using YourOwnBoss.Common.Errors;
-using YourOwnBoss.Common.Result;
 
 namespace Capychef.Food.Services;
 

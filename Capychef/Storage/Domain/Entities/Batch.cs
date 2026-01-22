@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Common.Entities;
 using Capychef.Food.Domain.Entities;
 using Capychef.Households.Domain.Entities;
-using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Storage.Domain.Entities;
 

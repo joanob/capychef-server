@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace YourOwnBoss.Common.Entities;
+namespace Capychef.Common.Entities;
 
 public class BaseEntity
 {

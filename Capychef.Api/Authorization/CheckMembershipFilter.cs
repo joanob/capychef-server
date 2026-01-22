@@ -1,8 +1,8 @@
-﻿using Capychef.Households.Domain.Interfaces;
+﻿using Capychef.Api.Auth;
+using Capychef.Api.Errors;
+using Capychef.Households.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using YourOwnBoss.Common.Auth;
-using YourOwnBoss.Common.Result;
 
 namespace Capychef.Api.Authorization;
 

@@ -1,4 +1,4 @@
-﻿namespace YourOwnBoss.Common.Errors;
+﻿namespace Capychef.Api.Errors;
 
 public class ExceptionHandlerMiddleware(RequestDelegate next)
 {

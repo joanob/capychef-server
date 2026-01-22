@@ -1,6 +1,6 @@
 ﻿using Capychef.Common.Auth;
 
-namespace YourOwnBoss.Game.Users.Domain.Interfaces;
+namespace Capychef.Users.Domain.Interfaces;
 
 public interface IUserSessionService
 {

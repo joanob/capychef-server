@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Users.Domain.Cmd.Auth;
-using YourOwnBoss.Common.Entities;
+using Capychef.Common.Entities;
+using Capychef.Users.Domain.Cmd;
 
 namespace Capychef.Users.Domain.Entities;
 

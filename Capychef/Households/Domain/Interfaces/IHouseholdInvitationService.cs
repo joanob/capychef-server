@@ -1,7 +1,7 @@
 ﻿using Capychef.Common.Auth;
+using Capychef.Common.Errors;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
-using YourOwnBoss.Common.Errors;
 
 namespace Capychef.Households.Domain.Interfaces;
 

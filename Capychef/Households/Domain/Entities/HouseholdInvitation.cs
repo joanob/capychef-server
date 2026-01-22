@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Common.Entities;
 using Capychef.Users.Domain.Entities;
-using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Households.Domain.Entities;
 

@@ -1,10 +1,10 @@
 using System.Text.Json;
 using Capychef;
+using Capychef.Api.Auth;
+using Capychef.Api.Errors;
 using Capychef.Api.Logging;
 using DotNetEnv;
 using Serilog;
-using YourOwnBoss.Common.Auth;
-using YourOwnBoss.Common.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
 

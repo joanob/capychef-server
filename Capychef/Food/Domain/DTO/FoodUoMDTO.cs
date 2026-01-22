@@ -1,6 +1,6 @@
 ﻿using Capychef.Food.Domain.Entities;
 
-namespace Capychef.Food.Domain.Cmd;
+namespace Capychef.Food.Domain.DTO;
 
 public class FoodUoMDTO
 {

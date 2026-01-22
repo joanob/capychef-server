@@ -1,6 +1,6 @@
-﻿using YourOwnBoss.Common.Errors;
+﻿using Capychef.Common.Errors;
 
-namespace YourOwnBoss.Common.Result;
+namespace Capychef.Common.Result;
 
 public class Result<T>
 {

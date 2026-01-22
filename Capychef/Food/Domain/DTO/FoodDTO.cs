@@ -1,4 +1,4 @@
-﻿namespace Capychef.Food.Domain.Cmd;
+﻿namespace Capychef.Food.Domain.DTO;
 
 public class FoodDTO
 {

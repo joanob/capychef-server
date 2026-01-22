@@ -14,8 +14,6 @@ using Capychef.Users.Services;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using YourOwnBoss.Game.Users.Domain.Interfaces;
-using YourOwnBoss.Game.Users.Services;
 
 namespace Capychef;
 

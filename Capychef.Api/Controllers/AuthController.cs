@@ -1,9 +1,9 @@
-﻿using Capychef.Users.Domain.Cmd.Auth;
+﻿using Capychef.Api.Auth;
+using Capychef.Api.Errors;
+using Capychef.Users.Domain.Cmd;
 using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using YourOwnBoss.Common.Auth;
-using YourOwnBoss.Common.Result;
 
 namespace Capychef.Api.Controllers;
 

@@ -2,9 +2,8 @@
 using Capychef.Persistence;
 using Capychef.Users.Domain.Entities;
 using Capychef.Users.Domain.Interfaces;
-using YourOwnBoss.Game.Users.Domain.Interfaces;
 
-namespace YourOwnBoss.Game.Users.Services;
+namespace Capychef.Users.Services;
 
 public class UserSessionService(CapychefDbContext dbContext, IUserSessionRepository userSessionRepository)
     : IUserSessionService

@@ -1,6 +1,6 @@
 ﻿using Capychef.Common.Auth;
 
-namespace YourOwnBoss.Common.Auth;
+namespace Capychef.Api.Auth;
 
 public class AuthUserDetailsService
 {
