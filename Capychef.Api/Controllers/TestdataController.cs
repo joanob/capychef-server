@@ -17,7 +17,14 @@ public class TestdataController(IServiceScopeFactory serviceScopeFactory) : Cont
 
             var testdata = scope.ServiceProvider.GetRequiredService<Testdata.Testdata>();
 
-            await testdata.Generate();
+            try
+            {
+                await testdata.Generate();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         });
 
         return Ok();
