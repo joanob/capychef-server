@@ -28,4 +28,15 @@ public class StorageController(
 
         return Ok(batch.get());
     }
+
+    [CheckMembership]
+    [HttpGet]
+    public async Task<ActionResult<List<BatchDTO>>> GetAllBatches()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batches = await batchService.GetAllBatches(userDetails);
+
+        return Ok(batches);
+    }
 }

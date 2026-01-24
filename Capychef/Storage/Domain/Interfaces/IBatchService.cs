@@ -8,4 +8,5 @@ namespace Capychef.Storage.Domain.Interfaces;
 public interface IBatchService
 {
     Task<Result<BatchDTO>> CreateBatch(AuthUserDetails userDetails, CreateBatchCmd cmd);
+    Task<List<BatchDTO>> GetAllBatches(AuthUserDetails userDetails);
 }

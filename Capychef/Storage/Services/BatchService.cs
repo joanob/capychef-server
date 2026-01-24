@@ -41,4 +41,11 @@ public class BatchService(
 
         return new Result<BatchDTO>(new BatchDTO(batch));
     }
+
+    public async Task<List<BatchDTO>> GetAllBatches(AuthUserDetails userDetails)
+    {
+        var batches = await batchRepository.GetAllByHouseholdId(userDetails.HouseholdId.Value);
+
+        return BatchDTO.ToBatchDTOList(batches);
+    }
 }
