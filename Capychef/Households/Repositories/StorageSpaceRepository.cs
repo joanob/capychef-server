@@ -17,4 +17,10 @@ public class StorageSpaceRepository(CapychefDbContext dbContext) : IStorageSpace
         return await dbContext.StorageSpaces.Active()
             .FirstOrDefaultAsync(x => x.Id == id && x.HouseholdId == householdId);
     }
+
+    public async Task<bool> CheckStorageSpaceExistsById(int cmdStorageSpaceId, int householdId)
+    {
+        return await dbContext.StorageSpaces.Active()
+            .AnyAsync(x => x.Id == cmdStorageSpaceId && x.HouseholdId == householdId);
+    }
 }

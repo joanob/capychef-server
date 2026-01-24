@@ -8,6 +8,23 @@ namespace Capychef.Storage.Domain.Entities;
 [Table("batches")]
 public class Batch : BaseDeletableEntity
 {
+    public Batch()
+    {
+    }
+
+    public Batch(int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId)
+    {
+        HouseholdId = householdId;
+        FoodId = foodId;
+        StorageSpaceId = storageSpaceId;
+        Quantity = quantity;
+        FoodUoMId = foodUoMId;
+        StoredAt = DateTime.UtcNow;
+        IsConsumed = false;
+        IsDiscarded = false;
+    }
+
+
     [Column("household_id")] public int HouseholdId { get; set; }
 
     [Column("food_id")] public int FoodId { get; set; }

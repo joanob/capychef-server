@@ -16,6 +16,7 @@ public class EntityType
     private const string _uomType = "UOM";
 
     private const string _foodType = "FOOD";
+    private const string _foodUoMType = "FOOD_UOM";
     private const string _foodCategoryType = "FOOD_CATEGORY";
 
     private readonly string _value;
@@ -35,6 +36,7 @@ public class EntityType
     public static EntityType StorageCondition => new(_storageConditionType);
     public static EntityType UoM => new(_uomType);
     public static EntityType Food => new(_foodType);
+    public static EntityType FoodUoM => new(_foodUoMType);
     public static EntityType FoodCategory => new(_foodCategoryType);
 
     public static EntityType from(string value)
@@ -51,6 +53,7 @@ public class EntityType
             _storageConditionType => StorageCondition,
             _uomType => UoM,
             _foodType => Food,
+            _foodUoMType => FoodUoM,
             _foodCategoryType => FoodCategory,
             _ => null
         };

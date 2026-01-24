@@ -7,6 +7,9 @@ using Capychef.Households.Services;
 using Capychef.Infrastructure.DevImplementations;
 using Capychef.Infrastructure.Interfaces;
 using Capychef.Persistence;
+using Capychef.Storage;
+using Capychef.Storage.Domain.Interfaces;
+using Capychef.Storage.Services;
 using Capychef.Testdata;
 using Capychef.Users.Domain.Interfaces;
 using Capychef.Users.Repositories;
@@ -72,6 +75,10 @@ public static class DependencyInjection
         services.AddScoped<IFoodUoMRepository, FoodUoMRepository>();
         services.AddScoped<IFoodModificationHistoryRepository, FoodModificationHistoryRepository>();
         services.AddScoped<IFoodService, FoodService>();
+
+        // STORAGE
+        services.AddScoped<IBatchRepository, BatchRepository>();
+        services.AddScoped<IBatchService, BatchService>();
 
         // TESTDATA
 

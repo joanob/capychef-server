@@ -7,6 +7,8 @@ public class GlobalErrorHandler
 {
     public static ActionResult handleError(AppError error, ILogger logger)
     {
+        logger.LogError(error.ToString());
+
         if (error is NotFoundError) return new StatusCodeResult(404);
 
         switch (error.errorType)
