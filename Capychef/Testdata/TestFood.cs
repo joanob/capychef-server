@@ -1,4 +1,5 @@
 ﻿using Capychef.Common.Utils;
+using Capychef.Food.Domain.Entities;
 using Capychef.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +45,11 @@ public class TestFood(CapychefDbContext dbContext)
                 if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_FOOD_PERCENTAJE))
                     food.Delete();
 
+                var foodUoM = new FoodUoM(food, uom.Code, null, null, null);
+
                 await dbContext.AddAsync(food);
+
+                await dbContext.AddAsync(foodUoM);
             }
         }
 
