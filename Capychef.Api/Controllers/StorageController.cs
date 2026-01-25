@@ -69,4 +69,19 @@ public class StorageController(
 
         return Ok(batch.get());
     }
+
+    [CheckMembership]
+    [HttpPut("{id}/move")]
+    public async Task<ActionResult<BatchDTO>> MoveBatch(int id, MoveBatchCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batch = await batchService.MoveBatch(id, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("BatchService.MoveBatch");
+
+        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+
+        return Ok(batch.get());
+    }
 }

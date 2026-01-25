@@ -107,4 +107,40 @@ public class BatchService(
 
         return new Result<BatchDTO>(new BatchDTO(batch));
     }
+
+    public async Task<Result<List<BatchDTO>>> MoveBatch(int batchId, MoveBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<List<BatchDTO>>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (cmd.Quantity > batch.Quantity)
+            return new Result<List<BatchDTO>>(
+                new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+
+        if (!await storageSpaceRepository.CheckStorageSpaceExistsById(cmd.StorageSpaceId,
+                userDetails.HouseholdId.Value))
+            return new Result<List<BatchDTO>>(new NotFoundError(EntityType.StorageSpace, cmd.StorageSpaceId));
+
+        if (cmd.Quantity == batch.Quantity)
+        {
+            // Change batch storage space
+            batch.StorageSpaceId = cmd.StorageSpaceId;
+
+            await dbContext.SaveChangesAsync();
+
+            return new Result<List<BatchDTO>>(new List<BatchDTO> { new(batch) });
+        }
+
+        // Create new batch from original batch with new quantity and new storage space
+        var movedBatch = new Batch(batch, cmd.Quantity);
+        movedBatch.StorageSpaceId = cmd.StorageSpaceId;
+
+        await batchRepository.AddAsync(movedBatch);
+
+        batch.Quantity -= cmd.Quantity;
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<List<BatchDTO>>(new List<BatchDTO> { new(batch), new(movedBatch) });
+    }
 }
