@@ -14,6 +14,12 @@ public class BatchRepository(CapychefDbContext dbContext) : IBatchRepository
 
     public async Task<List<Batch>> GetAllByHouseholdId(int householdId)
     {
-        return await dbContext.Batches.Where(x => x.HouseholdId == householdId).ToListAsync();
+        return await dbContext.Batches.AsNoTracking().Where(x => x.HouseholdId == householdId).ToListAsync();
+    }
+
+    public async Task<Batch?> GetTrackedBatchById(int batchId, int householdId)
+    {
+        return await dbContext.Batches.Where(x => x.Id == batchId && x.HouseholdId == householdId)
+            .FirstOrDefaultAsync();
     }
 }

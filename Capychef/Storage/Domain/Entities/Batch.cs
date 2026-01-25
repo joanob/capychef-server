@@ -24,6 +24,19 @@ public class Batch : BaseDeletableEntity
         IsDiscarded = false;
     }
 
+    public Batch(Batch originalBatch, double quantity)
+    {
+        HouseholdId = originalBatch.HouseholdId;
+        FoodId = originalBatch.FoodId;
+        StorageSpaceId = originalBatch.StorageSpaceId;
+        Quantity = quantity;
+        FoodUoMId = originalBatch.FoodUoMId;
+        StoredAt = DateTime.UtcNow;
+        OriginalBatch = originalBatch;
+        IsConsumed = false;
+        IsDiscarded = false;
+    }
+
 
     [Column("household_id")] public int HouseholdId { get; set; }
 
@@ -56,4 +69,16 @@ public class Batch : BaseDeletableEntity
     [ForeignKey(nameof(FoodUoMId))] public FoodUoM FoodUoM { get; set; }
 
     [ForeignKey(nameof(OriginalBatchId))] public Batch? OriginalBatch { get; set; }
+
+    public void Consume()
+    {
+        IsConsumed = true;
+        ConsumedAt = DateTime.UtcNow;
+    }
+
+    public void Discard()
+    {
+        IsDiscarded = true;
+        DiscardedAt = DateTime.UtcNow;
+    }
 }

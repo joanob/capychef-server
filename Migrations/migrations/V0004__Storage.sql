@@ -26,9 +26,18 @@ CREATE TABLE batches
     FOREIGN KEY (original_batch_id) REFERENCES batches(id),
     FOREIGN KEY (created_by) REFERENCES users (id),
     CHECK (
-        (NOT (is_consumed = TRUE AND is_discarded = TRUE)) AND
-        (NOT (is_consumed = TRUE AND consumed_at IS NULL)) AND
-        (NOT (is_discarded = TRUE AND discarded_at IS NULL))
+        -- Batch cannot be consumed and discarded
+        NOT (is_consumed AND is_discarded)
+        -- Batch consumed <-> batch consumed date
+        AND (
+            (is_consumed AND consumed_at IS NOT NULL) OR
+            (NOT is_consumed AND consumed_at IS NULL)
+            )
+            -- Batch discarded <-> batch discarded date
+        AND (
+            (is_discarded AND discarded_at IS NOT NULL) OR
+            (NOT is_discarded AND discarded_at IS NULL)
+            )
         )
 );
 

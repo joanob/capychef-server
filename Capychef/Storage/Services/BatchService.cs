@@ -2,6 +2,7 @@
 using Capychef.Common.Entities;
 using Capychef.Common.Errors;
 using Capychef.Common.Result;
+using Capychef.Food.Domain.Errors;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
@@ -47,5 +48,63 @@ public class BatchService(
         var batches = await batchRepository.GetAllByHouseholdId(userDetails.HouseholdId.Value);
 
         return BatchDTO.ToBatchDTOList(batches);
+    }
+
+    public async Task<Result<BatchDTO>> ConsumeBatch(int batchId, ConsumeBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<BatchDTO>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (cmd.Quantity > batch.Quantity)
+            return new Result<BatchDTO>(new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+
+        if (cmd.Quantity == batch.Quantity)
+        {
+            // Set batch as fully consumed
+            batch.Consume();
+        }
+        else
+        {
+            // Create new batch from original batch with new quantity and set new batch as consumed
+            var consumedBatch = new Batch(batch, cmd.Quantity);
+            consumedBatch.Consume();
+
+            await batchRepository.AddAsync(consumedBatch);
+
+            batch.Quantity -= cmd.Quantity;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDTO>(new BatchDTO(batch));
+    }
+
+    public async Task<Result<BatchDTO>> DiscardBatch(int batchId, DiscardBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<BatchDTO>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (cmd.Quantity > batch.Quantity)
+            return new Result<BatchDTO>(new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+
+        if (cmd.Quantity == batch.Quantity)
+        {
+            // Set batch as fully discarded
+            batch.Discard();
+        }
+        else
+        {
+            // Create new batch from original batch with new quantity and set new batch as discarded
+            var consumedBatch = new Batch(batch, cmd.Quantity);
+            consumedBatch.Discard();
+
+            await batchRepository.AddAsync(consumedBatch);
+
+            batch.Quantity -= cmd.Quantity;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDTO>(new BatchDTO(batch));
     }
 }

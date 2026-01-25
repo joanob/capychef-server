@@ -39,4 +39,34 @@ public class StorageController(
 
         return Ok(batches);
     }
+
+    [CheckMembership]
+    [HttpPut("{id}/consume")]
+    public async Task<ActionResult<BatchDTO>> ConsumeBatch(int id, ConsumeBatchCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batch = await batchService.ConsumeBatch(id, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("BatchService.ConsumeBatch");
+
+        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+
+        return Ok(batch.get());
+    }
+
+    [CheckMembership]
+    [HttpPut("{id}/discard")]
+    public async Task<ActionResult<BatchDTO>> DiscardBatch(int id, DiscardBatchCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batch = await batchService.DiscardBatch(id, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("BatchService.DiscardBatch");
+
+        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+
+        return Ok(batch.get());
+    }
 }

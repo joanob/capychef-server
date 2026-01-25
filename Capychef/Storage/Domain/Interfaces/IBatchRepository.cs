@@ -6,4 +6,5 @@ public interface IBatchRepository
 {
     Task AddAsync(Batch batch);
     Task<List<Batch>> GetAllByHouseholdId(int householdId);
+    Task<Batch?> GetTrackedBatchById(int batchId, int householdId);
 }

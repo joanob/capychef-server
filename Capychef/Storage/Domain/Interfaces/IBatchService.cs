@@ -9,4 +9,6 @@ public interface IBatchService
 {
     Task<Result<BatchDTO>> CreateBatch(AuthUserDetails userDetails, CreateBatchCmd cmd);
     Task<List<BatchDTO>> GetAllBatches(AuthUserDetails userDetails);
+    Task<Result<BatchDTO>> ConsumeBatch(int batchId, ConsumeBatchCmd cmd, AuthUserDetails userDetails);
+    Task<Result<BatchDTO>> DiscardBatch(int batchId, DiscardBatchCmd cmd, AuthUserDetails userDetails);
 }
