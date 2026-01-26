@@ -13,31 +13,39 @@ public class Food : BaseDeletableEntity
     {
     }
 
-    public Food(string globalId, string name, int categoryId, string baseUoMCode)
+    public Food(string globalId, string name, int categoryId, string baseUoMCode, int? daysUntilExpiration,
+        int? daysUntilBestBefore)
     {
         Name = name;
         CategoryId = categoryId;
         BaseUoM = baseUoMCode;
+        DaysUntilExpiration = daysUntilExpiration;
+        DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = true;
         GlobalId = globalId;
     }
 
-    public Food(int householdId, string name, int categoryId, string baseUoMCode, int createdBy)
+    public Food(int householdId, string name, int categoryId, string baseUoMCode, int createdBy,
+        int? daysUntilExpiration, int? daysUntilBestBefore)
     {
         Name = name;
         CategoryId = categoryId;
         BaseUoM = baseUoMCode;
+        DaysUntilExpiration = daysUntilExpiration;
+        DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = false;
         HouseholdId = householdId;
         CreatedBy = createdBy;
     }
 
     public Food(int householdId, int modifiedGlobalFoodId, string name, int categoryId, string baseUoMCode,
-        int createdBy)
+        int createdBy, int? daysUntilExpiration, int? daysUntilBestBefore)
     {
         Name = name;
         CategoryId = categoryId;
         BaseUoM = baseUoMCode;
+        DaysUntilExpiration = daysUntilExpiration;
+        DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = false;
         HouseholdId = householdId;
         ModifiedGlobalFoodId = modifiedGlobalFoodId;
@@ -53,6 +61,10 @@ public class Food : BaseDeletableEntity
     [Column("base_uom")]
     [ForeignKey(nameof(BaseUoMInstance))]
     public string BaseUoM { get; set; }
+
+    [Column("days_until_expiration")] public int? DaysUntilExpiration { get; set; }
+
+    [Column("days_until_best_before")] public int? DaysUntilBestBefore { get; set; }
 
     [Column("is_global")] public bool IsGlobal { get; private set; }
 

@@ -45,6 +45,8 @@ CREATE TABLE food
     name                    TEXT      NOT NULL,
     category_id             INTEGER   NOT NULL,
     base_uom VARCHAR(4) NOT NULL,
+    days_until_expiration INTEGER,
+    days_until_best_before INTEGER,
     is_global               BOOLEAN   NOT NULL,
     global_id               VARCHAR,
     household_id            INTEGER,

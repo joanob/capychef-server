@@ -8,6 +8,8 @@ public class GlobalFoodCmd
 
     public int Category { get; set; }
     public string BaseUoM { get; set; }
+    public int? DaysUntilExpiration { get; set; }
+    public int? DaysUntilBestBefore { get; set; }
 
     public List<FoodUoMCmd> UnitsOfMeasure { get; set; }
 }

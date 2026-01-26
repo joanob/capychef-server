@@ -8,6 +8,8 @@ public class FoodDTO
         Name = food.Name;
         CategoryId = food.CategoryId;
         BaseUoM = food.BaseUoM;
+        DaysUntilExpiration = food.DaysUntilExpiration;
+        DaysUntilBestBefore = food.DaysUntilBestBefore;
         IsGlobal = food.IsGlobal;
         HouseholdId = food.HouseholdId;
         ModifiedGlobalFoodId = food.ModifiedGlobalFoodId;
@@ -26,6 +28,10 @@ public class FoodDTO
     public int CategoryId { get; }
 
     public string BaseUoM { get; }
+
+    public int? DaysUntilExpiration { get; set; }
+
+    public int? DaysUntilBestBefore { get; set; }
 
     public bool IsGlobal { get; }
 

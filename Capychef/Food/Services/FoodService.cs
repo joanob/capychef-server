@@ -147,7 +147,7 @@ public class FoodService(
             return new Result<FoodDTO>(new FoodBaseUoMNotFound(0, cmd.BaseUoM));
 
         var food = new Domain.Entities.Food(userDetails.HouseholdId.Value, cmd.Name, cmd.CategoryId, cmd.BaseUoM,
-            userDetails.UserId);
+            userDetails.UserId, cmd.DaysUntilExpiration, cmd.DaysUntilBestBefore);
 
         await foodRepository.AddAsync(food);
 
@@ -194,7 +194,8 @@ public class FoodService(
             }
             else
             {
-                var newGlobalFood = new Domain.Entities.Food(food.GlobalId, food.Name, food.Category, food.BaseUoM);
+                var newGlobalFood = new Domain.Entities.Food(food.GlobalId, food.Name, food.Category, food.BaseUoM,
+                    food.DaysUntilExpiration, food.DaysUntilBestBefore);
 
                 await foodRepository.AddAsync(newGlobalFood);
 
