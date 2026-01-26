@@ -9,6 +9,8 @@ CREATE TABLE batches
     quantity REAL NOT NULL,
     food_uom_id INTEGER NOT NULL,
     stored_at TIMESTAMP NOT NULL,
+    best_before_date DATE,
+    expiration_date DATE,
     original_batch_id INTEGER,
     is_consumed BOOLEAN NOT NULL,
     consumed_at TIMESTAMP,

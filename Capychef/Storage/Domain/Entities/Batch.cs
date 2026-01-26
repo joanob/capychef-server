@@ -12,7 +12,8 @@ public class Batch : BaseDeletableEntity
     {
     }
 
-    public Batch(int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId)
+    public Batch(int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId,
+        DateTime? bestBeforeDate, DateTime? expirationDate)
     {
         HouseholdId = householdId;
         FoodId = foodId;
@@ -20,6 +21,8 @@ public class Batch : BaseDeletableEntity
         Quantity = quantity;
         FoodUoMId = foodUoMId;
         StoredAt = DateTime.UtcNow;
+        BestBeforeDate = bestBeforeDate;
+        ExpirationDate = expirationDate;
         IsConsumed = false;
         IsDiscarded = false;
     }
@@ -32,11 +35,12 @@ public class Batch : BaseDeletableEntity
         Quantity = quantity;
         FoodUoMId = originalBatch.FoodUoMId;
         StoredAt = DateTime.UtcNow;
+        BestBeforeDate = originalBatch.BestBeforeDate;
+        ExpirationDate = originalBatch.ExpirationDate;
         OriginalBatch = originalBatch;
         IsConsumed = false;
         IsDiscarded = false;
     }
-
 
     [Column("household_id")] public int HouseholdId { get; set; }
 
@@ -49,6 +53,10 @@ public class Batch : BaseDeletableEntity
     [Column("food_uom_id")] public int FoodUoMId { get; set; }
 
     [Column("stored_at")] public DateTime StoredAt { get; set; }
+
+    [Column("best_before_date")] public DateTime? BestBeforeDate { get; set; }
+
+    [Column("expiration_date")] public DateTime? ExpirationDate { get; set; }
 
     [Column("original_batch_id")] public int? OriginalBatchId { get; set; }
 

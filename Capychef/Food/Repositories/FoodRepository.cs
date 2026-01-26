@@ -28,7 +28,7 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
             .ToListAsync();
     }
 
-    public async Task<Domain.Entities.Food> GetTrackedHouseholdFoodById(int foodId, int householdId)
+    public async Task<Domain.Entities.Food?> GetTrackedHouseholdFoodById(int foodId, int householdId)
     {
         return await dbContext.Food.Active().IncludeUoM()
             .FirstOrDefaultAsync(x => x.Id == foodId && x.HouseholdId == householdId);

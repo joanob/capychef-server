@@ -22,8 +22,8 @@ public class BatchService(
 {
     public async Task<Result<BatchDTO>> CreateBatch(AuthUserDetails userDetails, CreateBatchCmd cmd)
     {
-        if (!await foodRepository.CheckFoodExistsById(cmd.FoodId, userDetails.HouseholdId.Value))
-            return new Result<BatchDTO>(new NotFoundError(EntityType.Food, cmd.FoodId));
+        var food = await foodRepository.GetTrackedHouseholdFoodById(cmd.FoodId, userDetails.HouseholdId.Value);
+        if (food == null) return new Result<BatchDTO>(new NotFoundError(EntityType.Food, cmd.FoodId));
 
         if (!await storageSpaceRepository.CheckStorageSpaceExistsById(cmd.StorageSpaceId,
                 userDetails.HouseholdId.Value))
@@ -33,8 +33,22 @@ public class BatchService(
             return new Result<BatchDTO>(new NotFoundError(EntityType.FoodUoM,
                 $"{cmd.FoodUoMId} for food {cmd.FoodId}"));
 
+        DateTime? bestBeforeDate = null;
+
+        if (cmd.BestBeforeDate.HasValue)
+            bestBeforeDate = cmd.BestBeforeDate.Value;
+        else if (food.DaysUntilBestBefore.HasValue)
+            bestBeforeDate = DateTime.UtcNow.AddDays(food.DaysUntilBestBefore.Value);
+
+        DateTime? expirationDate = null;
+
+        if (cmd.ExpirationDate.HasValue)
+            expirationDate = cmd.ExpirationDate.Value;
+        else if (food.DaysUntilExpiration.HasValue)
+            expirationDate = DateTime.UtcNow.AddDays(food.DaysUntilExpiration.Value);
+
         var batch = new Batch(userDetails.HouseholdId.Value, cmd.FoodId, cmd.StorageSpaceId, cmd.Quantity,
-            cmd.FoodUoMId);
+            cmd.FoodUoMId, bestBeforeDate, expirationDate);
 
         await batchRepository.AddAsync(batch);
 
