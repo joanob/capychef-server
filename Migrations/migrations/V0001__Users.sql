@@ -25,6 +25,11 @@ CREATE RULE "users_soft_deletion" AS ON DELETE TO "users" DO INSTEAD (
       AND NOT is_deleted
     );
 
+CREATE VIEW active_users AS
+    SELECT * 
+    FROM users 
+    WHERE is_deleted = FALSE 
+      AND is_blocked = FALSE;
 
 CREATE TABLE users_passwords
 (

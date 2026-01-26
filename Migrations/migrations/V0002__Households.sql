@@ -19,7 +19,11 @@ CREATE RULE "households_soft_deletion" AS ON DELETE TO "households" DO INSTEAD (
     WHERE id = old.id
       AND NOT is_deleted
     );
-          
+
+CREATE VIEW active_households AS
+SELECT *
+FROM households
+WHERE is_deleted = FALSE;
                                                     
 CREATE TABLE household_members (
   id SERIAL PRIMARY KEY,
@@ -113,6 +117,11 @@ CREATE RULE "storage_spaces_soft_deletion" AS ON DELETE TO "storage_spaces" DO I
     WHERE id = old.id
       AND NOT is_deleted
     );
+
+CREATE VIEW active_storage_spaces AS
+SELECT *
+FROM storage_spaces
+WHERE is_deleted = FALSE;
 
 CREATE TABLE storage_spaces_modifications_history
 (

@@ -49,4 +49,9 @@ CREATE RULE "batches_soft_deletion" AS ON DELETE TO "batches" DO INSTEAD (
     WHERE id = old.id
       AND NOT is_deleted
     );
-                                            
+
+CREATE VIEW available_batches AS
+SELECT *
+FROM batches
+WHERE is_consumed = FALSE
+AND is_discarded = FALSE;

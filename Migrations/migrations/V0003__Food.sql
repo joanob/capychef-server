@@ -75,6 +75,11 @@ CREATE RULE "food_soft_deletion" AS ON DELETE TO "food" DO INSTEAD (
     WHERE id = old.id
       AND NOT is_deleted
     );
+
+CREATE VIEW active_food AS
+SELECT *
+FROM food
+WHERE is_deleted = FALSE;
             
 -- FOOD MODIFICATIONS HISTORY
                                   
