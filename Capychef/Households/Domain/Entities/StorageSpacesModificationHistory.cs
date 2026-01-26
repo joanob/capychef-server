@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Households.Domain.Entities;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using YourOwnBoss.Common.Entities;
 
-namespace Capychef.Food.Domain.Entities;
+namespace Capychef.Households.Domain.Entities;
 
 [Table("storage_spaces_modifications_history")]
 public class StorageSpacesModificationHistory

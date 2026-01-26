@@ -3,7 +3,6 @@ using Capychef.Households.Domain.Entities;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Testdata;
 

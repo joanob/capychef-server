@@ -1,8 +1,8 @@
 ﻿using Capychef.Common.Auth;
-using Capychef.Users.Domain.Cmd.Auth;
+using Capychef.Common.Errors;
+using Capychef.Common.Result;
+using Capychef.Users.Domain.Cmd;
 using Capychef.Users.Domain.DTO;
-using YourOwnBoss.Common.Errors;
-using YourOwnBoss.Common.Result;
 
 namespace Capychef.Users.Domain.Interfaces;
 

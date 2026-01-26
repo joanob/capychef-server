@@ -4,7 +4,7 @@ using System.Text;
 using Capychef.Common.Auth;
 using Microsoft.IdentityModel.Tokens;
 
-namespace YourOwnBoss.Common.Auth;
+namespace Capychef.Api.Auth;
 
 public class JWTService
 {

@@ -6,4 +6,5 @@ public interface IStorageSpaceRepository
 {
     public Task AddAsync(StorageSpace storageSpace);
     Task<StorageSpace?> GetTrackedStorageSpaceById(int id, int householdId);
+    Task<bool> CheckStorageSpaceExistsById(int cmdStorageSpaceId, int householdId);
 }

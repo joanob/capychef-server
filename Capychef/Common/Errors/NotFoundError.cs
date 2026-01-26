@@ -1,6 +1,6 @@
-﻿using YourOwnBoss.Common.Entities;
+﻿using Capychef.Common.Entities;
 
-namespace YourOwnBoss.Common.Errors;
+namespace Capychef.Common.Errors;
 
 public class NotFoundError : AppError
 {

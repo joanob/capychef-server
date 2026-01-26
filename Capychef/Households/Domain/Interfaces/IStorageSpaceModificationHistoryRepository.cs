@@ -1,6 +1,6 @@
-﻿using Capychef.Food.Domain.Entities;
+﻿using Capychef.Households.Domain.Entities;
 
-namespace Capychef.Food.Domain.Interfaces;
+namespace Capychef.Households.Domain.Interfaces;
 
 public interface IStorageSpaceModificationHistoryRepository
 {

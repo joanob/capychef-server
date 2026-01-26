@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using YourOwnBoss.Common.Errors;
+﻿using Capychef.Common.Errors;
+using Microsoft.AspNetCore.Mvc;
 
-namespace YourOwnBoss.Common.Result;
+namespace Capychef.Api.Errors;
 
 public class GlobalErrorHandler
 {
     public static ActionResult handleError(AppError error, ILogger logger)
     {
+        logger.LogError(error.ToString());
+
         if (error is NotFoundError) return new StatusCodeResult(404);
 
         switch (error.errorType)

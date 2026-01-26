@@ -1,6 +1,6 @@
-﻿using YourOwnBoss.Common.Errors;
+﻿using Capychef.Common.Errors;
 
-namespace Capychef.Users.Domain.Errors;
+namespace Capychef.Households.Domain.Errors;
 
 public class NoHouseholdSelectedError : AppError
 {

@@ -1,7 +1,7 @@
-﻿using YourOwnBoss.Common.Entities;
-using YourOwnBoss.Common.Errors;
+﻿using Capychef.Common.Entities;
+using Capychef.Common.Errors;
 
-namespace Capychef.Users.Domain.Errors;
+namespace Capychef.Food.Domain.Errors;
 
 /**
  * Food base UoM is not in food uom list

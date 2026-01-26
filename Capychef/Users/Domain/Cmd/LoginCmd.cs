@@ -1,4 +1,4 @@
-﻿namespace Capychef.Users.Domain.Cmd.Auth;
+﻿namespace Capychef.Users.Domain.Cmd;
 
 public class LoginCmd
 {

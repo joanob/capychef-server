@@ -1,6 +1,6 @@
 ﻿using Capychef.Common.Utils;
 using Capychef.Persistence;
-using Capychef.Users.Domain.Cmd.Auth;
+using Capychef.Users.Domain.Cmd;
 using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Testdata;

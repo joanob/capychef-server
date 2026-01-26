@@ -1,5 +1,6 @@
 ﻿using Capychef.Food.Domain.Entities;
 using Capychef.Households.Domain.Entities;
+using Capychef.Storage.Domain.Entities;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -13,10 +14,12 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<UserPassword> UsersPasswords => Set<UserPassword>();
     public DbSet<UserSession> UsersSessions => Set<UserSession>();
     public DbSet<UserToken> UsersTokens => Set<UserToken>();
+
     public DbSet<Household> Households => Set<Household>();
     public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
+
     public DbSet<StorageSpace> StorageSpaces => Set<StorageSpace>();
 
     public DbSet<StorageSpacesModificationHistory> StorageSpacesModificationsHistory =>
@@ -28,6 +31,8 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<Food.Domain.Entities.Food> Food => Set<Food.Domain.Entities.Food>();
     public DbSet<FoodUoM> FoodUoM => Set<FoodUoM>();
     public DbSet<FoodModificationHistory> FoodModificationsHistory => Set<FoodModificationHistory>();
+
+    public DbSet<Batch> Batches => Set<Batch>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

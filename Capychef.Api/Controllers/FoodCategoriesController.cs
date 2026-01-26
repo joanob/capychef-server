@@ -1,4 +1,5 @@
 ﻿using Capychef.Food.Domain.Cmd;
+using Capychef.Food.Domain.DTO;
 using Capychef.Food.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

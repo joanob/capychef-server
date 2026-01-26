@@ -1,8 +1,8 @@
-﻿using Capychef.Persistence;
+﻿using Capychef.Common.Entities;
+using Capychef.Common.Errors;
+using Capychef.Persistence;
 using Capychef.Users.Domain.Entities;
 using Capychef.Users.Domain.Interfaces;
-using YourOwnBoss.Common.Entities;
-using YourOwnBoss.Common.Errors;
 
 namespace Capychef.Users.Services;
 

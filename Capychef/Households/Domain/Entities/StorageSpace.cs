@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Common.Entities;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using YourOwnBoss.Common.Entities;
 
 namespace Capychef.Households.Domain.Entities;
 

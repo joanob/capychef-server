@@ -1,5 +1,7 @@
 ﻿using Serilog.Context;
 
+namespace Capychef.Api.Logging;
+
 public class CorrelationIdMiddleware
 {
     private const string HeaderName = "X-Correlation-Id";

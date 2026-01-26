@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Capychef.Users.Domain.Cmd.Auth;
+namespace Capychef.Users.Domain.Cmd;
 
 public class SignupCmd
 {

@@ -1,4 +1,4 @@
-﻿namespace YourOwnBoss.Common.Errors;
+﻿namespace Capychef.Common.Errors;
 
 public enum ErrorType
 {

@@ -1,0 +1,146 @@
+﻿using Capychef.Common.Auth;
+using Capychef.Common.Entities;
+using Capychef.Common.Errors;
+using Capychef.Common.Result;
+using Capychef.Food.Domain.Errors;
+using Capychef.Food.Domain.Interfaces;
+using Capychef.Households.Domain.Interfaces;
+using Capychef.Persistence;
+using Capychef.Storage.Domain.Cmd;
+using Capychef.Storage.Domain.DTO;
+using Capychef.Storage.Domain.Entities;
+using Capychef.Storage.Domain.Interfaces;
+
+namespace Capychef.Storage.Services;
+
+public class BatchService(
+    CapychefDbContext dbContext,
+    IBatchRepository batchRepository,
+    IFoodRepository foodRepository,
+    IStorageSpaceRepository storageSpaceRepository,
+    IFoodUoMRepository foodUoMRepository) : IBatchService
+{
+    public async Task<Result<BatchDTO>> CreateBatch(AuthUserDetails userDetails, CreateBatchCmd cmd)
+    {
+        if (!await foodRepository.CheckFoodExistsById(cmd.FoodId, userDetails.HouseholdId.Value))
+            return new Result<BatchDTO>(new NotFoundError(EntityType.Food, cmd.FoodId));
+
+        if (!await storageSpaceRepository.CheckStorageSpaceExistsById(cmd.StorageSpaceId,
+                userDetails.HouseholdId.Value))
+            return new Result<BatchDTO>(new NotFoundError(EntityType.StorageSpace, cmd.FoodId));
+
+        if (!await foodUoMRepository.CheckFoodUoMExistsById(cmd.FoodUoMId, cmd.FoodId))
+            return new Result<BatchDTO>(new NotFoundError(EntityType.FoodUoM,
+                $"{cmd.FoodUoMId} for food {cmd.FoodId}"));
+
+        var batch = new Batch(userDetails.HouseholdId.Value, cmd.FoodId, cmd.StorageSpaceId, cmd.Quantity,
+            cmd.FoodUoMId);
+
+        await batchRepository.AddAsync(batch);
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDTO>(new BatchDTO(batch));
+    }
+
+    public async Task<List<BatchDTO>> GetAllBatches(AuthUserDetails userDetails)
+    {
+        var batches = await batchRepository.GetAllByHouseholdId(userDetails.HouseholdId.Value);
+
+        return BatchDTO.ToBatchDTOList(batches);
+    }
+
+    public async Task<Result<BatchDTO>> ConsumeBatch(int batchId, ConsumeBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<BatchDTO>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (cmd.Quantity > batch.Quantity)
+            return new Result<BatchDTO>(new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+
+        if (cmd.Quantity == batch.Quantity)
+        {
+            // Set batch as fully consumed
+            batch.Consume();
+        }
+        else
+        {
+            // Create new batch from original batch with new quantity and set new batch as consumed
+            var consumedBatch = new Batch(batch, cmd.Quantity);
+            consumedBatch.Consume();
+
+            await batchRepository.AddAsync(consumedBatch);
+
+            batch.Quantity -= cmd.Quantity;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDTO>(new BatchDTO(batch));
+    }
+
+    public async Task<Result<BatchDTO>> DiscardBatch(int batchId, DiscardBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<BatchDTO>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (cmd.Quantity > batch.Quantity)
+            return new Result<BatchDTO>(new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+
+        if (cmd.Quantity == batch.Quantity)
+        {
+            // Set batch as fully discarded
+            batch.Discard();
+        }
+        else
+        {
+            // Create new batch from original batch with new quantity and set new batch as discarded
+            var consumedBatch = new Batch(batch, cmd.Quantity);
+            consumedBatch.Discard();
+
+            await batchRepository.AddAsync(consumedBatch);
+
+            batch.Quantity -= cmd.Quantity;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDTO>(new BatchDTO(batch));
+    }
+
+    public async Task<Result<List<BatchDTO>>> MoveBatch(int batchId, MoveBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<List<BatchDTO>>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (cmd.Quantity > batch.Quantity)
+            return new Result<List<BatchDTO>>(
+                new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+
+        if (!await storageSpaceRepository.CheckStorageSpaceExistsById(cmd.StorageSpaceId,
+                userDetails.HouseholdId.Value))
+            return new Result<List<BatchDTO>>(new NotFoundError(EntityType.StorageSpace, cmd.StorageSpaceId));
+
+        if (cmd.Quantity == batch.Quantity)
+        {
+            // Change batch storage space
+            batch.StorageSpaceId = cmd.StorageSpaceId;
+
+            await dbContext.SaveChangesAsync();
+
+            return new Result<List<BatchDTO>>(new List<BatchDTO> { new(batch) });
+        }
+
+        // Create new batch from original batch with new quantity and new storage space
+        var movedBatch = new Batch(batch, cmd.Quantity);
+        movedBatch.StorageSpaceId = cmd.StorageSpaceId;
+
+        await batchRepository.AddAsync(movedBatch);
+
+        batch.Quantity -= cmd.Quantity;
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<List<BatchDTO>>(new List<BatchDTO> { new(batch), new(movedBatch) });
+    }
+}

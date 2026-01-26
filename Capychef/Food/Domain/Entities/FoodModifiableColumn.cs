@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace YourOwnBoss.Common.Entities;
+namespace Capychef.Food.Domain.Entities;
 
 public class FoodModifiableColumn
 {
