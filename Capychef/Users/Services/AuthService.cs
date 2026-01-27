@@ -2,6 +2,8 @@
 using Capychef.Common.Entities;
 using Capychef.Common.Errors;
 using Capychef.Common.Result;
+using Capychef.Households.Domain.Entities;
+using Capychef.Households.Domain.Interfaces;
 using Capychef.Infrastructure.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Cmd;
@@ -18,6 +20,7 @@ public class AuthService(
     IUserPasswordRepository userPasswordRepository,
     IUserSessionRepository userSessionRepository,
     IUserTokenRepository userTokenRepository,
+    IHouseholdRepository householdRepository,
     IEmailSender emailSender) : IAuthService
 {
     public async Task<Result<(UserDTO, AuthUserDetails)>> Signup(SignupCmd cmd)
@@ -173,5 +176,17 @@ public class AuthService(
         await dbContext.SaveChangesAsync();
 
         return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
+    }
+
+    public async Task<AuthSessionDTO> GetAuthSession(AuthUserDetails userDetails)
+    {
+        var user = await userRepository.GetUserById(userDetails.UserId);
+
+        Household? activeHousehold = null;
+
+        if (userDetails.HouseholdId.HasValue)
+            activeHousehold = await householdRepository.GetHouseholdById(userDetails.HouseholdId.Value);
+
+        return new AuthSessionDTO(user, activeHousehold);
     }
 }

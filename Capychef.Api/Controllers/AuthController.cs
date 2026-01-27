@@ -73,6 +73,16 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
         return Ok();
     }
 
+    [HttpGet("session")]
+    public async Task<ActionResult<AuthSessionDTO>> GetAuthSession()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var session = await authService.GetAuthSession(userDetails);
+
+        return Ok(session);
+    }
+
     [HttpGet("guest-transference")]
     public async Task<ActionResult<string>> GuestTransference()
     {
