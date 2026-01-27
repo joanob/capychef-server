@@ -18,6 +18,17 @@ builder.Host.UseSerilog();
 
 builder.Services.AddApplicationDI();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalhostFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -34,6 +45,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("LocalhostFrontend");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
