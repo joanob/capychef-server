@@ -40,7 +40,7 @@ public class AuthService(
 
         await userSessionRepository.AddUserSessionAsync(session);
 
-        if (cmd.Email != null)
+        if (cmd.Email != null && cmd.Email.Length > 0)
         {
             var userToken = UserToken.CreateEmailValidationUserToken(user);
 
