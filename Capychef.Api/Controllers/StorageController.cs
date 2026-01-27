@@ -41,6 +41,21 @@ public class StorageController(
     }
 
     [CheckMembership]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<BatchDTO>> UpdateBatch(int id, UpdateBatchCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batch = await batchService.UpdateBatch(id, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("BatchService.UpdateBatch");
+
+        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+
+        return Ok(batch.get());
+    }
+
+    [CheckMembership]
     [HttpPut("{id}/consume")]
     public async Task<ActionResult<BatchDTO>> ConsumeBatch(int id, ConsumeBatchCmd cmd)
     {

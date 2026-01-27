@@ -64,6 +64,20 @@ public class BatchService(
         return BatchDTO.ToBatchDTOList(batches);
     }
 
+    public async Task<Result<BatchDTO>> UpdateBatch(int batchId, UpdateBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
+        if (batch == null) return new Result<BatchDTO>(new NotFoundError(EntityType.Batch, batchId));
+
+        if (batch.BestBeforeDate != cmd.BestBeforeDate) batch.BestBeforeDate = cmd.BestBeforeDate;
+
+        if (batch.ExpirationDate != cmd.ExpirationDate) batch.ExpirationDate = cmd.ExpirationDate;
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDTO>(new BatchDTO(batch));
+    }
+
     public async Task<Result<BatchDTO>> ConsumeBatch(int batchId, ConsumeBatchCmd cmd, AuthUserDetails userDetails)
     {
         var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.HouseholdId.Value);
