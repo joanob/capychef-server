@@ -36,7 +36,23 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
 
         var logger = loggerFactory.CreateLogger("AuthService.Login");
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
+        if (result.failed())
+        {
+            // Login shouldn't return any error data, only the INCORRECT_LOGIN_DATA code
+
+            var error = result.error();
+
+            if (error is NotFoundError)
+            {
+                logger.LogWarning(error.Message);
+
+                return new ObjectResult(new ApiResponse<UserDTO>(new ApiError(new AppError(ErrorType.Authorization),
+                        "INCORRECT_LOGIN_DATA")))
+                    { StatusCode = 400 };
+            }
+
+            return handleError(result.error(), logger);
+        }
 
         var (user, userDetails) = result.get();
 
@@ -118,8 +134,12 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
     private ActionResult handleError(AppError error, ILogger logger)
     {
         if (error is UsernameInUseError)
+        {
+            logger.LogWarning(error.Message);
+
             return new ObjectResult(new ApiResponse<UserDTO>(new ApiError(error, "USERNAME_IN_USE")))
                 { StatusCode = 400 };
+        }
 
         return GlobalErrorHandler.handleError(error, logger);
     }

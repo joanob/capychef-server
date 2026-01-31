@@ -7,6 +7,6 @@ public class UsernameInUseError : AppError
 {
     public UsernameInUseError(string username) : base(ErrorType.CannotCreate, EntityType.User, username)
     {
-        Message = username + " already in use";
+        Message = "username " + username + " already in use";
     }
 }
