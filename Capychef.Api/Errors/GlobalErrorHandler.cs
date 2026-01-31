@@ -22,6 +22,6 @@ public class GlobalErrorHandler
         else
             statusCode = 500;
 
-        return new ObjectResult(error) { StatusCode = statusCode };
+        return new ObjectResult(new ApiResponse<int>(new ApiError(error))) { StatusCode = statusCode };
     }
 }
