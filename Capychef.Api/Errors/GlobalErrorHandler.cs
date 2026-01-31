@@ -9,16 +9,19 @@ public class GlobalErrorHandler
     {
         logger.LogError(error.ToString());
 
-        if (error is NotFoundError) return new StatusCodeResult(404);
+        var statusCode = 0;
 
-        switch (error.errorType)
-        {
-            case ErrorType.CANNOT_CREATE: return new StatusCodeResult(400);
-            case ErrorType.AUTHENTICATION: return new StatusCodeResult(401);
-            case ErrorType.AUTHORIZATION: return new StatusCodeResult(403);
-            case ErrorType.NOT_FOUND: return new StatusCodeResult(404);
-            case ErrorType.OTHER_ERROR: return new StatusCodeResult(500);
-            default: return new StatusCodeResult(400);
-        }
+        if (error.ErrorType.Equals(ErrorType.CannotCreate))
+            statusCode = 400;
+        else if (error.ErrorType.Equals(ErrorType.Authentication))
+            statusCode = 401;
+        else if (error.ErrorType.Equals(ErrorType.Authorization))
+            statusCode = 403;
+        else if (error.ErrorType.Equals(ErrorType.NotFound))
+            statusCode = 404;
+        else
+            statusCode = 500;
+
+        return new ObjectResult(error) { StatusCode = statusCode };
     }
 }

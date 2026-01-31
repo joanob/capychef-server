@@ -1,7 +1,9 @@
 ﻿using Capychef.Api.Auth;
 using Capychef.Api.Errors;
+using Capychef.Common.Errors;
 using Capychef.Users.Domain.Cmd;
 using Capychef.Users.Domain.DTO;
+using Capychef.Users.Domain.Errors;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,19 +14,19 @@ namespace Capychef.Api.Controllers;
 public class AuthController(IAuthService authService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost("signup")]
-    public async Task<ActionResult<UserDTO>> Signup(SignupCmd cmd)
+    public async Task<ActionResult<ApiResponse<UserDTO>>> Signup(SignupCmd cmd)
     {
         var result = await authService.Signup(cmd);
 
         var logger = loggerFactory.CreateLogger("AuthService.Signup");
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
+        if (result.failed()) return handleError(result.error(), logger);
 
         var (user, userDetails) = result.get();
 
         JWTService.CreateAndSendJWT(userDetails, Response);
 
-        return user;
+        return new ApiResponse<UserDTO>(user);
     }
 
     [HttpPost("login")]
@@ -111,5 +113,14 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
         JWTService.CreateAndSendJWT(userDetails, Response);
 
         return user;
+    }
+
+    private ActionResult handleError(AppError error, ILogger logger)
+    {
+        if (error is UsernameInUseError)
+            return new ObjectResult(new ApiResponse<UserDTO>(new ApiError(error, "USERNAME_IN_USE")))
+                { StatusCode = 400 };
+
+        return GlobalErrorHandler.handleError(error, logger);
     }
 }

@@ -1,11 +1,12 @@
-﻿using Capychef.Common.Errors;
+﻿using Capychef.Common.Entities;
+using Capychef.Common.Errors;
 
 namespace Capychef.Users.Domain.Errors;
 
 public class UsernameInUseError : AppError
 {
-    public UsernameInUseError(string username) : base(ErrorType.CANNOT_CREATE, "")
+    public UsernameInUseError(string username) : base(ErrorType.CannotCreate, EntityType.User, username)
     {
-        _message = username + " already in use";
+        Message = username + " already in use";
     }
 }

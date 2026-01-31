@@ -1,24 +1,43 @@
-﻿namespace Capychef.Common.Errors;
+﻿using Capychef.Common.Entities;
+
+namespace Capychef.Common.Errors;
 
 public class AppError
 {
-    protected string _message;
-
-    public AppError(ErrorType type, string message)
+    public AppError(ErrorType errorType)
     {
-        errorType = type;
-        _message = message;
+        ErrorType = errorType;
     }
 
-    public ErrorType errorType { get; protected set; }
+    public AppError(ErrorType errorType, EntityType entityType)
+    {
+        ErrorType = errorType;
+        Entity = new EntityDetails(entityType);
+    }
+
+    public AppError(ErrorType errorType, EntityType entityType, int entityId)
+    {
+        ErrorType = errorType;
+        Entity = new EntityDetails(entityType, entityId);
+    }
+
+    public AppError(ErrorType errorType, EntityType entityType, string entityId)
+    {
+        ErrorType = errorType;
+        Entity = new EntityDetails(entityType, entityId);
+    }
+
+    public ErrorType ErrorType { get; protected set; }
+    public EntityDetails? Entity { get; protected set; }
+    public string? Message { get; protected set; }
 
     public bool isEqual(AppError error)
     {
-        return errorType == error.errorType;
+        return ErrorType == error.ErrorType;
     }
 
     public override string ToString()
     {
-        return errorType + ": " + _message;
+        return ErrorType + ": " + Message;
     }
 }

@@ -4,21 +4,11 @@ namespace Capychef.Common.Errors;
 
 public class NotFoundError : AppError
 {
-    private string _compositeId;
-    private EntityType _entityType;
-    private int _id;
-
-    public NotFoundError(EntityType entityType, int id) : base(ErrorType.NOT_FOUND, "")
+    public NotFoundError(EntityType entityType, int id) : base(ErrorType.NotFound, entityType, id)
     {
-        _entityType = entityType;
-        _id = id;
-        _message = entityType + " - " + id;
     }
 
-    public NotFoundError(EntityType entityType, string compositeId) : base(ErrorType.NOT_FOUND, "")
+    public NotFoundError(EntityType entityType, string isString) : base(ErrorType.NotFound, entityType, isString)
     {
-        _entityType = entityType;
-        _compositeId = compositeId;
-        _message = entityType + " - " + compositeId;
     }
 }

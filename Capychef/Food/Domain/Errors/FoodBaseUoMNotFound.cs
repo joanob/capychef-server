@@ -12,7 +12,7 @@ public class FoodBaseUoMNotFound : NotFoundError
     {
         UoM = uom;
 
-        _message = "food " + foodId + " does not have uom" + uom;
+        Message = "food " + foodId + " does not have uom" + uom;
     }
 
     public string UoM { get; }

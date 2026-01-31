@@ -4,8 +4,8 @@ namespace Capychef.Households.Domain.Errors;
 
 public class NoHouseholdSelectedError : AppError
 {
-    public NoHouseholdSelectedError(int userId) : base(ErrorType.NOT_FOUND, "")
+    public NoHouseholdSelectedError(int userId) : base(ErrorType.NotFound)
     {
-        _message = userId + " does no have a household selected";
+        Message = userId + " does no have a household selected";
     }
 }
