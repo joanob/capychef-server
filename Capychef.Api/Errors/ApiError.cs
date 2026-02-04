@@ -29,9 +29,12 @@ public class ApiErrorEntityDetails
 {
     public ApiErrorEntityDetails(EntityDetails? entity)
     {
-        EntityType = entity.EntityType.ToString();
-        EntityId = entity.EntityId;
-        EntityIdString = entity.EntityIdString;
+        if (entity != null)
+        {
+            EntityType = entity.EntityType.ToString();
+            EntityId = entity.EntityId;
+            EntityIdString = entity.EntityIdString;
+        }
     }
 
     public string? EntityType { get; set; }

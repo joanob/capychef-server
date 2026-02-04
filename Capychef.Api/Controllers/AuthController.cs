@@ -30,7 +30,7 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<UserDTO>> Login(LoginCmd cmd)
+    public async Task<ActionResult<ApiResponse<UserDTO>>> Login(LoginCmd cmd)
     {
         var result = await authService.Login(cmd);
 
@@ -58,7 +58,7 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
 
         JWTService.CreateAndSendJWT(userDetails, Response);
 
-        return user;
+        return new ApiResponse<UserDTO>(user);
     }
 
     [HttpGet("recover-password/{email}")]
