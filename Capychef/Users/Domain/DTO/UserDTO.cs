@@ -12,4 +12,9 @@ public class UserDTO
 
     public int Id { get; }
     public string Username { get; }
+
+    public static List<UserDTO> ToDTOList(List<User> users)
+    {
+        return users.Select(u => new UserDTO(u)).ToList();
+    }
 }

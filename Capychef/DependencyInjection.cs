@@ -60,6 +60,7 @@ public static class DependencyInjection
         services.AddScoped<IStorageSpaceRepository, StorageSpaceRepository>();
         services.AddScoped<IStorageSpaceModificationHistoryRepository, StorageSpaceModificationHistoryRepository>();
         services.AddScoped<IHouseholdService, HouseholdService>();
+        services.AddScoped<IHouseholdMemberService, HouseholdMemberService>();
         services.AddScoped<IHouseholdInvitationService, HouseholdInvitationService>();
         services.AddScoped<IHouseholdJoinRequestService, HouseholdJoinRequestService>();
         services.AddScoped<IStorageSpaceService, StorageSpaceService>();
