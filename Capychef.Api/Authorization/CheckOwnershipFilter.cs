@@ -1,4 +1,9 @@
 ﻿using Capychef.Api.Auth;
+using Capychef.Api.Errors;
+using Capychef.Common.Entities;
+using Capychef.Common.Errors;
+using Capychef.Households.Domain.DTO;
+using Capychef.Households.Domain.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -16,7 +21,12 @@ public class CheckOwnershipFilter(IHouseholdService householdService)
 
         if (userDetails.HouseholdId == null)
         {
-            context.Result = new NotFoundResult();
+            context.Result = new ObjectResult(new ApiResponse<HouseholdDTO>(
+                new ApiError(new NoHouseholdSelectedError(userDetails.UserId), "NO_HOUSEHOLD_SELECTED")))
+            {
+                StatusCode = 404
+            };
+
             return;
         }
 
@@ -25,6 +35,11 @@ public class CheckOwnershipFilter(IHouseholdService householdService)
         if (error == null)
             await next();
         else
-            context.Result = new NotFoundResult();
+            context.Result = new ObjectResult(new ApiResponse<HouseholdDTO>(new ApiError(new NotFoundError(
+                EntityType.Household,
+                userDetails.HouseholdId.Value))))
+            {
+                StatusCode = 404
+            };
     }
 }

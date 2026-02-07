@@ -62,6 +62,18 @@ public class HouseholdService(
         return HouseholdDTO.ToDTOList(households);
     }
 
+    public async Task<Result<HouseholdDTO>> GetHouseholdById(AuthUserDetails userDetails, int householdId)
+    {
+        var household = await householdRepository.GetHouseholdById(householdId);
+
+        if (household == null) return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, householdId));
+
+        if (!await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, householdId))
+            return new Result<HouseholdDTO>(new HouseholdMembershipError(userDetails.UserId, householdId));
+
+        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+    }
+
     public async Task<Result<HouseholdDTO>> SelectHousehold(AuthUserDetails userDetails, int householdId)
     {
         if (!await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, householdId))
