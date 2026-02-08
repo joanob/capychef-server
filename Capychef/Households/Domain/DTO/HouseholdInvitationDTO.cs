@@ -1,4 +1,5 @@
 ﻿using Capychef.Households.Domain.Entities;
+using Capychef.Users.Domain.DTO;
 
 namespace Capychef.Households.Domain.DTO;
 
@@ -8,12 +9,12 @@ public class HouseholdInvitationDTO
     {
         Id = invitation.Id;
         HouseholdId = invitation.HouseholdId;
-        UserId = invitation.UserId;
+        User = new UserDTO(invitation.User);
     }
 
     public int Id { get; set; }
     public int HouseholdId { get; set; }
-    public int UserId { get; set; }
+    public UserDTO User { get; set; }
 
     public static List<HouseholdInvitationDTO> toList(List<HouseholdInvitation> invitations)
     {

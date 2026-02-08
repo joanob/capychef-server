@@ -30,14 +30,14 @@ public class HouseholdInvitationController(
     }
 
     [CheckOwnership]
-    [HttpGet("household")]
-    public async Task<ActionResult<List<HouseholdInvitationDTO>>> GetHousholdInvitations()
+    [HttpGet("household/{householdId}")]
+    public async Task<ActionResult<ApiResponse<List<HouseholdInvitationDTO>>>> GetHousholdInvitations(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
         var invitations = await householdInvitationService.GetAllHouseholdInvitations(userDetails);
 
-        return Ok(invitations);
+        return Ok(new ApiResponse<List<HouseholdInvitationDTO>>(invitations));
     }
 
     [HttpGet("user")]
