@@ -81,4 +81,11 @@ public class StorageSpaceService(
 
         return null;
     }
+
+    public async Task<Result<List<StorageSpaceDTO>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails)
+    {
+        var storageSpaces = await storageSpaceRepository.GetHouseholdStorageSpaces(userDetails.HouseholdId.Value);
+        
+        return new Result<List<StorageSpaceDTO>>(StorageSpaceDTO.ToDTOList(storageSpaces));
+    }
 }

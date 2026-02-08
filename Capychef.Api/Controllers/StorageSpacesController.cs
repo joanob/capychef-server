@@ -29,6 +29,21 @@ public class StorageSpacesController(
 
         return Ok(storageSpace.get());
     }
+    
+    [CheckMembership]
+    [HttpGet("household/{householdId}")]
+    public async Task<ActionResult<ApiResponse<List<StorageSpaceDTO>>>> GetHouseholdStorageSpaces(int householdId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var storageSpaces = await storageSpaceService.GetHouseholdStorageSpaces(userDetails);
+
+        var logger = loggerFactory.CreateLogger("StorageSpaceService.GetHouseholdStorageSpaces");
+
+        if (storageSpaces.failed()) return GlobalErrorHandler.handleError(storageSpaces.error(), logger);
+
+        return Ok(new ApiResponse<List<StorageSpaceDTO>>(storageSpaces.get()));
+    }
 
     [CheckMembership]
     [HttpPut("{id}")]
