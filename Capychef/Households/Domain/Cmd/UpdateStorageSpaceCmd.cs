@@ -4,5 +4,5 @@ public class UpdateStorageSpaceCmd
 {
     public string Name { get; set; }
 
-    public string StorageConditions { get; set; }
+    public string StorageCondition { get; set; }
 }

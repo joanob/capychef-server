@@ -26,6 +26,7 @@ public class StorageSpaceRepository(CapychefDbContext dbContext) : IStorageSpace
 
     public async Task<List<StorageSpace>> GetHouseholdStorageSpaces(int householdId)
     {
-        return await dbContext.StorageSpaces.Active().AsNoTracking().Where(x => x.HouseholdId == householdId).ToListAsync();
+        return await dbContext.StorageSpaces.Active().AsNoTracking().Where(x => x.HouseholdId == householdId)
+            .ToListAsync();
     }
 }

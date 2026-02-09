@@ -19,10 +19,10 @@ public class StorageSpaceService(
     public async Task<Result<StorageSpaceDTO>> CreateStorageSpace(CreateStorageSpaceCmd cmd,
         AuthUserDetails userDetails)
     {
-        var storageCondition = StorageConditions.from(cmd.StorageConditions);
+        var storageCondition = StorageConditions.from(cmd.StorageCondition);
 
         if (storageCondition == null)
-            return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageCondition, cmd.StorageConditions));
+            return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageCondition, cmd.StorageCondition));
 
         var storageSpace =
             new StorageSpace(cmd.Name, storageCondition, userDetails.HouseholdId.Value, userDetails.UserId);
@@ -49,17 +49,17 @@ public class StorageSpaceService(
             storageSpace.Name = cmd.Name;
         }
 
-        if (storageSpace.StorageCondition.ToString() != cmd.StorageConditions)
+        if (storageSpace.StorageCondition.ToString() != cmd.StorageCondition)
         {
-            var storageCondition = StorageConditions.from(cmd.StorageConditions);
+            var storageCondition = StorageConditions.from(cmd.StorageCondition);
 
             if (storageCondition == null)
                 return new Result<StorageSpaceDTO>(
-                    new NotFoundError(EntityType.StorageCondition, cmd.StorageConditions));
+                    new NotFoundError(EntityType.StorageCondition, cmd.StorageCondition));
 
             await storageSpaceModificationHistoryRepository.AddAsync(new StorageSpacesModificationHistory(
                 storageSpace.Id, StorageSpaceModifiableColumn.StorageCondition,
-                storageSpace.StorageCondition.ToString(), cmd.StorageConditions, userDetails.UserId));
+                storageSpace.StorageCondition.ToString(), cmd.StorageCondition, userDetails.UserId));
 
             storageSpace.StorageCondition = storageCondition;
         }
@@ -85,7 +85,7 @@ public class StorageSpaceService(
     public async Task<Result<List<StorageSpaceDTO>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails)
     {
         var storageSpaces = await storageSpaceRepository.GetHouseholdStorageSpaces(userDetails.HouseholdId.Value);
-        
+
         return new Result<List<StorageSpaceDTO>>(StorageSpaceDTO.ToDTOList(storageSpaces));
     }
 }

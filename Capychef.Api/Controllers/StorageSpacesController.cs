@@ -29,7 +29,7 @@ public class StorageSpacesController(
 
         return Ok(storageSpace.get());
     }
-    
+
     [CheckMembership]
     [HttpGet("household/{householdId}")]
     public async Task<ActionResult<ApiResponse<List<StorageSpaceDTO>>>> GetHouseholdStorageSpaces(int householdId)
