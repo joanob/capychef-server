@@ -17,7 +17,7 @@ public class FoodController(
 {
     [CheckMembership]
     [HttpPost]
-    public async Task<ActionResult<FoodDTO>> CreateHouseholdFood(CreateHouseholdFoodCmd cmd)
+    public async Task<ActionResult<ApiResponse<FoodDTO>>> CreateHouseholdFood(CreateHouseholdFoodCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -27,7 +27,7 @@ public class FoodController(
 
         if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
 
-        return Ok(food.get());
+        return Ok(new ApiResponse<FoodDTO>(food.get()));
     }
 
     [HttpPost("global")]
@@ -53,19 +53,19 @@ public class FoodController(
     }
 
     [CheckMembership]
-    [HttpGet]
-    public async Task<ActionResult<List<FoodCategoryDTO>>> GetAllHouseholdFood([FromQuery] string? groupBy)
+    [HttpGet("household/{householdId}")]
+    public async Task<ActionResult<ApiResponse<List<FoodDTO>>>> GetAllHouseholdFood(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
-        if (groupBy == "category") return Ok(await foodService.GetAllHouseholdFoodGroupedByCategory(userDetails));
+        var foodList = await foodService.GetAllHouseholdFood(userDetails);
 
-        return Ok(await foodService.GetAllHouseholdFood(userDetails));
+        return Ok(new ApiResponse<List<FoodDTO>>(foodList));
     }
 
     [CheckMembership]
     [HttpPut("{id}")]
-    public async Task<ActionResult<FoodDTO>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd)
+    public async Task<ActionResult<ApiResponse<FoodDTO>>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -75,7 +75,7 @@ public class FoodController(
 
         if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
 
-        return Ok(food.get());
+        return Ok(new ApiResponse<FoodDTO>(food.get()));
     }
 
     [CheckMembership]
