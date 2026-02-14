@@ -21,4 +21,9 @@ public class FoodCategoryRepository(CapychefDbContext dbContext) : IFoodCategory
     {
         return await dbContext.FoodCategories.AnyAsync(x => x.Id == id);
     }
+
+    public async Task<FoodCategory?> GetTrackedCategoryById(int cmdCategoryId)
+    {
+        return await dbContext.FoodCategories.FirstOrDefaultAsync(x => x.Id == cmdCategoryId);
+    }
 }

@@ -31,6 +31,7 @@ CREATE TABLE food_categories
 (
     id             SERIAL PRIMARY KEY,
     name       TEXT      NOT NULL,
+    is_leaf BOOLEAN NOT NULL,
     parent_category_id INTEGER,
     FOREIGN KEY (parent_category_id) REFERENCES food_categories (id)
 );

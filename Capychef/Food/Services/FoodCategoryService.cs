@@ -19,11 +19,13 @@ public class FoodCategoryService(CapychefDbContext dbContext, IFoodCategoryRepos
             if (storedCategory != null)
             {
                 storedCategory.Name = categoryCmd.Name;
+                storedCategory.IsLeaf = categoryCmd.IsLeaf;
                 storedCategory.ParentCategoryId = categoryCmd.ParentCategoryId;
             }
             else
             {
-                var category = new FoodCategory(categoryCmd.Id, categoryCmd.Name, categoryCmd.ParentCategoryId);
+                var category = new FoodCategory(categoryCmd.Id, categoryCmd.Name, categoryCmd.IsLeaf,
+                    categoryCmd.ParentCategoryId);
 
                 await dbContext.FoodCategories.AddAsync(category);
             }

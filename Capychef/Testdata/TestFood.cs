@@ -17,7 +17,7 @@ public class TestFood(CapychefDbContext dbContext)
 
         var households = await dbContext.Households.ToListAsync();
 
-        var foodCategories = await dbContext.FoodCategories.ToListAsync();
+        var foodLeafCategories = await dbContext.FoodCategories.Where(x => x.IsLeaf).ToListAsync();
 
         var unitsOfMeasure = await dbContext.UoM.ToListAsync();
 
@@ -32,7 +32,8 @@ public class TestFood(CapychefDbContext dbContext)
 
             for (var i = 0; i < householdFoodNumber; i++)
             {
-                var foodCategory = foodCategories.ElementAt(RandomGenerator.GenerateRandomNumber(foodCategories.Count));
+                var foodCategory =
+                    foodLeafCategories.ElementAt(RandomGenerator.GenerateRandomNumber(foodLeafCategories.Count));
 
                 var uom = unitsOfMeasure.ElementAt(RandomGenerator.GenerateRandomNumber(unitsOfMeasure.Count));
 

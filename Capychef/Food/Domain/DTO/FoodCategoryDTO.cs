@@ -8,11 +8,13 @@ public class FoodCategoryDTO
     {
         Id = foodCategory.Id;
         Name = foodCategory.Name;
+        IsLeaf = foodCategory.IsLeaf;
         ParentCategoryId = foodCategory.ParentCategoryId;
     }
 
     public int Id { get; }
     public string Name { get; }
+    public bool IsLeaf { get; }
     public int? ParentCategoryId { get; }
     public List<FoodCategoryDTO>? Children { get; private set; }
 

@@ -7,4 +7,5 @@ public interface IFoodCategoryRepository
     Task<List<FoodCategory>> GetTrackedAllCategories();
     Task<List<FoodCategory>> GetAllCategories();
     Task<bool> CheckCategoryExistsById(int id);
+    Task<FoodCategory?> GetTrackedCategoryById(int cmdCategoryId);
 }

@@ -6,5 +6,7 @@ public class FoodCategoryCmd
 
     public string Name { get; set; }
 
+    public bool IsLeaf { get; set; }
+
     public int? ParentCategoryId { get; set; }
 }

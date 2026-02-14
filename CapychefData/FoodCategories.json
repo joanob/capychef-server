@@ -2,39 +2,47 @@
   "foodCategories": [
     {
       "id": 1,
-      "name": "Fruta"
+      "name": "Fruta",
+      "isLeaf": true
     },
     {
       "id": 2,
-      "name": "Verdura"
+      "name": "Verdura",
+      "isLeaf": true
     },
     {
       "id": 3,
-      "name": "Carne"
+      "name": "Carne",
+      "isLeaf": false
     },
     {
       "id": 4,
       "name": "Pollo",
-      "parentCategoryId": 3
+      "parentCategoryId": 3,
+      "isLeaf": true
     },
     {
       "id": 5,
       "name": "Cerdo",
-      "parentCategoryId": 3
+      "parentCategoryId": 3,
+      "isLeaf": true
     },
     {
       "id": 6,
       "name": "Ternera",
-      "parentCategoryId": 3
+      "parentCategoryId": 3,
+      "isLeaf": true
     },
     {
       "id": 7,
       "name": "Pollo BIO",
-      "parentCategoryId": 4
+      "parentCategoryId": 4,
+      "isLeaf": true
     },
     {
       "id": 8,
-      "name": "Lacteos"
+      "name": "Lacteos",
+      "isLeaf": true
     }
   ]
 }

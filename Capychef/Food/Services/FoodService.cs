@@ -75,8 +75,12 @@ public class FoodService(
 
         if (food.CategoryId != cmd.CategoryId)
         {
-            if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
+            var foodCategory = await foodCategoryRepository.GetTrackedCategoryById(cmd.CategoryId);
+            if (foodCategory == null)
                 return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+
+            if (!foodCategory.IsLeaf)
+                return new Result<FoodDTO>(new FoodCategoryCannotContainFood(foodCategory.Id));
 
             await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
                 FoodModifiableColumn.CategoryId,
@@ -140,8 +144,12 @@ public class FoodService(
 
     public async Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd)
     {
-        if (!await foodCategoryRepository.CheckCategoryExistsById(cmd.CategoryId))
+        var foodCategory = await foodCategoryRepository.GetTrackedCategoryById(cmd.CategoryId);
+        if (foodCategory == null)
             return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+
+        if (!foodCategory.IsLeaf)
+            return new Result<FoodDTO>(new FoodCategoryCannotContainFood(foodCategory.Id));
 
         if (cmd.UoM.All(x => x.UoM != cmd.BaseUoM))
             return new Result<FoodDTO>(new FoodBaseUoMNotFound(0, cmd.BaseUoM));
