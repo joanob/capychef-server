@@ -31,6 +31,15 @@ public class FoodService(
         return FoodDTO.ToList(food);
     }
 
+    public async Task<Result<FoodDTO>> GetFoodById(AuthUserDetails userDetails, int id)
+    {
+        var food = await foodRepository.GetFoodById(id, userDetails.HouseholdId.Value);
+
+        if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
+
+        return new Result<FoodDTO>(new FoodDTO(food));
+    }
+
     public async Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails)
     {
         var categories = await foodCategoryRepository.GetAllCategories();

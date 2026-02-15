@@ -39,4 +39,10 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
         return await dbContext.Food.Active()
             .AnyAsync(x => x.Id == cmdFoodId && (x.IsGlobal || x.HouseholdId == householdId));
     }
+
+    public async Task<Domain.Entities.Food?> GetFoodById(int id, int householdId)
+    {
+        return await dbContext.Food.AsNoTracking().Active().IncludeUoM()
+            .FirstOrDefaultAsync(x => x.Id == id && (x.IsGlobal || x.HouseholdId == householdId));
+    }
 }

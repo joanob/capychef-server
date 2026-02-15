@@ -64,6 +64,21 @@ public class FoodController(
     }
 
     [CheckMembership]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ApiResponse<FoodDTO>>> GetFoodById(int id)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var food = await foodService.GetFoodById(userDetails, id);
+
+        var logger = loggerFactory.CreateLogger("FoodService.GetFoodById");
+
+        if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
+
+        return Ok(new ApiResponse<FoodDTO>(food.get()));
+    }
+
+    [CheckMembership]
     [HttpPut("{id}")]
     public async Task<ActionResult<ApiResponse<FoodDTO>>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd)
     {
