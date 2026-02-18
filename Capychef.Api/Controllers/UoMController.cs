@@ -1,4 +1,6 @@
-﻿using Capychef.Food.Domain.Cmd;
+﻿using Capychef.Api.Errors;
+using Capychef.Food.Domain.Cmd;
+using Capychef.Food.Domain.DTO;
 using Capychef.Food.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,9 +9,19 @@ namespace Capychef.Api.Controllers;
 [ApiController]
 [Route("global-uom")]
 public class UoMController(
-    IServiceScopeFactory serviceScopeFactory
+    IServiceScopeFactory serviceScopeFactory,
+    IUoMService uoMService
 ) : ControllerBase
 {
+    [HttpGet]
+    public async Task<ActionResult<ApiResponse<List<UoMDTO>>>> GetAllUoM()
+    {
+        var uoMs = await uoMService.GetAllUoM();
+
+        return Ok(new ApiResponse<List<UoMDTO>>(uoMs));
+    }
+
+
     [HttpPost]
     public async Task<ActionResult> LoadGlobalUoM(GlobalUoMFileCmd fileCmd)
     {

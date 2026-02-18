@@ -1,4 +1,5 @@
 ﻿using Capychef.Food.Domain.Cmd;
+using Capychef.Food.Domain.DTO;
 using Capychef.Food.Domain.Entities;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Persistence;
@@ -21,5 +22,12 @@ public class UoMService(
                 uom.Denominator));
 
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<UoMDTO>> GetAllUoM()
+    {
+        var uoMs = await uoMRepository.GetAllUoM();
+
+        return UoMDTO.ToList(uoMs);
     }
 }

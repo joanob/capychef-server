@@ -16,4 +16,9 @@ public class UoMRepository(CapychefDbContext dbContext) : IUoMRepository
     {
         return await dbContext.UoM.AnyAsync(x => x.Code == uom);
     }
+
+    public async Task<List<UoM>> GetAllUoM()
+    {
+        return await dbContext.UoM.ToListAsync();
+    }
 }
