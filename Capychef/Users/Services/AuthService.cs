@@ -68,6 +68,10 @@ public class AuthService(
 
     public async Task<Result<(UserDTO, AuthUserDetails)>> Login(LoginCmd cmd)
     {
+        var error = cmd.Validate();
+        
+        if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
+        
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null)
         {

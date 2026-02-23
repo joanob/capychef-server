@@ -15,7 +15,6 @@ public class SignupCmd: ICmd
     
     public ValidationError? Validate()
     {
-        // Trim safely (null-safe) and assign back
         Username = Username?.Trim();
         Email = Email?.Trim();
         Password = Password?.Trim();
