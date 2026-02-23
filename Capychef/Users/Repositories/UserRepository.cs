@@ -17,6 +17,11 @@ public class UserRepository(CapychefDbContext dbContext) : IUserRepository
         return await dbContext.Users.Where(x => x.Username == username).AnyAsync();
     }
 
+    public async Task<bool> CheckUserExistsByEmailAsync(string email)
+    {
+        return await dbContext.Users.Where(x => x.Email == email).AnyAsync();
+    }
+
     public async Task<User?> GetUserByUsernameAsync(string username)
     {
         return await dbContext.Users.AsNoTracking().Active().Where(x => x.Username == username).FirstOrDefaultAsync();

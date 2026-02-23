@@ -5,6 +5,7 @@ public class ErrorType
     private const string _notFound = "NOT_FOUND";
     private const string _authentication = "AUTHENTICATION";
     private const string _authorization = "AUTHORIZATION";
+    private const string _validation = "VALIDATION";
     private const string _cannotCreate = "CANNOT_CREATE";
     private const string _unknown = "UNKNOWN_ERROR";
 
@@ -18,6 +19,7 @@ public class ErrorType
     public static ErrorType NotFound => new(_notFound);
     public static ErrorType Authentication => new(_authentication);
     public static ErrorType Authorization => new(_authorization);
+    public static ErrorType Validation => new(_validation);
     public static ErrorType CannotCreate => new(_cannotCreate);
     public static ErrorType Unknown => new(_unknown);
 

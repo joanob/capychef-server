@@ -11,7 +11,7 @@ public class GlobalErrorHandler
 
         var statusCode = 0;
 
-        if (error.ErrorType.Equals(ErrorType.CannotCreate))
+        if (error.ErrorType.Equals(ErrorType.CannotCreate) || error.ErrorType.Equals(ErrorType.Validation))
             statusCode = 400;
         else if (error.ErrorType.Equals(ErrorType.Authentication))
             statusCode = 401;

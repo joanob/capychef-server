@@ -12,4 +12,5 @@ public interface IUserRepository
     Task<User> GetTrackedUserByUsernameAsync(string username);
     Task<User?> GetUserByEmailAsync(string email);
     Task<User> GetTrackedUserByEmailAsync(string email);
+    Task<bool> CheckUserExistsByEmailAsync(string email);
 }

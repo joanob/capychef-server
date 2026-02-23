@@ -25,7 +25,12 @@ public class AuthService(
 {
     public async Task<Result<(UserDTO, AuthUserDetails)>> Signup(SignupCmd cmd)
     {
+        var error = cmd.Validate();
+        
+        if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
+        
         var usernameInUse = await userRepository.CheckUserExistsByUsernameAsync(cmd.Username);
+        
         if (usernameInUse) return new Result<(UserDTO, AuthUserDetails)>(new UsernameInUseError(cmd.Username));
 
         var user = new User(cmd);
@@ -43,8 +48,12 @@ public class AuthService(
 
         await userSessionRepository.AddUserSessionAsync(session);
 
-        if (cmd.Email != null && cmd.Email.Length > 0)
+        if (cmd.Email != null)
         {
+            var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
+        
+            if (emailInUse) return new Result<(UserDTO, AuthUserDetails)>(new UsernameInUseError(cmd.Email));
+            
             var userToken = UserToken.CreateEmailValidationUserToken(user);
 
             await userTokenRepository.AddUserTokenAsync(userToken);
