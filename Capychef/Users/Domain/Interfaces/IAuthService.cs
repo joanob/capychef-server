@@ -14,5 +14,5 @@ public interface IAuthService
     Task<AppError> ResetPassword(ResetPasswordCmd cmd);
     Task<Result<string>> GuestTransference(AuthUserDetails userDetails);
     Task<Result<(UserDTO, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd);
-    Task<AuthSessionDTO> GetAuthSession(AuthUserDetails userDetails);
+    Task<Result<AuthSessionDTO>> GetAuthSession(AuthUserDetails userDetails);
 }

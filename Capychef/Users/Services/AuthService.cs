@@ -26,11 +26,11 @@ public class AuthService(
     public async Task<Result<(UserDTO, AuthUserDetails)>> Signup(SignupCmd cmd)
     {
         var error = cmd.Validate();
-        
+
         if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
-        
+
         var usernameInUse = await userRepository.CheckUserExistsByUsernameAsync(cmd.Username);
-        
+
         if (usernameInUse) return new Result<(UserDTO, AuthUserDetails)>(new UsernameInUseError(cmd.Username));
 
         var user = new User(cmd);
@@ -51,9 +51,9 @@ public class AuthService(
         if (cmd.Email != null)
         {
             var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
-        
+
             if (emailInUse) return new Result<(UserDTO, AuthUserDetails)>(new UsernameInUseError(cmd.Email));
-            
+
             var userToken = UserToken.CreateEmailValidationUserToken(user);
 
             await userTokenRepository.AddUserTokenAsync(userToken);
@@ -69,9 +69,9 @@ public class AuthService(
     public async Task<Result<(UserDTO, AuthUserDetails)>> Login(LoginCmd cmd)
     {
         var error = cmd.Validate();
-        
+
         if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
-        
+
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null)
         {
@@ -100,6 +100,7 @@ public class AuthService(
     public async Task<AppError> RecoverPassword(string email)
     {
         var user = await userRepository.GetTrackedUserByEmailAsync(email);
+
         if (user == null) return new NotFoundError(EntityType.User, email);
 
         if (!user.IsEmailValid) return new NotFoundError(EntityType.User, user.Id + "email is not verified");
@@ -108,7 +109,14 @@ public class AuthService(
 
         await userTokenRepository.AddUserTokenAsync(userToken);
 
-        await emailSender.SendPasswordRecoveryEmailAsync(email, userToken.Token);
+        try
+        {
+            await emailSender.SendPasswordRecoveryEmailAsync(email, userToken.Token);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
         await dbContext.SaveChangesAsync();
 
@@ -117,6 +125,10 @@ public class AuthService(
 
     public async Task<AppError> ResetPassword(ResetPasswordCmd cmd)
     {
+        var error = cmd.Validate();
+
+        if (error != null) return error;
+
         var userToken = await userTokenRepository.GetTrackedUsableUserTokenByTokenAsync(cmd.PasswordRecoveryToken);
 
         if (userToken == null)
@@ -165,6 +177,10 @@ public class AuthService(
 
     public async Task<Result<(UserDTO, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd)
     {
+        var error = cmd.Validate();
+
+        if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
+
         var userToken = await userTokenRepository.GetTrackedUsableUserTokenByTokenAsync(cmd.GuestTransferenceToken);
 
         if (userToken == null)
@@ -191,15 +207,18 @@ public class AuthService(
         return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
     }
 
-    public async Task<AuthSessionDTO> GetAuthSession(AuthUserDetails userDetails)
+    public async Task<Result<AuthSessionDTO>> GetAuthSession(AuthUserDetails userDetails)
     {
         var user = await userRepository.GetUserById(userDetails.UserId);
+
+        if (user == null)
+            return new Result<AuthSessionDTO>(new NotFoundError(EntityType.User, userDetails.UserId));
 
         Household? activeHousehold = null;
 
         if (userDetails.HouseholdId.HasValue)
             activeHousehold = await householdRepository.GetHouseholdById(userDetails.HouseholdId.Value);
 
-        return new AuthSessionDTO(user, activeHousehold);
+        return new Result<AuthSessionDTO>(new AuthSessionDTO(user, activeHousehold));
     }
 }

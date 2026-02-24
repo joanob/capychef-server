@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Common.Errors;
 using JetBrains.Annotations;
 
 namespace Capychef.Users.Domain.Entities;
@@ -31,6 +32,17 @@ public class UserPassword
     [Column("is_active")] public bool IsActive { get; set; }
 
     public User User { get; private set; } = null!;
+
+    public static ValidationError ValidatePassword(string password)
+    {
+        if (string.IsNullOrEmpty(password))
+            return new ValidationError("Password is empty.");
+
+        if (password.Length > 1024)
+            return new ValidationError("Password is too long. Max length is 1024 characters.");
+
+        return null!;
+    }
 
     public bool checkPassword(string password)
     {

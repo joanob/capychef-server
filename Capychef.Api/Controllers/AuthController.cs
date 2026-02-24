@@ -98,7 +98,11 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
 
         var session = await authService.GetAuthSession(userDetails);
 
-        return Ok(session);
+        var logger = loggerFactory.CreateLogger("AuthService.GetAuthSession");
+
+        if (session.failed()) return GlobalErrorHandler.handleError(session.error(), logger);
+
+        return Ok(session.get());
     }
 
     [HttpGet("guest-transference")]
