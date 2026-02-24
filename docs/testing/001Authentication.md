@@ -1,7 +1,7 @@
 ﻿# Authentication test cases
 
 ## Signup
-- [ ] Create a new user with username, email and password
+- [ ] Create a new user with username, email and password 
 - [ ] Create a new user with username and password 
 - [ ] Create a guest user
 - [ ] Create user with empty username should fail
