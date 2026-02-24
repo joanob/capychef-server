@@ -12,5 +12,6 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=03ba2468_002D1476_002D421b_002Da84d_002D1ad4770f5d64/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Signup" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::69657DE2-FCD5-42B3-8B6D-A0F3F4351790::net8.0::Capychef.E2E.Authentication.Signup&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::69657DE2-FCD5-42B3-8B6D-A0F3F4351790::net8.0::Capychef.E2E.Authentication.Login&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
