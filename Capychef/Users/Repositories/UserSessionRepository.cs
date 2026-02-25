@@ -16,4 +16,10 @@ public class UserSessionRepository(CapychefDbContext dbContext) : IUserSessionRe
     {
         return await dbContext.UsersSessions.FirstOrDefaultAsync(session => session.Id == id);
     }
+
+    public async Task<List<UserSession>> GetTrackedActiveUserSessionsByUserIdAsync(int userId)
+    {
+        return await dbContext.UsersSessions.Where(session => session.UserId == userId && !session.IsRevoked)
+            .ToListAsync();
+    }
 }

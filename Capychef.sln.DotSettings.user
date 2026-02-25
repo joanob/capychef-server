@@ -14,5 +14,6 @@
     &lt;TestId&gt;NUnit3x::69657DE2-FCD5-42B3-8B6D-A0F3F4351790::net8.0::Capychef.E2E.Authentication.Signup&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::69657DE2-FCD5-42B3-8B6D-A0F3F4351790::net8.0::Capychef.E2E.Authentication.Login&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::69657DE2-FCD5-42B3-8B6D-A0F3F4351790::net8.0::Capychef.E2E.Authentication.RecoverPassword&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::69657DE2-FCD5-42B3-8B6D-A0F3F4351790::net8.0::Capychef.E2E.Authentication.ResetPassword&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

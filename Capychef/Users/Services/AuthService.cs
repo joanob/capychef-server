@@ -153,6 +153,10 @@ public class AuthService(
 
         await userPasswordRepository.AddUserPasswordAsync(password);
 
+        var userSessions = await userSessionRepository.GetTrackedActiveUserSessionsByUserIdAsync(user.Id);
+
+        foreach (var userSession in userSessions) userSession.IsRevoked = true;
+
         await dbContext.SaveChangesAsync();
 
         return null;
