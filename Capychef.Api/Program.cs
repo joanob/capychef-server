@@ -3,6 +3,7 @@ using Capychef;
 using Capychef.Api.Auth;
 using Capychef.Api.Errors;
 using Capychef.Api.Logging;
+using Capychef.Api.Realtime;
 using DotNetEnv;
 using Serilog;
 
@@ -36,6 +37,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 
+builder.Services.AddSingleton<IConnectionMappingStore, InMemoryConnectionMappingStore>();
+builder.Services.AddSignalR();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -61,5 +65,7 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
 
 app.MapControllers();
+
+app.MapHub<RealtimeHub>("/realtime");
 
 app.Run();
