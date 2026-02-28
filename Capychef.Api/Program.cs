@@ -17,6 +17,7 @@ SerilogSetup.SetupSerilog(builder.Environment);
 
 builder.Host.UseSerilog();
 
+builder.Services.AddRealtimeDI();
 builder.Services.AddApplicationDI();
 
 builder.Services.AddCors(options =>
@@ -37,7 +38,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 
-builder.Services.AddSingleton<IConnectionMappingStore, InMemoryConnectionMappingStore>();
 builder.Services.AddSignalR();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

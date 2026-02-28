@@ -1,4 +1,4 @@
-﻿// csharp
+﻿﻿// csharp
 namespace Capychef.Api.Realtime;
 
 using System.Collections.Concurrent;
@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 public class InMemoryConnectionMappingStore : IConnectionMappingStore
 {
     private readonly ConcurrentDictionary<string, ConnectionDetails> _connections;
+
+    public InMemoryConnectionMappingStore()
+    {
+        _connections = new ConcurrentDictionary<string, ConnectionDetails>();
+    }
     
     public Task AddAsync(ConnectionDetails connection)
     {

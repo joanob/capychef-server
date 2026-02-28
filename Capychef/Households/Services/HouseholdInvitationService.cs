@@ -15,7 +15,7 @@ public class HouseholdInvitationService(
     IHouseholdInvitationRepository invitationRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
-    IUserRepository userRepository) : IHouseholdInvitationService
+    IUserRepository userRepository, IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
     {
@@ -30,6 +30,8 @@ public class HouseholdInvitationService(
         await invitationRepository.AddInvitationAsync(invitation);
 
         await dbContext.SaveChangesAsync();
+        
+        householdInvitationRealtimeService.SendHouseholdInvitationReceivedMessage(invitation);
 
         return null;
     }
