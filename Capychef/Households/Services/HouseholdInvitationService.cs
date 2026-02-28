@@ -4,6 +4,7 @@ using Capychef.Common.Errors;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
+using Capychef.Households.Domain.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Interfaces;
@@ -25,6 +26,11 @@ public class HouseholdInvitationService(
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null) return new NotFoundError(EntityType.User, cmd.Username);
 
+        if (await invitationRepository.CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(household.Id, user.Id))
+        {
+            return new UserHasUnansweredHouseholdInvitation(user.Id, household.Id);
+        }
+        
         var invitation = new HouseholdInvitation(household, user);
 
         await invitationRepository.AddInvitationAsync(invitation);
