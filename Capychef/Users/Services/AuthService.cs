@@ -48,7 +48,7 @@ public class AuthService(
 
         await userSessionRepository.AddUserSessionAsync(session);
 
-        if (cmd.Email != null)
+        if (!string.IsNullOrEmpty(cmd.Email))
         {
             var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
 
