@@ -35,7 +35,7 @@ public class ResetPassword
             var payload = new { username = u, email = e, password = p };
             var r = await _client.PostAsJsonAsync("/auth/signup", payload);
             if (!(r.StatusCode == HttpStatusCode.OK || r.StatusCode == HttpStatusCode.Created))
-                Assert.Fail("Setup: failed to create user " + u + " (status " + ((int)r.StatusCode) + ")");
+                Assert.Fail("Setup: failed to create user " + u + " (status " + (int)r.StatusCode + ")");
 
             return (u, e, p);
         }
