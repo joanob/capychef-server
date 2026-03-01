@@ -1,4 +1,5 @@
-﻿using Capychef.Common.Entities;
+﻿using Capychef.Common.Auth;
+using Capychef.Common.Entities;
 using Capychef.Common.Errors;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Entities;
@@ -32,6 +33,19 @@ public class UserService(
         if (user == null) return new NotFoundError(EntityType.User, userToken.UserId);
 
         user.IsEmailValid = true;
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
+    public async Task<AppError> SetWelcomeComplete(AuthUserDetails userDetails)
+    {
+        var user = await userRepository.GetTrackedUserById(userDetails.UserId);
+
+        if (user == null) return new NotFoundError(EntityType.User, userDetails.UserId);
+
+        user.IsWelcomeComplete = true;
 
         await dbContext.SaveChangesAsync();
 

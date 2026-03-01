@@ -12,7 +12,8 @@ CREATE TABLE users
     email          TEXT,
     is_email_valid BOOLEAN   NOT NULL,
     is_blocked     BOOLEAN   NOT NULL,
-    block_reason   TEXT
+    block_reason   TEXT,
+    is_welcome_complete BOOLEAN   NOT NULL
 );
 
 CREATE UNIQUE INDEX idx_users_username ON users(username);
