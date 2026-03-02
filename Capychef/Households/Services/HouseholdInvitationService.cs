@@ -4,6 +4,7 @@ using Capychef.Common.Errors;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
+using Capychef.Households.Domain.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Interfaces;
@@ -15,7 +16,7 @@ public class HouseholdInvitationService(
     IHouseholdInvitationRepository invitationRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
-    IUserRepository userRepository) : IHouseholdInvitationService
+    IUserRepository userRepository, IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
     {
@@ -25,11 +26,18 @@ public class HouseholdInvitationService(
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null) return new NotFoundError(EntityType.User, cmd.Username);
 
+        if (await invitationRepository.CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(household.Id, user.Id))
+        {
+            return new UserHasUnansweredHouseholdInvitation(user.Id, household.Id);
+        }
+        
         var invitation = new HouseholdInvitation(household, user);
 
         await invitationRepository.AddInvitationAsync(invitation);
 
         await dbContext.SaveChangesAsync();
+        
+        householdInvitationRealtimeService.SendHouseholdInvitationReceivedMessage(invitation);
 
         return null;
     }

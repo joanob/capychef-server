@@ -28,4 +28,10 @@ public class HouseholdInvitationRepository(CapychefDbContext dbContext) : IHouse
         return await dbContext.HouseholdInvitations.Active().Where(x => x.Id == invitationId && x.UserId == userId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<bool> CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(int householdId, int userId)
+    {
+        return await dbContext.HouseholdInvitations.AsNoTracking().Active()
+            .Where(x => x.HouseholdId == householdId && x.UserId == userId && !x.IsAnswered).AnyAsync();
+    }
 }
