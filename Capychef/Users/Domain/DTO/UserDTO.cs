@@ -8,10 +8,20 @@ public class UserDTO
     {
         Id = user.Id;
         Username = user.Username;
+        IsGuest = user.IsGuest;
+        Email = user.Email;
+        IsEmailValid = user.IsEmailValid;
+        IsWelcomeComplete = user.IsWelcomeComplete;
+        CreatedAt = user.CreatedAt;
     }
 
     public int Id { get; }
     public string Username { get; }
+    public bool IsGuest { get; }
+    public string? Email { get; }
+    public bool IsEmailValid { get; }
+    public bool IsWelcomeComplete { get; }
+    public DateTime CreatedAt { get; }
 
     public static List<UserDTO> ToDTOList(List<User> users)
     {
