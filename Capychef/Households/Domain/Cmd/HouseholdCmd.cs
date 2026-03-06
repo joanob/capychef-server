@@ -1,6 +1,6 @@
 ﻿namespace Capychef.Households.Domain.Cmd;
 
-public class CreateHouseholdCmd
+public class HouseholdCmd
 {
     public string Name { get; set; }
 }
