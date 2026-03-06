@@ -29,18 +29,4 @@ public class UserController(IUserService userService, ILoggerFactory loggerFacto
 
         return Ok();
     }
-
-    [HttpPost("welcome-complete")]
-    public async Task<ActionResult> SetWelcomeComplete()
-    {
-        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
-
-        var error = await userService.SetWelcomeComplete(userDetails);
-
-        var logger = loggerFactory.CreateLogger("UserService.WelcomeCompleteAsync");
-
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
-
-        return Ok();
-    }
 }

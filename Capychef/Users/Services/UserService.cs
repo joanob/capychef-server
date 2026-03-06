@@ -38,17 +38,4 @@ public class UserService(
 
         return null;
     }
-
-    public async Task<AppError> SetWelcomeComplete(AuthUserDetails userDetails)
-    {
-        var user = await userRepository.GetTrackedUserById(userDetails.UserId);
-
-        if (user == null) return new NotFoundError(EntityType.User, userDetails.UserId);
-
-        user.IsWelcomeComplete = true;
-
-        await dbContext.SaveChangesAsync();
-
-        return null;
-    }
 }

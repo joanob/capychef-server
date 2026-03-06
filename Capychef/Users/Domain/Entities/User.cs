@@ -19,7 +19,6 @@ public class User : BaseDeletableEntity
         IsEmailValid = false;
         IsBlocked = false;
         BlockReason = null;
-        IsWelcomeComplete = false;
     }
 
     [Column("username")] public string Username { get; set; }
@@ -33,8 +32,6 @@ public class User : BaseDeletableEntity
     [Column("is_blocked")] public bool IsBlocked { get; set; }
 
     [Column("block_reason")] public string? BlockReason { get; set; }
-
-    [Column("is_welcome_complete")] public bool IsWelcomeComplete { get; set; }
 }
 
 public static class UserExtensions

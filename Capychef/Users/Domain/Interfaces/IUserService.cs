@@ -7,5 +7,4 @@ public interface IUserService
 {
     Task<bool> CheckUserByUsernameAsync(string username);
     Task<AppError?> ValidateEmailAsync(string token);
-    Task<AppError> SetWelcomeComplete(AuthUserDetails userDetails);
 }
