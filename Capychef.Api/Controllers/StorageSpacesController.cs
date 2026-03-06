@@ -17,7 +17,7 @@ public class StorageSpacesController(
 {
     [CheckOwnership]
     [HttpPost]
-    public async Task<ActionResult<StorageSpaceDTO>> CreateStorageSpace(CreateStorageSpaceCmd cmd)
+    public async Task<ActionResult<StorageSpaceDTO>> CreateStorageSpace(StorageSpaceCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -47,7 +47,7 @@ public class StorageSpacesController(
 
     [CheckMembership]
     [HttpPut("{id}")]
-    public async Task<ActionResult<StorageSpaceDTO>> UpdateStorageSpace(int id, UpdateStorageSpaceCmd cmd)
+    public async Task<ActionResult<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 

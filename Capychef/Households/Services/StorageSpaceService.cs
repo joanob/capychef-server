@@ -16,7 +16,7 @@ public class StorageSpaceService(
     IStorageSpaceModificationHistoryRepository storageSpaceModificationHistoryRepository)
     : IStorageSpaceService
 {
-    public async Task<Result<StorageSpaceDTO>> CreateStorageSpace(CreateStorageSpaceCmd cmd,
+    public async Task<Result<StorageSpaceDTO>> CreateStorageSpace(StorageSpaceCmd cmd,
         AuthUserDetails userDetails)
     {
         var storageCondition = StorageConditions.from(cmd.StorageCondition);
@@ -34,7 +34,7 @@ public class StorageSpaceService(
         return new Result<StorageSpaceDTO>(new StorageSpaceDTO(storageSpace));
     }
 
-    public async Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, UpdateStorageSpaceCmd cmd,
+    public async Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd,
         AuthUserDetails userDetails)
     {
         var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.HouseholdId.Value);

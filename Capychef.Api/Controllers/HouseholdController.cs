@@ -16,7 +16,7 @@ namespace Capychef.Api.Controllers;
 public class HouseholdController(IHouseholdService householdService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<HouseholdDTO>>> CreateHousehold(CreateHouseholdCmd cmd)
+    public async Task<ActionResult<ApiResponse<HouseholdDTO>>> CreateHousehold(HouseholdCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -92,7 +92,7 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
     [CheckOwnership]
     [HttpPut("{householdId}")]
-    public async Task<ActionResult<HouseholdDTO>> UpdateHousehold(int householdId, UpdateHouseholdCmd cmd)
+    public async Task<ActionResult<HouseholdDTO>> UpdateHousehold(int householdId, HouseholdCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 

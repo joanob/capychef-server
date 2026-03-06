@@ -18,7 +18,7 @@ public class HouseholdService(
     IStorageSpaceRepository storageSpaceRepository
 ) : IHouseholdService
 {
-    public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
+    public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, HouseholdCmd cmd)
     {
         var household = new Household(userDetails.UserId, cmd.Name);
 
@@ -85,8 +85,7 @@ public class HouseholdService(
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
 
-    public async Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
-        UpdateHouseholdCmd cmd)
+    public async Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId, HouseholdCmd cmd)
     {
         var household = await householdRepository.GetTrackedHouseholdById(householdId);
 

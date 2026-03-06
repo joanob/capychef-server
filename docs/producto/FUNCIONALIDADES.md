@@ -1,12 +1,12 @@
 ﻿# Funcionalidades
 
 ## Hogar
-- [ ] Crear hogar
-- [ ] Modificar nombre hogar
-- [ ] Invitar a usuarios
-- [ ] Aceptar y rechazar invitaciones
-- [ ] Pedir acceso a un hogar mediante un enlace o código
-- [ ] Aceptar o rechazar peticiones de acceso
+- [x] Crear hogar
+- [x] Modificar nombre hogar
+- [x] Invitar a usuarios
+- [x] Aceptar y rechazar invitaciones
+- [x] Pedir acceso a un hogar mediante un enlace o código
+- [x] Aceptar o rechazar peticiones de acceso
 - [ ] Eliminar miembros
 
 ## Espacios de almacenamiento

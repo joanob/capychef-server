@@ -8,12 +8,12 @@ namespace Capychef.Households.Domain.Interfaces;
 
 public interface IHouseholdService
 {
-    Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd);
+    Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, HouseholdCmd cmd);
     Task<AppError?> CheckHouseholdOwnership(AuthUserDetails userDetails);
     Task<AppError?> CheckHouseholdMembership(AuthUserDetails userDetails);
     Task<List<HouseholdDTO>> GetAllHouseholds(AuthUserDetails userDetails);
     Task<Result<HouseholdDTO>> GetHouseholdById(AuthUserDetails userDetails, int householdId);
     Task<Result<HouseholdDTO>> SelectHousehold(AuthUserDetails userDetails, int householdId);
-    Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId, UpdateHouseholdCmd cmd);
+    Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId, HouseholdCmd cmd);
     Task<Result<HouseholdDTO>> GetActiveHousehold(AuthUserDetails userDetails);
 }
