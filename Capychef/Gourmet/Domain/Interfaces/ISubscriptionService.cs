@@ -6,4 +6,5 @@ namespace Capychef.Gourmet.Domain.Interfaces;
 public interface ISubscriptionService
 {
     Task<AppError?> CheckUserCanCreateHousehold(AuthUserDetails userDetails);
+    Task<AppError?> CheckUserCanBecomeHouseholdMember(AuthUserDetails userDetails);
 }

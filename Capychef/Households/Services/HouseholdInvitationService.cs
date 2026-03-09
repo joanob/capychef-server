@@ -1,6 +1,7 @@
 ﻿using Capychef.Common.Auth;
 using Capychef.Common.Entities;
 using Capychef.Common.Errors;
+using Capychef.Gourmet.Domain.Interfaces;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
@@ -17,6 +18,7 @@ public class HouseholdInvitationService(
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
     IUserRepository userRepository,
+    ISubscriptionService subscriptionService,
     IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
@@ -61,6 +63,9 @@ public class HouseholdInvitationService(
 
         if (invitation == null || invitation.IsAnswered)
             return new NotFoundError(EntityType.HouseholdInvitation, userDetails.UserId);
+
+        var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(userDetails);
+        if (error != null) return error;
 
         invitation.IsAnswered = true;
         invitation.AnsweredAt = DateTime.Now;

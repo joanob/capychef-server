@@ -30,4 +30,17 @@ public class SubscriptionService(
 
         return null;
     }
+
+    public async Task<AppError?> CheckUserCanBecomeHouseholdMember(AuthUserDetails userDetails)
+    {
+        var hasSubscription = await userSubscriptionRepository.UserHasActiveSubscription(userDetails);
+        if (hasSubscription)
+            return null;
+
+        var memberships = await householdMemberRepository.CountHouseholdMemberships(userDetails.UserId);
+        if (memberships >= MAX_MEMBERSHIPS_FREE_ACCOUNT)
+            return new SubscriptionRequiredError("Max household memberships reached for free account");
+
+        return null;
+    }
 }
