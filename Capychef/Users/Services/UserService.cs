@@ -1,5 +1,4 @@
-﻿using Capychef.Common.Auth;
-using Capychef.Common.Entities;
+﻿using Capychef.Common.Entities;
 using Capychef.Common.Errors;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Entities;

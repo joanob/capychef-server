@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Capychef.Api.Realtime.Services;
 
-public class HouseholdInvitationRealtimeService: IHouseholdInvitationRealtimeService
+public class HouseholdInvitationRealtimeService : IHouseholdInvitationRealtimeService
 {
     private readonly IConnectionMappingStore _connections;
     private readonly IHubContext<RealtimeHub> _hubContext;
@@ -20,7 +20,7 @@ public class HouseholdInvitationRealtimeService: IHouseholdInvitationRealtimeSer
         var payload = new
         {
             HouseholdId = householdInvitation.Household.Id,
-            HouseholdName = householdInvitation.Household.Name,
+            HouseholdName = householdInvitation.Household.Name
         };
 
         var connections = await _connections.GetByUserAsync(householdInvitation.UserId);
@@ -30,8 +30,6 @@ public class HouseholdInvitationRealtimeService: IHouseholdInvitationRealtimeSer
         if (!connectionIds.Any()) return;
 
         foreach (var connectionId in connectionIds)
-        {
             await _hubContext.Clients.Client(connectionId).SendAsync("HouseholdInvitation.Received", payload);
-        }
     }
 }

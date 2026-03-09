@@ -16,7 +16,8 @@ public class HouseholdInvitationService(
     IHouseholdInvitationRepository invitationRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
-    IUserRepository userRepository, IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
+    IUserRepository userRepository,
+    IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
     {
@@ -27,16 +28,14 @@ public class HouseholdInvitationService(
         if (user == null) return new NotFoundError(EntityType.User, cmd.Username);
 
         if (await invitationRepository.CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(household.Id, user.Id))
-        {
             return new UserHasUnansweredHouseholdInvitation(user.Id, household.Id);
-        }
-        
+
         var invitation = new HouseholdInvitation(household, user);
 
         await invitationRepository.AddInvitationAsync(invitation);
 
         await dbContext.SaveChangesAsync();
-        
+
         householdInvitationRealtimeService.SendHouseholdInvitationReceivedMessage(invitation);
 
         return null;

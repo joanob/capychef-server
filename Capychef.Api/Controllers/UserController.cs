@@ -1,5 +1,4 @@
-﻿using Capychef.Api.Auth;
-using Capychef.Api.Errors;
+﻿using Capychef.Api.Errors;
 using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;

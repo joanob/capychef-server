@@ -1,10 +1,8 @@
-﻿﻿// csharp
-namespace Capychef.Api.Realtime;
+﻿// csharp
 
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+namespace Capychef.Api.Realtime;
 
 public class InMemoryConnectionMappingStore : IConnectionMappingStore
 {
@@ -14,7 +12,7 @@ public class InMemoryConnectionMappingStore : IConnectionMappingStore
     {
         _connections = new ConcurrentDictionary<string, ConnectionDetails>();
     }
-    
+
     public Task AddAsync(ConnectionDetails connection)
     {
         _connections[connection.ConnectionId] = connection;
@@ -44,11 +42,8 @@ public class InMemoryConnectionMappingStore : IConnectionMappingStore
 
     public Task UpdateHouseholdAsync(string connectionId, int? householdId)
     {
-        if (_connections.TryGetValue(connectionId, out var connection))
-        {
-            connection.UpdateHouseholdId(householdId);
-        }
-        
+        if (_connections.TryGetValue(connectionId, out var connection)) connection.UpdateHouseholdId(householdId);
+
         return Task.CompletedTask;
     }
 }
