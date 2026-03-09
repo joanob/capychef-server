@@ -17,6 +17,8 @@ public class GlobalErrorHandler
             statusCode = 401;
         else if (error.ErrorType.Equals(ErrorType.Authorization))
             statusCode = 403;
+        else if (error.ErrorType.Equals(ErrorType.SubscriptionRequired))
+            statusCode = 403;
         else if (error.ErrorType.Equals(ErrorType.NotFound))
             statusCode = 404;
         else

@@ -1,4 +1,5 @@
 ﻿using Capychef.Food.Domain.Entities;
+using Capychef.Gourmet.Domain.Entities;
 using Capychef.Households.Domain.Entities;
 using Capychef.Storage.Domain.Entities;
 using Capychef.Users.Domain.Entities;
@@ -20,6 +21,9 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
 
+    public DbSet<SubscriptionDiscount> SubscriptionDiscounts => Set<SubscriptionDiscount>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
+
     public DbSet<StorageSpace> StorageSpaces => Set<StorageSpace>();
 
     public DbSet<StorageSpacesModificationHistory> StorageSpacesModificationsHistory =>
@@ -39,6 +43,9 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
         base.OnModelCreating(modelBuilder);
 
         StorageSpace.OnModelCreating(modelBuilder);
+
+        SubscriptionDiscount.OnModelCreating(modelBuilder);
+        Subscription.OnModelCreating(modelBuilder);
 
         StorageSpacesModificationHistory.OnModelCreating(modelBuilder);
         FoodModificationHistory.OnModelCreating(modelBuilder);

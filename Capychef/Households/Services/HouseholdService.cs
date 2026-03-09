@@ -2,6 +2,7 @@
 using Capychef.Common.Entities;
 using Capychef.Common.Errors;
 using Capychef.Common.Result;
+using Capychef.Gourmet.Domain.Interfaces;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
@@ -15,11 +16,16 @@ public class HouseholdService(
     CapychefDbContext dbContext,
     IHouseholdRepository householdRepository,
     IHouseholdMemberRepository householdMemberRepository,
-    IStorageSpaceRepository storageSpaceRepository
+    IStorageSpaceRepository storageSpaceRepository,
+    ISubscriptionService subscriptionService
 ) : IHouseholdService
 {
     public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, HouseholdCmd cmd)
     {
+        var error = await subscriptionService.CheckUserCanCreateHousehold(userDetails);
+
+        if (error != null) return new Result<HouseholdDTO>(error);
+
         var household = new Household(userDetails.UserId, cmd.Name);
 
         await householdRepository.AddHouseholdAsync(household);
@@ -85,7 +91,8 @@ public class HouseholdService(
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
 
-    public async Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId, HouseholdCmd cmd)
+    public async Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
+        HouseholdCmd cmd)
     {
         var household = await householdRepository.GetTrackedHouseholdById(householdId);
 

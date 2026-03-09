@@ -47,4 +47,9 @@ public class HouseholdRepository(CapychefDbContext dbContext) : IHouseholdReposi
     {
         return await dbContext.Households.Active().IncludeStorageSpaces().FirstOrDefaultAsync(x => x.Id == householdId);
     }
+
+    public async Task<int> CountOwnedHouseholds(int userId)
+    {
+        return await dbContext.Households.Active().Where(h => h.OwnerId == userId).CountAsync();
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using Capychef.Food.Domain.Interfaces;
 using Capychef.Food.Repositories;
 using Capychef.Food.Services;
+using Capychef.Gourmet.Domain.Interfaces;
+using Capychef.Gourmet.Domain.Services;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Households.Repositories;
 using Capychef.Households.Services;
@@ -25,7 +27,6 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationDI(this IServiceCollection services)
     {
         // DATABASE
-
         Env.Load("../.env");
 
         var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
@@ -34,15 +35,12 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString));
 
         // EMAIL
-
         services.AddScoped<IEmailSender, Smtp4DevSender>();
 
         // HEALTH
-
         services.AddScoped<HealthCheckService, HealthCheckService>();
 
         // USERS
-
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
         services.AddScoped<IUserSessionRepository, UserSessionRepository>();
@@ -52,7 +50,6 @@ public static class DependencyInjection
         services.AddScoped<IUserSessionService, UserSessionService>();
 
         // HOUSEHOLD 
-
         services.AddScoped<IHouseholdRepository, HouseholdRepository>();
         services.AddScoped<IHouseholdMemberRepository, HouseholdMemberRepository>();
         services.AddScoped<IHouseholdInvitationRepository, HouseholdInvitationRepository>();
@@ -66,7 +63,6 @@ public static class DependencyInjection
         services.AddScoped<IStorageSpaceService, StorageSpaceService>();
 
         // FOOD 
-
         services.AddScoped<IUoMDimensionRepository, UoMDimensionRepository>();
         services.AddScoped<IUoMRepository, UoMRepository>();
         services.AddScoped<IUoMService, UoMService>();
@@ -80,6 +76,10 @@ public static class DependencyInjection
         // STORAGE
         services.AddScoped<IBatchRepository, BatchRepository>();
         services.AddScoped<IBatchService, BatchService>();
+
+        // Gourmet
+        services.AddScoped<IUserSubscriptionRepository, UserSubscriptionRepository>();
+        services.AddScoped<ISubscriptionService, SubscriptionService>();
 
         // TESTDATA
 
