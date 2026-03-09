@@ -1,8 +1,6 @@
-﻿using Capychef.Common.Auth;
-
-namespace Capychef.Gourmet.Domain.Interfaces;
+﻿namespace Capychef.Gourmet.Domain.Interfaces;
 
 public interface IUserSubscriptionRepository
 {
-    Task<bool> UserHasActiveSubscription(AuthUserDetails user);
+    Task<bool> UserHasActiveSubscription(int userId);
 }

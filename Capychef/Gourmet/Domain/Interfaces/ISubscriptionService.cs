@@ -1,10 +1,9 @@
-﻿using Capychef.Common.Auth;
-using Capychef.Common.Errors;
+﻿using Capychef.Common.Errors;
 
 namespace Capychef.Gourmet.Domain.Interfaces;
 
 public interface ISubscriptionService
 {
-    Task<AppError?> CheckUserCanCreateHousehold(AuthUserDetails userDetails);
-    Task<AppError?> CheckUserCanBecomeHouseholdMember(AuthUserDetails userDetails);
+    Task<AppError?> CheckUserCanCreateHousehold(int userId);
+    Task<AppError?> CheckUserCanBecomeHouseholdMember(int userId);
 }

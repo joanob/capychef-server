@@ -64,7 +64,7 @@ public class HouseholdInvitationService(
         if (invitation == null || invitation.IsAnswered)
             return new NotFoundError(EntityType.HouseholdInvitation, userDetails.UserId);
 
-        var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(userDetails);
+        var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(invitation.UserId);
         if (error != null) return error;
 
         invitation.IsAnswered = true;

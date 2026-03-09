@@ -1,6 +1,7 @@
 ﻿using Capychef.Common.Auth;
 using Capychef.Common.Entities;
 using Capychef.Common.Errors;
+using Capychef.Gourmet.Domain.Interfaces;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
@@ -15,10 +16,14 @@ public class HouseholdJoinRequestService(
     IHouseholdJoinRequestRepository joinRequestRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
-    IUserRepository userRepository) : IHouseholdJoinRequestService
+    IUserRepository userRepository,
+    ISubscriptionService subscriptionService) : IHouseholdJoinRequestService
 {
     public async Task<AppError?> CreateJoinRequest(AuthUserDetails userDetails, CreateHouseholdJoinRequestCmd cmd)
     {
+        var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(userDetails.UserId);
+        if (error != null) return error;
+
         var household = await householdRepository.GetTrackedHouseholdByPublicId(cmd.HouseholdPublicId);
         if (household == null) return new NotFoundError(EntityType.Household, cmd.HouseholdPublicId);
 
@@ -55,6 +60,9 @@ public class HouseholdJoinRequestService(
 
         if (joinRequest == null || joinRequest.IsAnswered)
             return new NotFoundError(EntityType.HouseholdJoinRequest, joinRequestId);
+
+        var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(joinRequest.UserId);
+        if (error != null) return error;
 
         joinRequest.IsAnswered = true;
         joinRequest.AnsweredAt = DateTime.Now;

@@ -1,5 +1,4 @@
-﻿using Capychef.Common.Auth;
-using Capychef.Gourmet.Domain.Entities;
+﻿using Capychef.Gourmet.Domain.Entities;
 using Capychef.Gourmet.Domain.Interfaces;
 using Capychef.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +12,10 @@ public class UserSubscriptionRepository : IUserSubscriptionRepository
         _dbContext = dbContext;
     }
 
-    public async Task<bool> UserHasActiveSubscription(AuthUserDetails user)
+    public async Task<bool> UserHasActiveSubscription(int userId)
     {
         var now = DateTime.UtcNow;
         return await _dbContext.Set<Subscription>()
-            .AnyAsync(s => s.UserId == user.UserId && s.ValidFrom <= now && s.ExpiresAt > now);
+            .AnyAsync(s => s.UserId == userId && s.ValidFrom <= now && s.ExpiresAt > now);
     }
 }

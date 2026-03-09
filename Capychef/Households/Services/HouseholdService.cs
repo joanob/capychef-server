@@ -22,7 +22,7 @@ public class HouseholdService(
 {
     public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, HouseholdCmd cmd)
     {
-        var error = await subscriptionService.CheckUserCanCreateHousehold(userDetails);
+        var error = await subscriptionService.CheckUserCanCreateHousehold(userDetails.UserId);
 
         if (error != null) return new Result<HouseholdDTO>(error);
 
