@@ -24,6 +24,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<SubscriptionDiscount> SubscriptionDiscounts => Set<SubscriptionDiscount>();
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
+    public DbSet<InitialStorageSpace> InitialStorageSpaces => Set<InitialStorageSpace>();
     public DbSet<StorageSpace> StorageSpaces => Set<StorageSpace>();
 
     public DbSet<StorageSpacesModificationHistory> StorageSpacesModificationsHistory =>

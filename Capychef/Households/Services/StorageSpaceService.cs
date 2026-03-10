@@ -88,4 +88,10 @@ public class StorageSpaceService(
 
         return new Result<List<StorageSpaceDTO>>(StorageSpaceDTO.ToDTOList(storageSpaces));
     }
+
+    public async Task<Result<List<InitialStorageSpaceDTO>>> GetInitialStorageSpaces()
+    {
+        var items = await storageSpaceRepository.GetInitialStorageSpaces();
+        return new Result<List<InitialStorageSpaceDTO>>(InitialStorageSpaceDTO.ToDTOList(items));
+    }
 }

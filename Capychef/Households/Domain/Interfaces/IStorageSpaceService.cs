@@ -12,4 +12,5 @@ public interface IStorageSpaceService
     Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd, AuthUserDetails userDetails);
     Task<AppError> DeleteStorageSpace(int id, AuthUserDetails userDetails);
     Task<Result<List<StorageSpaceDTO>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails);
+    Task<Result<List<InitialStorageSpaceDTO>>> GetInitialStorageSpaces();
 }

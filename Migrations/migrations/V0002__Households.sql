@@ -124,6 +124,14 @@ SELECT *
 FROM storage_spaces
 WHERE is_deleted = FALSE;
 
+CREATE TABLE initial_storage_spaces (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    storage_condition CHAR(1) NOT NULL
+);
+
+CREATE INDEX idx_initial_storage_spaces_name ON initial_storage_spaces(name);
+
 CREATE TABLE storage_spaces_modifications_history
 (
     id      SERIAL PRIMARY KEY,

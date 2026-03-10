@@ -74,4 +74,16 @@ public class StorageSpacesController(
 
         return Ok();
     }
+
+    [HttpGet("initial")]
+    public async Task<ActionResult<ApiResponse<List<InitialStorageSpaceDTO>>>> GetInitialStorageSpaces()
+    {
+        var result = await storageSpaceService.GetInitialStorageSpaces();
+
+        var logger = loggerFactory.CreateLogger("StorageSpaceService.GetInitialStorageSpaces");
+
+        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
+
+        return Ok(new ApiResponse<List<InitialStorageSpaceDTO>>(result.get()));
+    }
 }

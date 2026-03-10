@@ -8,4 +8,5 @@ public interface IStorageSpaceRepository
     Task<StorageSpace?> GetTrackedStorageSpaceById(int id, int householdId);
     Task<bool> CheckStorageSpaceExistsById(int cmdStorageSpaceId, int householdId);
     Task<List<StorageSpace>> GetHouseholdStorageSpaces(int householdId);
+    Task<List<InitialStorageSpace>> GetInitialStorageSpaces();
 }
