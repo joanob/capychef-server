@@ -34,4 +34,15 @@ public class StorageSpaceRepository(CapychefDbContext dbContext) : IStorageSpace
     {
         return await dbContext.InitialStorageSpaces.AsNoTracking().ToListAsync();
     }
+
+    public async Task<List<InitialStorageSpace>> GetInitialStorageSpacesByIds(IEnumerable<int> ids)
+    {
+        var idList = ids.ToList();
+        if (!idList.Any()) return new List<InitialStorageSpace>();
+
+        return await dbContext.InitialStorageSpaces
+            .AsNoTracking()
+            .Where(s => idList.Contains(s.Id))
+            .ToListAsync();
+    }
 }

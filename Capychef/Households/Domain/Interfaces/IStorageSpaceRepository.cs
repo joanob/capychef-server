@@ -9,4 +9,5 @@ public interface IStorageSpaceRepository
     Task<bool> CheckStorageSpaceExistsById(int cmdStorageSpaceId, int householdId);
     Task<List<StorageSpace>> GetHouseholdStorageSpaces(int householdId);
     Task<List<InitialStorageSpace>> GetInitialStorageSpaces();
+    Task<List<InitialStorageSpace>> GetInitialStorageSpacesByIds(IEnumerable<int> ids);
 }

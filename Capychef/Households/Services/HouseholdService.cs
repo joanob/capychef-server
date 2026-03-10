@@ -21,7 +21,7 @@ public class HouseholdService(
     ISubscriptionService subscriptionService
 ) : IHouseholdService
 {
-    public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, HouseholdCmd cmd)
+    public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
     {
         var error = await subscriptionService.CheckUserCanCreateHousehold(userDetails.UserId);
 
@@ -31,7 +31,7 @@ public class HouseholdService(
 
         await householdRepository.AddHouseholdAsync(household);
 
-        await createDefaultStorageSpaces(household, userDetails);
+        await CreateInitialStorageSpaces(household, userDetails, cmd);
 
         var member = new HouseholdMember(household, userDetails.UserId);
 
@@ -116,21 +116,18 @@ public class HouseholdService(
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
 
-    private async Task createDefaultStorageSpaces(Household household, AuthUserDetails userDetails)
+    private async Task CreateInitialStorageSpaces(Household household, AuthUserDetails userDetails,
+        CreateHouseholdCmd cmd)
     {
-        var storageSpace = new StorageSpace("Despensa", StorageConditions.AmbientTemperature,
-            household, userDetails.UserId);
-        household.AddStorageSpace(storageSpace);
-        await storageSpaceRepository.AddAsync(storageSpace);
+        if (cmd.InitialStorageSpaceIds.Count == 0)
+            return;
 
-        storageSpace = new StorageSpace("Nevera", StorageConditions.Refrigerated,
-            household, userDetails.UserId);
-        household.AddStorageSpace(storageSpace);
-        await storageSpaceRepository.AddAsync(storageSpace);
-
-        storageSpace = new StorageSpace("Congelador", StorageConditions.Frozen,
-            household, userDetails.UserId);
-        household.AddStorageSpace(storageSpace);
-        await storageSpaceRepository.AddAsync(storageSpace);
+        var selected = await storageSpaceRepository.GetInitialStorageSpacesByIds(cmd.InitialStorageSpaceIds);
+        foreach (var initial in selected)
+        {
+            var s = new StorageSpace(initial.Name, initial.StorageCondition, household, userDetails.UserId);
+            household.AddStorageSpace(s);
+            await storageSpaceRepository.AddAsync(s);
+        }
     }
 }

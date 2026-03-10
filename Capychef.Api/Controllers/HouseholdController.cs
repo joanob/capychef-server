@@ -16,7 +16,7 @@ namespace Capychef.Api.Controllers;
 public class HouseholdController(IHouseholdService householdService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<HouseholdDTO>>> CreateHousehold(HouseholdCmd cmd)
+    public async Task<ActionResult<ApiResponse<HouseholdDTO>>> CreateHousehold(CreateHouseholdCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
