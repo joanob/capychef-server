@@ -18,6 +18,7 @@ public class HouseholdInvitationService(
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
     IUserRepository userRepository,
+    IHouseholdJoinRequestRepository joinRequestRepository,
     ISubscriptionService subscriptionService,
     IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
 {
@@ -74,6 +75,9 @@ public class HouseholdInvitationService(
         var member = new HouseholdMember(invitation.HouseholdId, invitation.UserId);
 
         await householdMemberRepository.AddHouseholdMemberAsync(member);
+
+        if (await subscriptionService.WillReachMembershipLimit(invitation.UserId, 1))
+            await joinRequestRepository.HidePendingJoinRequestsForUser(invitation.UserId);
 
         await dbContext.SaveChangesAsync();
 

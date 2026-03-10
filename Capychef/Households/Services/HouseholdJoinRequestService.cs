@@ -72,6 +72,9 @@ public class HouseholdJoinRequestService(
 
         await householdMemberRepository.AddHouseholdMemberAsync(member);
 
+        if (await subscriptionService.WillReachMembershipLimit(joinRequest.UserId, 1))
+            await joinRequestRepository.HidePendingJoinRequestsForUser(joinRequest.UserId);
+
         await dbContext.SaveChangesAsync();
 
         return null;

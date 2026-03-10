@@ -42,4 +42,13 @@ public class SubscriptionService(
 
         return null;
     }
+
+    public async Task<bool> WillReachMembershipLimit(int userId, int additionalMemberships)
+    {
+        var hasSubscription = await userSubscriptionRepository.UserHasActiveSubscription(userId);
+        if (hasSubscription) return false;
+
+        var memberships = await householdMemberRepository.CountHouseholdMemberships(userId);
+        return memberships + additionalMemberships >= MAX_MEMBERSHIPS_FREE_ACCOUNT;
+    }
 }

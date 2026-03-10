@@ -81,6 +81,7 @@ CREATE TABLE household_join_requests (
    is_answered BOOLEAN NOT NULL,
    answered_at     TIMESTAMP,
    is_accepted BOOLEAN NOT NULL,
+   is_hidden BOOLEAN NOT NULL DEFAULT FALSE,
    FOREIGN KEY (household_id) REFERENCES households (id),
    FOREIGN KEY (user_id) REFERENCES users (id)
 );

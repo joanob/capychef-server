@@ -17,6 +17,7 @@ public class HouseholdService(
     IHouseholdRepository householdRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IStorageSpaceRepository storageSpaceRepository,
+    IHouseholdJoinRequestRepository joinRequestRepository,
     ISubscriptionService subscriptionService
 ) : IHouseholdService
 {
@@ -35,6 +36,9 @@ public class HouseholdService(
         var member = new HouseholdMember(household, userDetails.UserId);
 
         await householdMemberRepository.AddHouseholdMemberAsync(member);
+
+        if (await subscriptionService.WillReachMembershipLimit(userDetails.UserId, 1))
+            await joinRequestRepository.HidePendingJoinRequestsForUser(userDetails.UserId);
 
         await dbContext.SaveChangesAsync();
 
