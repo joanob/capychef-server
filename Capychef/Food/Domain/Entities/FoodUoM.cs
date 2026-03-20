@@ -42,4 +42,11 @@ public class FoodUoM
     [ForeignKey(nameof(FoodId))] public Food Food { get; private set; }
 
     [ForeignKey(nameof(UoM))] public UoM UoMInstance { get; private set; }
+
+    public void Set(string? baseUom, int? numerator, int? denominator)
+    {
+        BaseUoM = baseUom;
+        Numerator = numerator;
+        Denominator = denominator;
+    }
 }

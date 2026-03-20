@@ -1,0 +1,1662 @@
+﻿{
+  "uomDimensions": [
+    {
+      "code": "QUAN",
+      "name": "QUANidad"
+    },
+    {
+      "code": "MASS",
+      "name": "Masa"
+    },
+    {
+      "code": "VOL",
+      "name": "Volumen"
+    }    
+  ],
+  "uom": [
+    {
+      "code": "KG",
+      "name": "Kilogramos",
+      "dimensionCode": "MASS"
+    },
+    {
+      "code": "G",
+      "name": "Gramos",
+      "dimensionCode": "MASS",
+      "baseUom": "KG",
+      "numerator": 1,
+      "denominator": 1000
+    },
+    {
+      "code": "L",
+      "name": "Litros",
+      "dimensionCode": "VOL"
+    },
+    {
+      "code": "ML",
+      "name": "Mililitros",
+      "dimensionCode": "VOL",
+      "baseUom": "L",
+      "numerator": 1,
+      "denominator": 1000
+    },
+    {
+      "code": "UN",
+      "name": "Unidades",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "DZ",
+      "name": "Docena",
+      "dimensionCode": "QUAN",
+      "baseUom": "UN",
+      "numerator": 12,
+      "denominator": 1
+    },
+    {
+      "code": "HDZ",
+      "name": "Unidades",
+      "dimensionCode": "QUAN",
+      "baseUom": "UN",
+      "numerator": 6,
+      "denominator": 1
+    },
+    {
+      "code": "CAN",
+      "name": "Lata",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "PACK",
+      "name": "Pack",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "PAQ",
+      "name": "Paquete",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "BAG",
+      "name": "Bolsa",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "MESH",
+      "name": "Malla",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "CUP",
+      "name": "Taza",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "TBSP",
+      "name": "Cucharada",
+      "dimensionCode": "QUAN"
+    },
+    {
+      "code": "TSP",
+      "name": "Cucharada de cafe",
+      "dimensionCode": "QUAN"
+    }
+  ],
+  "foodCategories": [
+    {
+      "id": 1, 
+      "name": "Fruta"
+    },
+    {
+      "id": 2,
+      "name": "Verdura"
+    },
+    {
+      "id": 3,
+      "name": "Carne",
+      "children": [
+        {
+          "id": 4,
+          "name": "Pollo"
+        },
+        {
+          "id": 5,
+          "name": "Cerdo"
+        },
+        {
+          "id": 6,
+          "name": "Ternera"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Pescado"
+    },
+    {
+      "id": 8,
+      "name": "Lácteos"
+    }
+  ],
+  "food": [
+    {
+      "globalId": "TOMATE",
+      "name": "Tomate",
+      "category": 2,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "MANZANA",
+      "name": "Manzana",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "PLATANO",
+      "name": "Plátano",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "LECHUGA",
+      "name": "Lechuga",
+      "category": 2,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "LECHE",
+      "name": "Leche",
+      "category": 8,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "SANDIA",
+      "name": "Sandía",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "PECHUGA_POLLO",
+      "name": "Pechuga de pollo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "LOMO_CERDO",
+      "name": "Lomo de cerdo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "NARANJA",
+      "name": "Naranja",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "LIMON",
+      "name": "Limón",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "CEBOLLA",
+      "name": "Cebolla",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "PIMIENTO",
+      "name": "Pimiento",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "PEPINO",
+      "name": "Pepino",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "BERENJENA",
+      "name": "Berenjena",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "CALABACIN",
+      "name": "Calabacín",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "PATATA",
+      "name": "Patata",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "ZANAHORIA",
+      "name": "Zanahoria",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "GARBANZOS",
+      "name": "Garbanzos",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "ALUBIAS",
+      "name": "Alubias",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "LENTEJA",
+      "name": "Lenteja",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "GUISANTES",
+      "name": "Guisantes",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "ARROZ",
+      "name": "Arroz",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "FIDEOS",
+      "name": "Fideos",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "HARINA",
+      "name": "Harina",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "PAN",
+      "name": "Pan",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "PAN_RALLADO",
+      "name": "Pan rallado",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MASA",
+      "name": "Masa",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "MANTEQUILLA",
+      "name": "Mantequilla",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "YOGUR",
+      "name": "Yogur natural",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "YOGUR_GRIEGO",
+      "name": "Yogur griego",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "QUESO_FRESCO",
+      "name": "Queso fresco",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "QUESO_CURADO",
+      "name": "Queso curado",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "QUESO_MANCHEGO",
+      "name": "Queso Manchego",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "QUESO_CABRA",
+      "name": "Queso de cabra",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "QUESO_RALLADO",
+      "name": "Queso rallado",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "NATA",
+      "name": "Nata / Crema de leche",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "LECHE_CONDENSADA",
+      "name": "Leche condensada",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "LECHE_EN_POLVO",
+      "name": "Leche en polvo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "REQUESON",
+      "name": "Requesón",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "QUESO_CREMA",
+      "name": "Queso crema",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "HUEVO",
+      "name": "Huevo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "ACEITE_OLIVA",
+      "name": "Aceite de oliva",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "ACEITE_GIRASOL",
+      "name": "Aceite de girasol",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "ACEITE_COCO",
+      "name": "Aceite de coco",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "ACEITE_SESAMO",
+      "name": "Aceite de sésamo",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "ACEITE_AGUACATE",
+      "name": "Aceite de aguacate",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "MARGARINA",
+      "name": "Margarina",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "MANTECA_CERDO",
+      "name": "Manteca de cerdo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MORCILLO",
+      "name": "Morcillo (vacuno)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "PANCETA",
+      "name": "Panceta",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CHORIZO",
+      "name": "Chorizo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "JAMON",
+      "name": "Jamón curado",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MORCILLA",
+      "name": "Morcilla",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "BACALAO",
+      "name": "Bacalao",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "ATUN",
+      "name": "Atún",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MERLUZA",
+      "name": "Merluza",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "SALMON",
+      "name": "Salmón",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "SARDINA",
+      "name": "Sardina",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "TRUCHA",
+      "name": "Trucha",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CABALLA",
+      "name": "Caballa",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "BONITO",
+      "name": "Bonito",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "LENGUADO",
+      "name": "Lenguado",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "DORADA",
+      "name": "Dorada",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "LUBINA",
+      "name": "Lubina",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "RODABALLO",
+      "name": "Rodaballo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "ANCHOA",
+      "name": "Anchoa",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "ATUN_CONSERVA",
+      "name": "Atún en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "SARDINA_CONSERVA",
+      "name": "Sardina en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "BONITO_CONSERVA",
+      "name": "Bonito en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "MEJILLON_CONSERVA",
+      "name": "Mejillón en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "ALMEJA_CONSERVA",
+      "name": "Almejas en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "BERBERECHO_CONSERVA",
+      "name": "Berberechos en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "VIEIRA_CONSERVA",
+      "name": "Vieiras en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "NAVAJAS_CONSERVA",
+      "name": "Navajas en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "CALAMAR_CONSERVA",
+      "name": "Calamar en conserva",
+      "category": 1,
+      "baseUoM": "CAN",
+      "unitsOfMeasure": [{ "uom": "CAN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "PULPO",
+      "name": "Pulpo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "GAMBA",
+      "name": "Gamba",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MEJILLON",
+      "name": "Mejillón",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CALAMAR",
+      "name": "Calamar",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CALDO",
+      "name": "Caldo (pollo/pescado)",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "SALSA_BRAVA",
+      "name": "Salsa brava",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "AJO",
+      "name": "Ajo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "SAL",
+      "name": "Sal",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "AZAFRAN",
+      "name": "Azafrán",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "PIMENTON",
+      "name": "Pimentón",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "PIMIENTO_CHORICERO",
+      "name": "Pimiento choricero / ñora",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "PEREJIL",
+      "name": "Perejil",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "VINAGRE",
+      "name": "Vinagre",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "AZUCAR",
+      "name": "Azúcar",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CARAMELO",
+      "name": "Caramelo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "CHOCOLATE",
+      "name": "Chocolate",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "AZUCAR_MORO",
+      "name": "Azúcar moreno",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "AZUCAR_GLASS",
+      "name": "Azúcar glas",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "AZUCAR_MASCABADO",
+      "name": "Azúcar mascabado",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MIEL",
+      "name": "Miel",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "MELAZA",
+      "name": "Melaza",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "JARABE_ARCE",
+      "name": "Jarabe de arce",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "MERMELADA",
+      "name": "Mermelada",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "DULCE_LECHE",
+      "name": "Dulce de leche",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "GALLETAS",
+      "name": "Galletas",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "BIZCOCHO",
+      "name": "Bizcocho",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }]
+    },
+    {
+      "globalId": "CHOCOLATE_TABLETA",
+      "name": "Chocolate (tableta)",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "ALMENDRAS",
+      "name": "Almendras",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "AVELLANAS",
+      "name": "Avellanas",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "PISTACHOS",
+      "name": "Pistachos",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CACAHUETE",
+      "name": "Cacahuete (maní)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "ANACARDO",
+      "name": "Anacardos",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "NUEZ",
+      "name": "Nuez",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "NUEZ_PECAN",
+      "name": "Nuez pecán",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "MACADAMIA",
+      "name": "Nuez de macadamia",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "SEMILLAS_GIRASOL",
+      "name": "Semillas de girasol",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "SEMILLAS_CALABAZA",
+      "name": "Semillas de calabaza",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "KETCHUP",
+      "name": "Ketchup / Salsa de tomate",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "L" }, { "uom": "ML" }]
+    },
+    {
+      "globalId": "MAYONESA",
+      "name": "Mayonesa",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "L" }]
+    },
+    {
+      "globalId": "MOSTAZA",
+      "name": "Mostaza",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "L" }]
+    },
+    {
+      "globalId": "SALSA_SOJA",
+      "name": "Salsa de soja",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "SALSA_PESTO",
+      "name": "Salsa pesto",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "SALSA_BBQ",
+      "name": "Salsa BBQ",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "L" }]
+    },
+    {
+      "globalId": "VINO_TINTO",
+      "name": "Vino tinto",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }]
+    },
+    {
+      "globalId": "PERA",
+      "name": "Pera",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "UVAS",
+      "name": "Uvas",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "FRESA",
+      "name": "Fresa",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "KIWI",
+      "name": "Kiwi",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "PINA",
+      "name": "Piña",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "MELON",
+      "name": "Melón",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "MELOCOTON",
+      "name": "Melocotón",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "NECTARINA",
+      "name": "Nectarina",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "MANDARINA",
+      "name": "Mandarina",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "CEREZA",
+      "name": "Cereza",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "ARANDANO",
+      "name": "Arándano",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "MANGO",
+      "name": "Mango",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "AGUACATE",
+      "name": "Aguacate",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "ALBARICOQUE",
+      "name": "Albaricoque",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "HIGO",
+      "name": "Higo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "GRANADA",
+      "name": "Granada",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "FRAMBUESA",
+      "name": "Frambuesa",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "LIMA",
+      "name": "Lima",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "COCO",
+      "name": "Coco",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "ESPINACA",
+      "name": "Espinaca",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "ACELGA",
+      "name": "Acelga",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "COL",
+      "name": "Col / Repollo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "BROCOLI",
+      "name": "Brócoli",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "COLIFLOR",
+      "name": "Coliflor",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "ALCACHOFA",
+      "name": "Alcachofa",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "CALABAZA",
+      "name": "Calabaza",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "JUDIA_VERDE",
+      "name": "Judía verde",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CHAMPIÑON",
+      "name": "Champiñón",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "PUERRO",
+      "name": "Puerro",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "ESPARRAGO",
+      "name": "Espárrago",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "REMOLACHA",
+      "name": "Remolacha",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "NABO",
+      "name": "Nabo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "APIO",
+      "name": "Apio",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "RABANITO",
+      "name": "Rabanito",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CEBOLLINO",
+      "name": "Cebollino",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "COL_RIZADA",
+      "name": "Col rizada (kale)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "RUCULA",
+      "name": "Rúcula",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "POLLO_ENTERO",
+      "name": "Pollo entero",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "MUSLO_POLLO",
+      "name": "Muslo de pollo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "UN" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "ALITAS_POLLO",
+      "name": "Alitas de pollo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CONTRAMUSLO",
+      "name": "Contramuslo de pollo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "PAVO_ENTERO",
+      "name": "Pavo entero",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "PECHUGA_PAVO",
+      "name": "Pechuga de pavo",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "FILETE_PAVO",
+      "name": "Filete de pavo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "COSTILLA_CERDO",
+      "name": "Costilla de cerdo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "SOLOMILLO_CERDO",
+      "name": "Solomillo de cerdo",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CORDERO_PIERNA",
+      "name": "Pierna de cordero",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CORDERO_CHULETA",
+      "name": "Chuleta de cordero",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CORDERO_PALETILLA",
+      "name": "Paletilla de cordero",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "ENTRECOT",
+      "name": "Entrecot (vacuno)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "SOLOMILLO_VACUNO",
+      "name": "Solomillo (vacuno)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "FILETE_VACUNO",
+      "name": "Filete (vacuno)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }]
+    },
+    {
+      "globalId": "CARNE_PICADA_VACUNO",
+      "name": "Carne picada (vacuno)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "CARNE_PICADA_CERDO",
+      "name": "Carne picada (cerdo)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "CARNE_PICADA_MIXTA",
+      "name": "Carne picada (mixta)",
+      "category": 1,
+      "baseUoM": "KG",
+      "unitsOfMeasure": [{ "uom": "KG" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "PIMIENTA_NEGRA",
+      "name": "Pimienta negra (molida)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "TSP" }, { "uom": "TBSP" }]
+    },
+    {
+      "globalId": "PIMIENTA_BLANCA",
+      "name": "Pimienta blanca (molida)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "TSP" }]
+    },
+    {
+      "globalId": "ORIGANO",
+      "name": "Orégano seco",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "ROMERO",
+      "name": "Romero seco",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "TOMILLO",
+      "name": "Tomillo seco",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "ALBAHACA_FRESCA",
+      "name": "Albahaca (fresca)",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "ALBAHACA_SECA",
+      "name": "Albahaca seca",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CILANTRO",
+      "name": "Cilantro",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "COMINO",
+      "name": "Comino (molido)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CURCUMA",
+      "name": "Cúrcuma",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CANELA",
+      "name": "Canela (molida)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CLAVO",
+      "name": "Clavo (molido)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "NUEZ_MOSCADA",
+      "name": "Nuez moscada",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CHILE_PIQUANE",
+      "name": "Chile piQUANe / cayena",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "TSP" }]
+    },
+    {
+      "globalId": "ENELDO",
+      "name": "Eneldo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "JENGIBRE",
+      "name": "Jengibre (fresco)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "KG" }]
+    },
+    {
+      "globalId": "AJO_EN_POLVO",
+      "name": "Ajo en polvo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "TSP" }]
+    },
+    {
+      "globalId": "CEBOLLA_EN_POLVO",
+      "name": "Cebolla en polvo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "HOJA_LAUREL",
+      "name": "Hoja de laurel",
+      "category": 1,
+      "baseUoM": "UN",
+      "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "G" }]
+    },
+    {
+      "globalId": "CARDAMOMO",
+      "name": "Cardamomo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CURRY",
+      "name": "Curry en polvo (mezcla)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "TSP" }, { "uom": "TBSP" }]
+    },
+    {
+      "globalId": "SAZONADOR_POLLO",
+      "name": "Sazonador para pollo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "SAZONADOR_ADOBO",
+      "name": "Sazonador / Adobo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "CALDO_POLLO_POLVO",
+      "name": "Caldo de pollo en polvo (cubito/instantáneo)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CALDO_VERDURAS_POLVO",
+      "name": "Caldo vegetal en polvo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "MEZCLA_BBQ",
+      "name": "Mezcla BBQ (barbacoa)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "PROVENZAL",
+      "name": "Hierbas provenzales (mezcla)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "SAL_AJO_MEZCLA",
+      "name": "Sal con ajo (mezcla comercial)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }]
+    },
+    {
+      "globalId": "AGUA",
+      "name": "Agua",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "AGUA_MINERAL",
+      "name": "Agua mineral",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "AGUA_GAS",
+      "name": "Agua con gas",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "COCA_COLA",
+      "name": "Refresco cola (Coca-Cola)",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "FANTA_NARANJA",
+      "name": "Fanta naranja",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "REFRESCO_COLA",
+      "name": "Refresco cola (genérico)",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "ZUMO_NARANJA",
+      "name": "Zumo de naranja",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "ZUMO_MANZANA",
+      "name": "Zumo de manzana",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "ML" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CERVEZA",
+      "name": "Cerveza",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CERVEZA_SIN_ALCOHOL",
+      "name": "Cerveza sin alcohol",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "VINO_BLANCO",
+      "name": "Vino blanco",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "BEBIDA_ENERGETICA",
+      "name": "Bebida energética",
+      "category": 1,
+      "baseUoM": "L",
+      "unitsOfMeasure": [{ "uom": "L" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CAFE",
+      "name": "Café (molido)",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "KG" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "CAFE_INSTANTANEO",
+      "name": "Café instantáneo",
+      "category": 1,
+      "baseUoM": "G",
+      "unitsOfMeasure": [{ "uom": "G" }, { "uom": "UN" }]
+    },
+    {
+      "globalId": "TE_BOLSA",
+      "name": "Té (bolsa)",
+      "category": 1,
+      "baseUoM": "BAG",
+      "unitsOfMeasure": [{ "uom": "BAG" }, { "uom": "G" }]
+    }
+  ]
+}

@@ -30,4 +30,11 @@ public class FoodCategory
     public int? ParentCategoryId { get; set; }
 
     public FoodCategory? ParentCategory { get; private set; }
+
+    public void Set(FoodCategory foodCategoryLevel1)
+    {
+        Name = foodCategoryLevel1.Name;
+        IsLeaf = foodCategoryLevel1.IsLeaf;
+        ParentCategoryId = foodCategoryLevel1.ParentCategoryId;
+    }
 }

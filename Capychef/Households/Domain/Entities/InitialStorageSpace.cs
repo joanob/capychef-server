@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Domain.Entities;
 
@@ -20,4 +21,11 @@ public class InitialStorageSpace
     [Column("name")] public string Name { get; set; }
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
+
+    public static void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<InitialStorageSpace>()
+            .Property(f => f.StorageCondition)
+            .HasConversion(new StorageConditionsConverter());
+    }
 }

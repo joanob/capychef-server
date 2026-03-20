@@ -6,6 +6,7 @@ using Capychef.Api.Logging;
 using Capychef.Api.Realtime;
 using DotNetEnv;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,22 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("LocalhostFrontend");
+
+    // Intentamos generar el documento Swagger al arrancar para atrapar errores de generación
+    try
+    {
+        var swaggerProvider = app.Services.GetRequiredService<ISwaggerProvider>();
+        // Esto forzará la creación del documento y fallará ahora en vez de cuando se llame a /swagger/v1/swagger.json
+        var doc = swaggerProvider.GetSwagger("v1");
+    }
+    catch (Exception ex)
+    {
+        // Imprimir en consola para que puedas ver la traza completa al ejecutar la app
+        Console.WriteLine("Error generating Swagger document at startup:");
+        Console.WriteLine(ex.ToString());
+        // No rethrow: dejamos que la app arranque para que puedas inspeccionar otros endpoints.
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }

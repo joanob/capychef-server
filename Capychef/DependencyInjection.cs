@@ -1,4 +1,6 @@
-﻿using Capychef.Food.Domain.Interfaces;
+﻿using Capychef.Data;
+using Capychef.DataLoader.Services;
+using Capychef.Food.Domain.Interfaces;
 using Capychef.Food.Repositories;
 using Capychef.Food.Services;
 using Capychef.Gourmet.Domain.Interfaces;
@@ -87,6 +89,9 @@ public static class DependencyInjection
         services.AddScoped<TestHouseholds, TestHouseholds>();
         services.AddScoped<TestFood, TestFood>();
         services.AddScoped<Testdata.Testdata, Testdata.Testdata>();
+
+        // DATA LOADER
+        services.AddScoped<IDataLoader, JsonDataLoader>();
 
         return services;
     }

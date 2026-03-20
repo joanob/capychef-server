@@ -106,6 +106,15 @@ public class Food : BaseDeletableEntity
 
         if (uoM != null) UoM.Remove(uoM);
     }
+
+    public void Set(Food food)
+    {
+        Name = food.Name;
+        CategoryId = food.CategoryId;
+        BaseUoM = food.BaseUoM;
+        DaysUntilExpiration = food.DaysUntilExpiration;
+        DaysUntilBestBefore = food.DaysUntilBestBefore;
+    }
 }
 
 public static class FoodExtensions

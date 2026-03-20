@@ -19,4 +19,9 @@ public class UoMDimension
     [Key] [Column("code")] public string Code { get; private set; }
 
     [Column("name")] public string Name { get; private set; }
+
+    public void Set(UoMDimension uoMDimension)
+    {
+        Name = uoMDimension.Name;
+    }
 }

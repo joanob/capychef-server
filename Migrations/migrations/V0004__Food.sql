@@ -29,7 +29,7 @@ CREATE RULE "uom_soft_delete" AS ON DELETE TO "uom" DO INSTEAD NOTHING;
 
 CREATE TABLE food_categories
 (
-    id             SERIAL PRIMARY KEY,
+    id             INTEGER PRIMARY KEY,
     name       TEXT      NOT NULL,
     is_leaf BOOLEAN NOT NULL,
     parent_category_id INTEGER,

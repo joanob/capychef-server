@@ -43,6 +43,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     {
         base.OnModelCreating(modelBuilder);
 
+        InitialStorageSpace.OnModelCreating(modelBuilder);
         StorageSpace.OnModelCreating(modelBuilder);
 
         SubscriptionDiscount.OnModelCreating(modelBuilder);

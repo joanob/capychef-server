@@ -31,7 +31,7 @@ public class Subscription
         AmountSaved = amountSaved;
     }
 
-    [Column("id")] public int Id { get; }
+    [Column("id")] public int Id { get; private set; }
 
     [Column("user_id")] public int UserId { get; }
 

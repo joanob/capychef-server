@@ -7,6 +7,7 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
 {
     private readonly string[] publicRoutes =
     {
+        "/data/load",
         "/auth/signup",
         "/auth/login",
         "/users/username/check",

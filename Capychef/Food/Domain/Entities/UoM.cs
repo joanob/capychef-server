@@ -35,4 +35,13 @@ public class UoM
     [Column("denominator")] public int? Denominator { get; private set; }
 
     public UoMDimension Dimension { get; private set; }
+
+    public void Set(UoM uoM)
+    {
+        Name = uoM.Name;
+        DimensionCode = uoM.DimensionCode;
+        BaseUoM = uoM.BaseUoM;
+        Numerator = uoM.Numerator;
+        Denominator = uoM.Denominator;
+    }
 }
