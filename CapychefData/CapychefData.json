@@ -184,14 +184,14 @@
     {
       "globalId": "PECHUGA_POLLO",
       "name": "Pechuga de pollo",
-      "category": 1,
+      "category": 4,
       "baseUoM": "UN",
       "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
     },
     {
       "globalId": "LOMO_CERDO",
       "name": "Lomo de cerdo",
-      "category": 1,
+      "category": 5,
       "baseUoM": "UN",
       "unitsOfMeasure": [{ "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
     },
