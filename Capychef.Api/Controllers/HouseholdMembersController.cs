@@ -29,7 +29,7 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
     }
 
     [CheckMembership]
-    [HttpDelete("{householdId}")]
+    [HttpDelete("leave/{householdId}")]
     public async Task<ActionResult> LeaveHousehold(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
@@ -41,6 +41,21 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
         if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         JWTService.CreateAndSendJWT(new AuthUserDetails(userDetails.UserId, userDetails.SessionId), Response);
+
+        return Ok();
+    }
+
+    [CheckOwnership]
+    [HttpDelete("remove/{householdMemberId}")]
+    public async Task<ActionResult> RemoveMember(int householdMemberId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await householdMemberService.RemoveMember(userDetails, householdMemberId);
+
+        var logger = loggerFactory.CreateLogger("HouseholdService.LeaveHousehold");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
 
         return Ok();
     }

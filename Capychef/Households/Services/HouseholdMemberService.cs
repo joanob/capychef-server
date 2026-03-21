@@ -36,4 +36,19 @@ public class HouseholdMemberService(
 
         return null;
     }
+
+    public async Task<AppError> RemoveMember(AuthUserDetails userDetails, int householdMemberId)
+    {
+        var member =
+            await householdMemberRepository.GetTrackedByHouseholdMemberId(householdMemberId,
+                userDetails.HouseholdId.Value);
+
+        if (member == null) return new NotFoundError(EntityType.HouseholdMember, householdMemberId);
+
+        member.Delete();
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
 }

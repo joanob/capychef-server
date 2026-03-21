@@ -9,4 +9,5 @@ public interface IHouseholdMemberService
 {
     Task<Result<List<UserDTO>>> GetHouseholdMembers(AuthUserDetails userDetails);
     Task<AppError?> LeaveHousehold(AuthUserDetails userDetails);
+    Task<AppError> RemoveMember(AuthUserDetails userDetails, int householdMemberId);
 }

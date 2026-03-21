@@ -9,4 +9,5 @@ public interface IHouseholdMemberRepository
     Task<List<HouseholdMember>> GetHouseholdMembers(int householdId);
     Task<int> CountHouseholdMemberships(int userId);
     Task<HouseholdMember?> GetTrackedHouseholdMember(int userId, int householdId);
+    Task<HouseholdMember?> GetTrackedByHouseholdMemberId(int householdMemberId, int householdId);
 }
