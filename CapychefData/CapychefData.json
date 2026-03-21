@@ -1,4 +1,21 @@
 ﻿{
+  "initialStorageSpaces": [
+    {
+      "id": 1,
+      "name": "Despensa",
+      "storageCondition": "A"
+    },
+    {
+      "id": 2,
+      "name": "Nevera",
+      "storageCondition": "R"
+    },
+    {
+      "id": 3,
+      "name": "Congelador",
+      "storageCondition": "F"
+    }
+  ],
   "uomDimensions": [
     {
       "code": "QUAN",

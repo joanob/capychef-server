@@ -4,6 +4,9 @@ namespace Capychef.Data;
 
 public class CapychefDataFile
 {
+    [JsonPropertyName("initialStorageSpaces")]
+    public List<InitialStorageSpaceDataFile>? InitialStorageSpaces { get; set; }
+
     [JsonPropertyName("uomDimensions")] public List<UoMDimensionDataFile>? UomDimensions { get; set; }
 
     [JsonPropertyName("uom")] public List<UoMDataFile>? Uom { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Capychef.Data;
 using Capychef.Food.Domain.Entities;
+using Capychef.Households.Domain.Entities;
 using Capychef.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +25,8 @@ public class JsonDataLoader(CapychefDbContext dbContext)
 
         if (data == null) return;
 
+        await LoadInitialStorageSpaces(data.InitialStorageSpaces);
+
         var uoMDimensions = await LoadUoMDimensions(data.UomDimensions);
 
         var uoMs = await LoadUoMs(data.Uom, uoMDimensions);
@@ -35,6 +38,31 @@ public class JsonDataLoader(CapychefDbContext dbContext)
         await dbContext.SaveChangesAsync();
 
         Console.WriteLine("Data loaded successfully from JSON file");
+    }
+
+    private async Task LoadInitialStorageSpaces(List<InitialStorageSpaceDataFile>? initialStorageSpacesData)
+    {
+        if (initialStorageSpacesData == null || initialStorageSpacesData.Count == 0) return;
+
+        var storedInitialStorageSpaces = await dbContext.InitialStorageSpaces.ToListAsync();
+
+        var initialStorageSpaces = initialStorageSpacesData
+            .Select(x => new InitialStorageSpace(x.Id, x.Name, StorageConditions.from(x.StorageCondition))).ToList();
+
+        foreach (var initialStorageSpace in initialStorageSpaces)
+        {
+            var storedInitialStorageSpace =
+                storedInitialStorageSpaces.FirstOrDefault(x => x.Id == initialStorageSpace.Id);
+            if (storedInitialStorageSpace == null)
+            {
+                await dbContext.InitialStorageSpaces.AddAsync(initialStorageSpace);
+            }
+            else
+            {
+                storedInitialStorageSpace.Name = initialStorageSpace.Name;
+                storedInitialStorageSpace.StorageCondition = initialStorageSpace.StorageCondition;
+            }
+        }
     }
 
     private async Task<List<UoMDimension>> LoadUoMDimensions(List<UoMDimensionDataFile>? uoMDimensionsData)

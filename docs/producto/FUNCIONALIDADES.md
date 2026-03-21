@@ -12,7 +12,7 @@
 - [x] Eliminar hogar
 
 ## Espacios de almacenamiento
-- [ ] Cargar espacios de almacenamiento iniciales masivamente
+- [x] Cargar espacios de almacenamiento iniciales masivamente
 - [ ] Elegir espacios de almacenamiento iniciales al crear el hogar
 - [ ] Crear espacio de almacenamiento
 - [ ] Editar espacio de almacenamiento

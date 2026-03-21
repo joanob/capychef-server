@@ -10,6 +10,13 @@ public class InitialStorageSpace
     {
     }
 
+    public InitialStorageSpace(int id, string name, StorageConditions storageCondition)
+    {
+        Id = id;
+        Name = name;
+        StorageCondition = storageCondition;
+    }
+
     public InitialStorageSpace(string name, StorageConditions storageCondition)
     {
         Name = name;
