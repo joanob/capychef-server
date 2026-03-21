@@ -5,7 +5,7 @@ namespace Capychef.Api.Authorization;
 public class CheckMembershipAttribute : TypeFilterAttribute
 {
     public CheckMembershipAttribute()
-        : base(typeof(CheckOwnershipFilter))
+        : base(typeof(CheckMembershipFilter))
     {
     }
 }

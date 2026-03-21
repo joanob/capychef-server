@@ -6,7 +6,7 @@ CREATE TABLE discounts
 (
     id SERIAL PRIMARY KEY,
     discount_code VARCHAR NOT NULL UNIQUE,
-    discount_type VARCHAR NOT NULL CHECK (discount_type IN ('PERCENTAGE', 'FREE_MONTH' 'FIXED_AMOUNT')),
+    discount_type VARCHAR NOT NULL CHECK (discount_type IN ('PERCENTAGE', 'FREE_MONTH', 'FIXED_AMOUNT')),
     percentage_or_amount REAL NOT NULL,
     valid_from TIMESTAMP NOT NULL,
     valid_until TIMESTAMP NOT NULL
