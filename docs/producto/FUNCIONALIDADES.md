@@ -7,9 +7,9 @@
 - [x] Aceptar y rechazar invitaciones
 - [x] Pedir acceso a un hogar mediante un enlace o código
 - [x] Aceptar o rechazar peticiones de acceso
-- [ ] Abandonar hogar
-- [ ] Eliminar miembro
-- [ ] Eliminar hogar
+- [x] Abandonar hogar
+- [x] Eliminar miembro
+- [x] Eliminar hogar
 
 ## Espacios de almacenamiento
 - [ ] Cargar espacios de almacenamiento iniciales masivamente
