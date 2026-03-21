@@ -116,6 +116,18 @@ public class HouseholdService(
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
 
+    public async Task<AppError> DeleteHousehold(AuthUserDetails userDetails)
+    {
+        var household = await householdRepository.GetTrackedHouseholdById(userDetails.HouseholdId.Value);
+        if (household == null) return new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value);
+
+        household.Delete();
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
     private async Task CreateInitialStorageSpaces(Household household, AuthUserDetails userDetails,
         CreateHouseholdCmd cmd)
     {

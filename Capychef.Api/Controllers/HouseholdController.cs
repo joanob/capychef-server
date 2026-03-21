@@ -1,6 +1,7 @@
 ﻿using Capychef.Api.Auth;
 using Capychef.Api.Authorization;
 using Capychef.Api.Errors;
+using Capychef.Common.Auth;
 using Capychef.Common.Entities;
 using Capychef.Common.Errors;
 using Capychef.Households.Domain.Cmd;
@@ -103,6 +104,23 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
         if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
 
         return Ok(household.get());
+    }
+
+    [CheckOwnership]
+    [HttpDelete("{householdId}")]
+    public async Task<ActionResult> DeleteHousehold(int householdId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await householdService.DeleteHousehold(userDetails);
+
+        var logger = loggerFactory.CreateLogger("HouseholdService.DeleteHousehold");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+
+        JWTService.CreateAndSendJWT(new AuthUserDetails(userDetails.UserId, userDetails.SessionId), Response);
+
+        return Ok();
     }
 
     private ActionResult handleError(AppError error, ILogger logger)
