@@ -15,18 +15,21 @@ public class HouseholdMember : BaseDeletableEntity
     {
         Household = household;
         User = user;
+        DidLeave = false;
     }
 
     public HouseholdMember(Household household, int userId)
     {
         Household = household;
         UserId = userId;
+        DidLeave = false;
     }
 
     public HouseholdMember(int householdId, int userId)
     {
         HouseholdId = householdId;
         UserId = userId;
+        DidLeave = false;
     }
 
     [Column("household_id")]
@@ -37,9 +40,17 @@ public class HouseholdMember : BaseDeletableEntity
     [ForeignKey(nameof(User))]
     public int UserId { get; private set; }
 
+    [Column("did_leave")] public bool DidLeave { get; private set; }
+
     public Household Household { get; private set; } = null!;
 
     public User User { get; private set; } = null!;
+
+    public void Leave()
+    {
+        DidLeave = true;
+        Delete();
+    }
 }
 
 public static class HouseholdMemberExtensions

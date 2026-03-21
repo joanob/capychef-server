@@ -33,6 +33,7 @@ CREATE TABLE household_members (
   deleted_at     TIMESTAMP,
   household_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
+  did_leave BOOLEAN NOT NULL,
   FOREIGN KEY (household_id) REFERENCES households (id),
   FOREIGN KEY (user_id) REFERENCES users (id)
 );

@@ -28,4 +28,10 @@ public class HouseholdMemberRepository(CapychefDbContext dbContext) : IHousehold
     {
         return await dbContext.HouseholdMembers.Active().Where(m => m.UserId == userId).CountAsync();
     }
+
+    public async Task<HouseholdMember?> GetTrackedHouseholdMember(int userId, int householdId)
+    {
+        return await dbContext.HouseholdMembers.Active().Where(m => m.UserId == userId && m.HouseholdId == householdId)
+            .FirstOrDefaultAsync();
+    }
 }

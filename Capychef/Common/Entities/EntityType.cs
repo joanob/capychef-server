@@ -7,6 +7,7 @@ public class EntityType
     private const string _tokenType = "TOKEN";
 
     private const string _householdType = "HOUSEHOLD";
+    private const string _householdMemberType = "HOUSHOLD_MEMBER";
     private const string _householdInvitationType = "HOUSHOLD_INVITATION";
     private const string _householdJoinRequestType = "HOUSHOLD_JOIN_REQUEST";
 
@@ -32,6 +33,7 @@ public class EntityType
     public static EntityType UserPassword => new(_userPasswordType);
     public static EntityType Token => new(_tokenType);
     public static EntityType Household => new(_householdType);
+    public static EntityType HouseholdMember => new(_householdMemberType);
     public static EntityType HouseholdInvitation => new(_householdInvitationType);
     public static EntityType HouseholdJoinRequest => new(_householdJoinRequestType);
     public static EntityType StorageSpace => new(_storageSpaceType);
@@ -50,6 +52,7 @@ public class EntityType
             _userPasswordType => UserPassword,
             _tokenType => Token,
             _householdType => Household,
+            _householdMemberType => HouseholdMember,
             _householdInvitationType => HouseholdInvitation,
             _householdJoinRequestType => HouseholdJoinRequest,
             _storageSpaceType => StorageSpace,
