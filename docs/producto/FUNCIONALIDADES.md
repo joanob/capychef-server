@@ -19,9 +19,9 @@
 - [x] Eliminar espacio de almacenamiento
 
 ## Alimentos
-- [ ] Cargar unidades de medida y dimensiones masivamente
-- [ ] Cargar categorías masivamente
-- [ ] Cargar alimentos globales masivamente
+- [x] Cargar unidades de medida y dimensiones masivamente
+- [x] Cargar categorías masivamente
+- [x] Cargar alimentos globales masivamente
 - [ ] Modificar unidades de medida o conversiones de un alimento global
 - [ ] Modificar tiempo de consumo preferente o de caducidad de un alimento global
 - [ ] Modificar notificaciones de un alimento global
