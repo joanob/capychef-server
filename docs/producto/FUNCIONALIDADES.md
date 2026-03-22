@@ -13,10 +13,10 @@
 
 ## Espacios de almacenamiento
 - [x] Cargar espacios de almacenamiento iniciales masivamente
-- [ ] Elegir espacios de almacenamiento iniciales al crear el hogar
-- [ ] Crear espacio de almacenamiento
-- [ ] Editar espacio de almacenamiento
-- [ ] Eliminar espacio de almacenamiento
+- [x] Elegir espacios de almacenamiento iniciales al crear el hogar
+- [x] Crear espacio de almacenamiento
+- [x] Editar espacio de almacenamiento
+- [x] Eliminar espacio de almacenamiento
 
 ## Alimentos
 - [ ] Cargar unidades de medida y dimensiones masivamente
