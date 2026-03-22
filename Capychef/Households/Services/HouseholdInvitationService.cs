@@ -24,8 +24,8 @@ public class HouseholdInvitationService(
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
     {
-        var household = await householdRepository.GetTrackedHouseholdById(userDetails.HouseholdId.Value);
-        if (household == null) return new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value);
+        var household = await householdRepository.GetTrackedHouseholdById(userDetails.GetHouseholdId());
+        if (household == null) return new NotFoundError(EntityType.Household, userDetails.GetHouseholdId());
 
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null) return new NotFoundError(EntityType.User, cmd.Username);
@@ -46,7 +46,7 @@ public class HouseholdInvitationService(
 
     public async Task<List<HouseholdInvitationDTO>> GetAllHouseholdInvitations(AuthUserDetails userDetails)
     {
-        var invitations = await invitationRepository.GetHouseholdInvitations(userDetails.HouseholdId.Value);
+        var invitations = await invitationRepository.GetHouseholdInvitations(userDetails.GetHouseholdId());
 
         return HouseholdInvitationDTO.toList(invitations);
     }

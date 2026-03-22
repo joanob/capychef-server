@@ -4,16 +4,12 @@ using Capychef.Common.Errors;
 namespace Capychef.Food.Domain.Errors;
 
 /**
- * Food base UoM is not in food uom list
+ * Food uom list does not have any base uom
  */
 public class FoodBaseUoMNotFound : NotFoundError
 {
-    public FoodBaseUoMNotFound(int foodId, string uom) : base(EntityType.UoM, uom)
+    public FoodBaseUoMNotFound(int foodId) : base(EntityType.FoodBaseUoM, foodId)
     {
-        UoM = uom;
-
-        Message = "food " + foodId + " does not have uom" + uom;
+        Message = "food " + foodId + " does not have a base uom";
     }
-
-    public string UoM { get; }
 }

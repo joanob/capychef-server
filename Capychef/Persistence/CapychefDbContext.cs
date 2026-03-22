@@ -3,6 +3,7 @@ using Capychef.Gourmet.Domain.Entities;
 using Capychef.Households.Domain.Entities;
 using Capychef.Storage.Domain.Entities;
 using Capychef.Users.Domain.Entities;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -90,5 +91,15 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
         }
 
         return base.SaveChangesAsync(cancellationToken);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        Env.Load("../../.env");
+
+        Console.WriteLine(Environment.GetEnvironmentVariable("ENVIRONMENT"));
+
+        if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "Development")
+            optionsBuilder.EnableSensitiveDataLogging();
     }
 }

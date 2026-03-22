@@ -15,7 +15,7 @@ public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFa
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(context.HttpContext);
 
-        if (userDetails.HouseholdId == null)
+        if (!userDetails.HasHouseholdId)
         {
             context.Result = new NotFoundResult();
             return;

@@ -25,7 +25,7 @@ public class StorageSpaceService(
             return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageCondition, cmd.StorageCondition));
 
         var storageSpace =
-            new StorageSpace(cmd.Name, storageCondition, userDetails.HouseholdId.Value, userDetails.UserId);
+            new StorageSpace(cmd.Name, storageCondition, userDetails.GetHouseholdId(), userDetails.UserId);
 
         await storageSpaceRepository.AddAsync(storageSpace);
 
@@ -37,7 +37,7 @@ public class StorageSpaceService(
     public async Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd,
         AuthUserDetails userDetails)
     {
-        var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.HouseholdId.Value);
+        var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.GetHouseholdId());
 
         if (storageSpace == null) return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageSpace, id));
 
@@ -71,7 +71,7 @@ public class StorageSpaceService(
 
     public async Task<AppError> DeleteStorageSpace(int id, AuthUserDetails userDetails)
     {
-        var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.HouseholdId.Value);
+        var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.GetHouseholdId());
 
         if (storageSpace == null) return new NotFoundError(EntityType.StorageSpace, id);
 
@@ -84,7 +84,7 @@ public class StorageSpaceService(
 
     public async Task<Result<List<StorageSpaceDTO>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails)
     {
-        var storageSpaces = await storageSpaceRepository.GetHouseholdStorageSpaces(userDetails.HouseholdId.Value);
+        var storageSpaces = await storageSpaceRepository.GetHouseholdStorageSpaces(userDetails.GetHouseholdId());
 
         return new Result<List<StorageSpaceDTO>>(StorageSpaceDTO.ToDTOList(storageSpaces));
     }

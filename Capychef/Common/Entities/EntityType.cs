@@ -18,6 +18,7 @@ public class EntityType
 
     private const string _foodType = "FOOD";
     private const string _foodUoMType = "FOOD_UOM";
+    private const string _foodBaseUoMType = "FOOD_BASE_UOM";
     private const string _foodCategoryType = "FOOD_CATEGORY";
 
     private const string _batchType = "BATCH";
@@ -41,6 +42,7 @@ public class EntityType
     public static EntityType UoM => new(_uomType);
     public static EntityType Food => new(_foodType);
     public static EntityType FoodUoM => new(_foodUoMType);
+    public static EntityType FoodBaseUoM => new(_foodBaseUoMType);
     public static EntityType FoodCategory => new(_foodCategoryType);
     public static EntityType Batch => new(_batchType);
 
@@ -60,6 +62,7 @@ public class EntityType
             _uomType => UoM,
             _foodType => Food,
             _foodUoMType => FoodUoM,
+            _foodBaseUoMType => FoodBaseUoM,
             _foodCategoryType => FoodCategory,
             _batchType => Batch,
             _ => null

@@ -41,7 +41,7 @@ public class HouseholdJoinRequestService(
 
     public async Task<List<HouseholdJoinRequestDTO>> GetAllHouseholdJoinRequests(AuthUserDetails userDetails)
     {
-        var joinRequests = await joinRequestRepository.GetHouseholdJoinRequests(userDetails.HouseholdId.Value);
+        var joinRequests = await joinRequestRepository.GetHouseholdJoinRequests(userDetails.GetHouseholdId());
 
         return HouseholdJoinRequestDTO.toList(joinRequests);
     }
@@ -56,7 +56,7 @@ public class HouseholdJoinRequestService(
     public async Task<AppError?> AcceptJoinRequest(AuthUserDetails userDetails, int joinRequestId)
     {
         var joinRequest =
-            await joinRequestRepository.GetTrackedJoinRequestById(joinRequestId, userDetails.HouseholdId.Value);
+            await joinRequestRepository.GetTrackedJoinRequestById(joinRequestId, userDetails.GetHouseholdId());
 
         if (joinRequest == null || joinRequest.IsAnswered)
             return new NotFoundError(EntityType.HouseholdJoinRequest, joinRequestId);
@@ -83,7 +83,7 @@ public class HouseholdJoinRequestService(
     public async Task<AppError?> RejectJoinRequest(AuthUserDetails userDetails, int joinRequestId)
     {
         var joinRequest =
-            await joinRequestRepository.GetTrackedJoinRequestById(joinRequestId, userDetails.HouseholdId.Value);
+            await joinRequestRepository.GetTrackedJoinRequestById(joinRequestId, userDetails.GetHouseholdId());
 
         if (joinRequest == null || joinRequest.IsAnswered)
             return new NotFoundError(EntityType.HouseholdJoinRequest, joinRequestId);

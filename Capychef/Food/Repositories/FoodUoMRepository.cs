@@ -12,13 +12,14 @@ public class FoodUoMRepository(CapychefDbContext dbContext) : IFoodUoMRepository
         await dbContext.FoodUoM.AddAsync(foodUoM);
     }
 
-    public async Task<List<FoodUoM>> GetTrackedAllUoMByFoodId(int foodId)
+    public async Task<List<FoodUoM>> GetTrackedAllUoMByFoodId(int foodId, int? householdId = null)
     {
-        return await dbContext.FoodUoM.Where(x => x.FoodId == foodId).ToListAsync();
+        return await dbContext.FoodUoM.FromHousehold(householdId).Active().Where(x => x.FoodId == foodId).ToListAsync();
     }
 
-    public async Task<bool> CheckFoodUoMExistsById(int foodUoMId, int foodId)
+    public async Task<bool> CheckFoodUoMExistsById(int foodUoMId, int foodId, int? householdId = null)
     {
-        return await dbContext.FoodUoM.AnyAsync(x => x.FoodId == foodUoMId && x.FoodId == foodId);
+        return await dbContext.FoodUoM.FromHousehold(householdId).Active()
+            .AnyAsync(x => x.FoodId == foodUoMId && x.FoodId == foodId);
     }
 }

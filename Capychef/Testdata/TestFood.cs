@@ -41,12 +41,12 @@ public class TestFood(CapychefDbContext dbContext)
                     householdMembers.ElementAt(RandomGenerator.GenerateRandomNumber(householdMembers.Count));
 
                 var food = new Food.Domain.Entities.Food(household.Id, RandomGenerator.GenerateRandomAlphabetString(10),
-                    foodCategory.Id, uom.Code, createdBy.UserId, null, null);
+                    foodCategory.Id, createdBy.UserId, null, null);
 
                 if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_FOOD_PERCENTAJE))
                     food.Delete();
 
-                var foodUoM = new FoodUoM(food, uom.Code, null, null, null);
+                var foodUoM = new FoodUoM(food, household.Id, uom.Code, false, null, null, null);
 
                 await dbContext.AddAsync(food);
 

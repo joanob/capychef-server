@@ -30,28 +30,6 @@ public class FoodController(
         return Ok(new ApiResponse<FoodDTO>(food.get()));
     }
 
-    [HttpPost("global")]
-    public async Task<ActionResult> LoadGlobalFood(GlobalFoodFileCmd fileCmd)
-    {
-        Task.Run(async () =>
-        {
-            using var scope = serviceScopeFactory.CreateScope();
-
-            var foodService = scope.ServiceProvider.GetRequiredService<IFoodService>();
-
-            try
-            {
-                await foodService.LoadGlobalFood(fileCmd);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        });
-
-        return Ok();
-    }
-
     [CheckMembership]
     [HttpGet("household/{householdId}")]
     public async Task<ActionResult<ApiResponse<List<FoodDTO>>>> GetAllHouseholdFood(int householdId)
@@ -91,6 +69,21 @@ public class FoodController(
         if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
 
         return Ok(new ApiResponse<FoodDTO>(food.get()));
+    }
+
+    [CheckMembership]
+    [HttpPut("{foodId}/uom")]
+    public async Task<ActionResult> UpdateFoodUoM(int foodId, List<FoodUoMCmd> cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await foodService.UpdateFoodUoM(foodId, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("FoodService.UpdateFoodUoM");
+
+        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+
+        return Ok();
     }
 
     [CheckMembership]

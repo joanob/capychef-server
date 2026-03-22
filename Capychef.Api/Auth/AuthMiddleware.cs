@@ -55,9 +55,9 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
 
     private void LogAuthUserDetails(AuthUserDetails userDetails)
     {
-        if (userDetails.HouseholdId.HasValue)
+        if (userDetails.HasHouseholdId)
             logger.LogInformation(
-                $"user {userDetails.UserId} - session {userDetails.SessionId} - household {userDetails.HouseholdId.Value}");
+                $"user {userDetails.UserId} - session {userDetails.SessionId} - household {userDetails.GetHouseholdId()}");
         else
             logger.LogInformation($"user {userDetails.UserId} - session {userDetails.SessionId}");
     }

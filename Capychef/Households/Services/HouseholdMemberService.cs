@@ -15,7 +15,7 @@ public class HouseholdMemberService(
 {
     public async Task<Result<List<UserDTO>>> GetHouseholdMembers(AuthUserDetails userDetails)
     {
-        var members = await householdMemberRepository.GetHouseholdMembers(userDetails.HouseholdId.Value);
+        var members = await householdMemberRepository.GetHouseholdMembers(userDetails.GetHouseholdId());
 
         return new Result<List<UserDTO>>(UserDTO.ToDTOList(members.Select(m => m.User).ToList()));
     }
@@ -24,11 +24,11 @@ public class HouseholdMemberService(
     {
         var member =
             await householdMemberRepository.GetTrackedHouseholdMember(userDetails.UserId,
-                userDetails.HouseholdId.Value);
+                userDetails.GetHouseholdId());
 
         if (member == null)
             return new NotFoundError(EntityType.HouseholdMember,
-                $"household {userDetails.HouseholdId.Value} user {userDetails.UserId}");
+                $"household {userDetails.GetHouseholdId()} user {userDetails.UserId}");
 
         member.Leave();
 
@@ -41,7 +41,7 @@ public class HouseholdMemberService(
     {
         var member =
             await householdMemberRepository.GetTrackedByHouseholdMemberId(householdMemberId,
-                userDetails.HouseholdId.Value);
+                userDetails.GetHouseholdId());
 
         if (member == null) return new NotFoundError(EntityType.HouseholdMember, householdMemberId);
 

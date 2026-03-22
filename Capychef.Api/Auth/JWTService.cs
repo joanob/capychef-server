@@ -44,8 +44,8 @@ public class JWTService
             new(USER_ID_CLAIM, authUserDetails.UserId.ToString())
         };
 
-        if (authUserDetails.HouseholdId != null)
-            claims.Add(new Claim(HOUSEHOLD_ID_CLAIM, authUserDetails.HouseholdId.ToString()));
+        if (authUserDetails.HasHouseholdId)
+            claims.Add(new Claim(HOUSEHOLD_ID_CLAIM, authUserDetails.GetHouseholdId().ToString()));
 
         var securityKey = new SymmetricSecurityKey(jwtSecret);
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

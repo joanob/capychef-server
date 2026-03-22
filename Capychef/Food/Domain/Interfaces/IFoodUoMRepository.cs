@@ -5,6 +5,6 @@ namespace Capychef.Food.Domain.Interfaces;
 public interface IFoodUoMRepository
 {
     Task AddAsync(FoodUoM foodUoM);
-    Task<List<FoodUoM>> GetTrackedAllUoMByFoodId(int foodId);
-    Task<bool> CheckFoodUoMExistsById(int foodUoMId, int foodId);
+    Task<List<FoodUoM>> GetTrackedAllUoMByFoodId(int foodId, int? householdId);
+    Task<bool> CheckFoodUoMExistsById(int foodUoMId, int foodId, int? householdId);
 }

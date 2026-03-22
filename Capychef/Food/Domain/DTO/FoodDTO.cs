@@ -7,7 +7,6 @@ public class FoodDTO
         Id = food.Id;
         Name = food.Name;
         CategoryId = food.CategoryId;
-        BaseUoM = food.BaseUoM;
         DaysUntilExpiration = food.DaysUntilExpiration;
         DaysUntilBestBefore = food.DaysUntilBestBefore;
         IsGlobal = food.IsGlobal;
@@ -26,8 +25,6 @@ public class FoodDTO
     public string Name { get; }
 
     public int CategoryId { get; }
-
-    public string BaseUoM { get; }
 
     public int? DaysUntilExpiration { get; set; }
 

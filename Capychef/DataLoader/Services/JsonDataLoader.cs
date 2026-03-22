@@ -210,7 +210,6 @@ public class JsonDataLoader(CapychefDbContext dbContext)
 
         var storedFoodList = await dbContext.Food.ToListAsync();
 
-
         foreach (var foodData in foodDataList)
         {
             // Check food category
@@ -218,16 +217,12 @@ public class JsonDataLoader(CapychefDbContext dbContext)
                 throw new Exception(
                     $"Food {foodData.GlobalId} has a category {foodData.Category} that does not exist or is not a leaf category");
 
-            // Check base UoM
-            if (!uoMs.Any(u => u.Code == foodData.BaseUoM))
-                throw new Exception($"Food {foodData.GlobalId} has a base UoM {foodData.BaseUoM} that does not exist");
-
-            if (!foodData.UnitsOfMeasure.Any(u => u.UoM == foodData.BaseUoM))
-                throw new Exception(
-                    $"Food {foodData.GlobalId} has a base UoM {foodData.BaseUoM} that is not in the food units of measure");
+            // Check one food uom is base uom
+            if (foodData.UnitsOfMeasure.Count(u => u.IsBaseUoM ?? false) != 1)
+                throw new Exception($"Food {foodData.GlobalId} must have exactly one base UoM");
 
             var food = new Food.Domain.Entities.Food(foodData.GlobalId, foodData.Name, foodData.Category,
-                foodData.BaseUoM, foodData.DaysUntilExpiration, foodData.DaysUntilBestBefore);
+                foodData.DaysUntilExpiration, foodData.DaysUntilBestBefore);
 
             var storedFood = storedFoodList.FirstOrDefault(x => x.GlobalId == foodData.GlobalId);
             if (storedFood == null)
@@ -238,21 +233,24 @@ public class JsonDataLoader(CapychefDbContext dbContext)
 
                 foreach (var foodDataUoM in foodData.UnitsOfMeasure)
                 {
-                    if (!uoMs.Any(u => u.Code == foodDataUoM.UoM))
+                    if (uoMs.All(u => u.Code != foodDataUoM.UoM))
                         throw new Exception(
                             $"Food {foodData.GlobalId} has a UoM {foodDataUoM.UoM} that does not exist");
 
-                    await dbContext.FoodUoM.AddAsync(new FoodUoM(food, foodDataUoM.UoM, foodDataUoM.BaseUom,
-                        foodDataUoM.Numerator, foodDataUoM.Denominator));
+                    await dbContext.FoodUoM.AddAsync(new FoodUoM(food, null, foodDataUoM.UoM,
+                        foodDataUoM.IsBaseUoM ?? false, foodDataUoM.Numerator, foodDataUoM.Denominator,
+                        foodDataUoM.IsApproxConversion));
                 }
             }
             else
             {
                 storedFood.Set(food);
 
-                foreach (var foodDataUoM in foodData.UnitsOfMeasure)
+                // Iterate first units of measure that are not base uom to set current base uom as false before setting new base uom
+                foreach (var foodDataUoM in foodData.UnitsOfMeasure.Where(x =>
+                             !x.IsBaseUoM.HasValue || !x.IsBaseUoM.Value).ToList())
                 {
-                    if (!uoMs.Any(u => u.Code == foodDataUoM.UoM))
+                    if (uoMs.All(u => u.Code != foodDataUoM.UoM))
                         throw new Exception(
                             $"Food {foodData.GlobalId} has a UoM {foodDataUoM.UoM} that does not exist");
 
@@ -261,10 +259,42 @@ public class JsonDataLoader(CapychefDbContext dbContext)
                             x.FoodId == storedFood.Id && x.UoM == foodDataUoM.UoM);
 
                     if (storedFoodUoM == null)
-                        await dbContext.FoodUoM.AddAsync(new FoodUoM(storedFood, foodDataUoM.UoM, foodDataUoM.BaseUom,
-                            foodDataUoM.Numerator, foodDataUoM.Denominator));
+                    {
+                        await dbContext.FoodUoM.AddAsync(new FoodUoM(storedFood, null, foodDataUoM.UoM,
+                            foodDataUoM.IsBaseUoM ?? false,
+                            foodDataUoM.Numerator, foodDataUoM.Denominator, foodDataUoM.IsApproxConversion));
+                    }
                     else
-                        storedFoodUoM.Set(foodDataUoM.BaseUom, foodDataUoM.Numerator, foodDataUoM.Denominator);
+                    {
+                        var isBaseUoM = foodDataUoM.IsBaseUoM.HasValue && foodDataUoM.IsBaseUoM.Value;
+                        storedFoodUoM.Set(isBaseUoM, foodDataUoM.Numerator,
+                            foodDataUoM.Denominator, foodDataUoM.IsApproxConversion);
+                    }
+                }
+
+                foreach (var foodDataUoM in
+                         foodData.UnitsOfMeasure.Where(x => x.IsBaseUoM.HasValue && x.IsBaseUoM.Value).ToList())
+                {
+                    if (uoMs.All(u => u.Code != foodDataUoM.UoM))
+                        throw new Exception(
+                            $"Food {foodData.GlobalId} has a UoM {foodDataUoM.UoM} that does not exist");
+
+                    var storedFoodUoM =
+                        await dbContext.FoodUoM.FirstOrDefaultAsync(x =>
+                            x.FoodId == storedFood.Id && x.UoM == foodDataUoM.UoM);
+
+                    if (storedFoodUoM == null)
+                    {
+                        await dbContext.FoodUoM.AddAsync(new FoodUoM(storedFood, null, foodDataUoM.UoM,
+                            foodDataUoM.IsBaseUoM ?? false,
+                            foodDataUoM.Numerator, foodDataUoM.Denominator, foodDataUoM.IsApproxConversion));
+                    }
+                    else
+                    {
+                        var isBaseUoM = foodDataUoM.IsBaseUoM.HasValue && foodDataUoM.IsBaseUoM.Value;
+                        storedFoodUoM.Set(isBaseUoM, foodDataUoM.Numerator,
+                            foodDataUoM.Denominator, foodDataUoM.IsApproxConversion);
+                    }
                 }
             }
         }

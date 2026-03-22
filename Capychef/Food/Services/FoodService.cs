@@ -22,9 +22,9 @@ public class FoodService(
 {
     public async Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails)
     {
-        var food = await foodRepository.GetAllHouseholdFood(userDetails.HouseholdId.Value);
+        var food = await foodRepository.GetAllHouseholdFood(userDetails.GetHouseholdId());
 
-        var globalFood = await foodRepository.GetAllGlobalFood();
+        var globalFood = await foodRepository.GetAllGlobalFood(userDetails.GetHouseholdId());
 
         food.AddRange(globalFood);
 
@@ -33,29 +33,108 @@ public class FoodService(
 
     public async Task<Result<FoodDTO>> GetFoodById(AuthUserDetails userDetails, int id)
     {
-        var food = await foodRepository.GetFoodById(id, userDetails.HouseholdId.Value);
+        var food = await foodRepository.GetFoodById(id, userDetails.GetHouseholdId());
 
         if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
 
         return new Result<FoodDTO>(new FoodDTO(food));
     }
 
+    /**
+     * UpdateFoodUoM sets the list of food units of measure for user's household
+     * 
+     * The list will contain the complete list of food units of measure for the food, not just the ones to be updated. Those units of measure that are in the database but not in the list will be deleted as household food units of measure
+     */
+    public async Task<AppError> UpdateFoodUoM(int foodId, List<FoodUoMCmd> cmd, AuthUserDetails userDetails)
+    {
+        var food = await foodRepository.GetTrackedGlobalFoodById(foodId, userDetails.GetHouseholdId());
+        if (food == null) food = await foodRepository.GetTrackedFoodById(foodId, userDetails.GetHouseholdId());
+
+        if (food == null) return new NotFoundError(EntityType.Food, foodId);
+
+        if (cmd.Count(x => x.IsBaseUoM) != 1) return new FoodBaseUoMNotFound(foodId);
+
+        var foodUoMs = food.UoM.ToList();
+
+        foreach (var uomCmd in cmd)
+        {
+            if (!uomCmd.CheckConversion()) return new FoodUoMConversionError(foodId, uomCmd.UoM);
+
+            var foodUoM =
+                foodUoMs.FirstOrDefault(x => x.UoM == uomCmd.UoM && x.HouseholdId == userDetails.GetHouseholdId());
+            if (foodUoM == null) foodUoM = foodUoMs.FirstOrDefault(x => x.UoM == uomCmd.UoM && x.HouseholdId == null);
+
+            if (foodUoM == null)
+            {
+                await foodUoMRepository.AddAsync(new FoodUoM(food.Id, userDetails.GetHouseholdId(), uomCmd.UoM,
+                    uomCmd.IsBaseUoM, uomCmd.Numerator, uomCmd.Denominator, uomCmd.IsApproxConversion));
+            }
+            else
+            {
+                if (foodUoM.IsDeleted)
+                {
+                    if (!foodUoM.HouseholdId.HasValue)
+                        await foodUoMRepository.AddAsync(new FoodUoM(food.Id, userDetails.GetHouseholdId(), uomCmd.UoM,
+                            uomCmd.IsBaseUoM, uomCmd.Numerator, uomCmd.Denominator, uomCmd.IsApproxConversion));
+                    else
+                        foodUoM.RestoreDeleted();
+                }
+
+                // If existing food uom belongs to household, update it. If it belongs to global food, only add a new household food uom if the conversion details are different, otherwise keep using the global food uom
+                if (foodUoM.HouseholdId.HasValue)
+                {
+                    foodUoM.Set(uomCmd.IsBaseUoM, uomCmd.Numerator, uomCmd.Denominator, uomCmd.IsApproxConversion);
+                }
+                else
+                {
+                    if (foodUoM.IsBaseUoM != uomCmd.IsBaseUoM || foodUoM.Numerator != uomCmd.Numerator ||
+                        foodUoM.Denominator != uomCmd.Denominator ||
+                        foodUoM.IsApproxConversion != uomCmd.IsApproxConversion)
+                        await foodUoMRepository.AddAsync(new FoodUoM(food.Id, userDetails.GetHouseholdId(), uomCmd.UoM,
+                            uomCmd.IsBaseUoM, uomCmd.Numerator, uomCmd.Denominator, uomCmd.IsApproxConversion));
+                }
+            }
+        }
+
+        foreach (var foodUoM in foodUoMs)
+            if (cmd.All(x => x.UoM != foodUoM.UoM))
+            {
+                if (foodUoM.HouseholdId.HasValue)
+                {
+                    foodUoM.Delete();
+                }
+                else
+                {
+                    var deletedFoodUoM = new FoodUoM(food.Id, userDetails.GetHouseholdId(), foodUoM.UoM,
+                        foodUoM.IsBaseUoM, foodUoM.Numerator, foodUoM.Denominator, foodUoM.IsApproxConversion);
+
+                    deletedFoodUoM.Delete();
+
+                    await foodUoMRepository.AddAsync(deletedFoodUoM);
+                }
+            }
+
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
     public async Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails)
     {
         var categories = await foodCategoryRepository.GetAllCategories();
 
-        var food = await foodRepository.GetAllHouseholdFood(userDetails.HouseholdId.Value);
+        var food = await foodRepository.GetAllHouseholdFood(userDetails.GetHouseholdId());
 
-        var globalFood = await foodRepository.GetAllGlobalFood();
+        var globalFood = await foodRepository.GetAllGlobalFood(userDetails.GetHouseholdId());
 
         food.AddRange(globalFood);
 
         return FoodCategoryWithFoodDTO.ToTree(categories, food);
     }
 
-    public async Task<AppError> DeleteHouseholdFood(int foodId, AuthUserDetails userDetails)
+    public async Task<AppError?> DeleteHouseholdFood(int foodId, AuthUserDetails userDetails)
     {
-        var food = await foodRepository.GetTrackedHouseholdFoodById(foodId, userDetails.HouseholdId.Value);
+        var food = await foodRepository.GetTrackedHouseholdFoodById(foodId, userDetails.GetHouseholdId());
 
         if (food == null) return new NotFoundError(EntityType.Food, foodId);
 
@@ -69,7 +148,7 @@ public class FoodService(
     public async Task<Result<FoodDTO>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd,
         AuthUserDetails userDetails)
     {
-        var food = await foodRepository.GetTrackedHouseholdFoodById(id, userDetails.HouseholdId.Value);
+        var food = await foodRepository.GetTrackedHouseholdFoodById(id, userDetails.GetHouseholdId());
 
         if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
 
@@ -99,22 +178,6 @@ public class FoodService(
             food.CategoryId = cmd.CategoryId;
         }
 
-        if (food.BaseUoM != cmd.BaseUoM)
-        {
-            if (!await uoMRepository.CheckUoMExists(cmd.BaseUoM))
-                return new Result<FoodDTO>(new NotFoundError(EntityType.UoM, cmd.BaseUoM));
-
-            if (food.UoM.All(x => x.UoM != cmd.BaseUoM) && cmd.UoM.All(x => x.UoM != cmd.BaseUoM))
-                return new Result<FoodDTO>(new FoodBaseUoMNotFound(food.Id, cmd.BaseUoM));
-
-            await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
-                FoodModifiableColumn.BaseUoM,
-                food.BaseUoM,
-                cmd.BaseUoM, userDetails.UserId));
-
-            food.BaseUoM = cmd.BaseUoM;
-        }
-
         foreach (var uom in cmd.UoM)
         {
             if (!await uoMRepository.CheckUoMExists(uom.UoM))
@@ -122,7 +185,7 @@ public class FoodService(
 
             if (food.UoM.All(x => x.UoM != uom.UoM))
             {
-                food.AddUoM(uom.UoM);
+                food.AddUoM(new FoodUoM(food, userDetails.GetHouseholdId(), uom.UoM, false, null, null, null));
 
                 await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
                     FoodModifiableColumn.UoM,
@@ -160,10 +223,7 @@ public class FoodService(
         if (!foodCategory.IsLeaf)
             return new Result<FoodDTO>(new FoodCategoryCannotContainFood(foodCategory.Id));
 
-        if (cmd.UoM.All(x => x.UoM != cmd.BaseUoM))
-            return new Result<FoodDTO>(new FoodBaseUoMNotFound(0, cmd.BaseUoM));
-
-        var food = new Domain.Entities.Food(userDetails.HouseholdId.Value, cmd.Name, cmd.CategoryId, cmd.BaseUoM,
+        var food = new Domain.Entities.Food(userDetails.GetHouseholdId(), cmd.Name, cmd.CategoryId,
             userDetails.UserId, cmd.DaysUntilExpiration, cmd.DaysUntilBestBefore);
 
         await foodRepository.AddAsync(food);
@@ -174,7 +234,8 @@ public class FoodService(
                 if (!await uoMRepository.CheckUoMExists(uom.UoM))
                     return new Result<FoodDTO>(new NotFoundError(EntityType.UoM, uom.UoM));
 
-                await foodUoMRepository.AddAsync(new FoodUoM(food, uom.UoM, null, null, null));
+                await foodUoMRepository.AddAsync(new FoodUoM(food, userDetails.GetHouseholdId(), uom.UoM, uom.IsBaseUoM,
+                    null, null, null));
             }
 
         await dbContext.SaveChangesAsync();
@@ -182,51 +243,9 @@ public class FoodService(
         return new Result<FoodDTO>(new FoodDTO(food));
     }
 
-    /**
-     * Create or update global food
-     * 
-     * For compatibility reasons, global food cannot be deleted
-     */
-    public async Task LoadGlobalFood(GlobalFoodFileCmd fileCmd)
+    public async Task<List<FoodDTO>> GetAllGlobalFood(AuthUserDetails userDetails)
     {
-        var globalFood = await foodRepository.GetTrackedAllGlobalFood();
-
-        foreach (var food in fileCmd.Food)
-        {
-            var modifiedGlobalFood = globalFood.FirstOrDefault(x => x.GlobalId == food.GlobalId);
-            if (modifiedGlobalFood != null)
-            {
-                modifiedGlobalFood.Name = food.Name;
-                modifiedGlobalFood.CategoryId = food.Category;
-                modifiedGlobalFood.BaseUoM = food.BaseUoM;
-
-                var globalFoodUoM = await foodUoMRepository.GetTrackedAllUoMByFoodId(modifiedGlobalFood.Id);
-
-                foreach (var uom in food.UnitsOfMeasure)
-                {
-                    var modifiedGlobalFoodUoM = globalFoodUoM.FirstOrDefault(x => x.UoM == uom.UoM);
-                    if (modifiedGlobalFoodUoM == null)
-                        await foodUoMRepository.AddAsync(new FoodUoM(modifiedGlobalFood.Id, uom.UoM, null, null, null));
-                }
-            }
-            else
-            {
-                var newGlobalFood = new Domain.Entities.Food(food.GlobalId, food.Name, food.Category, food.BaseUoM,
-                    food.DaysUntilExpiration, food.DaysUntilBestBefore);
-
-                await foodRepository.AddAsync(newGlobalFood);
-
-                foreach (var uom in food.UnitsOfMeasure)
-                    await foodUoMRepository.AddAsync(new FoodUoM(newGlobalFood, uom.UoM, null, null, null));
-            }
-        }
-
-        await dbContext.SaveChangesAsync();
-    }
-
-    public async Task<List<FoodDTO>> GetAllGlobalFood()
-    {
-        var food = await foodRepository.GetAllGlobalFood();
+        var food = await foodRepository.GetAllGlobalFood(userDetails.GetHouseholdId());
 
         return FoodDTO.ToList(food);
     }

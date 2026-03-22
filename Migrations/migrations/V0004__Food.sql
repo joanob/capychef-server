@@ -45,7 +45,6 @@ CREATE TABLE food
     id                      SERIAL PRIMARY KEY,
     name                    TEXT      NOT NULL,
     category_id             INTEGER   NOT NULL,
-    base_uom VARCHAR(4) NOT NULL,
     days_until_expiration INTEGER,
     days_until_best_before INTEGER,
     is_global               BOOLEAN   NOT NULL,
@@ -58,7 +57,6 @@ CREATE TABLE food
     is_deleted              BOOLEAN   NOT NULL,
     deleted_at              TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES food_categories (id),
-    FOREIGN KEY (base_uom) REFERENCES uom (code),
     FOREIGN KEY (modified_global_food_id) REFERENCES food (id),
     FOREIGN KEY (created_by) REFERENCES users (id),
     UNIQUE (household_id, modified_global_food_id),
@@ -110,14 +108,29 @@ CREATE TABLE food_uom
     id                SERIAL PRIMARY KEY,
     food_id INTEGER NOT NULL,
     uom varchar(4) NOT NULL,
+    household_id INTEGER,
+    is_base BOOLEAN NOT NULL DEFAULT FALSE,
     base_uom VARCHAR(4),
     numerator           INTEGER,
     denominator         INTEGER,
+    is_approx_conversion  BOOLEAN,
+    created_at              TIMESTAMP NOT NULL,
+    row_version INTEGER NOT NULL,
+    is_deleted              BOOLEAN   NOT NULL,
+    deleted_at              TIMESTAMP,
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (base_uom) REFERENCES uom (code),
-    UNIQUE (food_id, uom),
     CHECK (
-        (base_uom IS NULL AND numerator IS NULL AND denominator IS NULL) OR
-        (base_uom IS NOT NULL AND numerator IS NOT NULL AND denominator IS NOT NULL)
+        (
+            base_uom IS NULL AND
+            numerator IS NULL AND
+            denominator IS NULL AND
+            is_approx_conversion IS NULL
+        ) OR (
+            base_uom IS NOT NULL AND
+            numerator IS NOT NULL AND
+            denominator IS NOT NULL AND
+            is_approx_conversion IS NOT NULL
         )
+    )
 );                                                                 

@@ -13,24 +13,22 @@ public class Food : BaseDeletableEntity
     {
     }
 
-    public Food(string globalId, string name, int categoryId, string baseUoMCode, int? daysUntilExpiration,
+    public Food(string globalId, string name, int categoryId, int? daysUntilExpiration,
         int? daysUntilBestBefore)
     {
         Name = name;
         CategoryId = categoryId;
-        BaseUoM = baseUoMCode;
         DaysUntilExpiration = daysUntilExpiration;
         DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = true;
         GlobalId = globalId;
     }
 
-    public Food(int householdId, string name, int categoryId, string baseUoMCode, int createdBy,
+    public Food(int householdId, string name, int categoryId, int createdBy,
         int? daysUntilExpiration, int? daysUntilBestBefore)
     {
         Name = name;
         CategoryId = categoryId;
-        BaseUoM = baseUoMCode;
         DaysUntilExpiration = daysUntilExpiration;
         DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = false;
@@ -38,12 +36,11 @@ public class Food : BaseDeletableEntity
         CreatedBy = createdBy;
     }
 
-    public Food(int householdId, int modifiedGlobalFoodId, string name, int categoryId, string baseUoMCode,
+    public Food(int householdId, int modifiedGlobalFoodId, string name, int categoryId,
         int createdBy, int? daysUntilExpiration, int? daysUntilBestBefore)
     {
         Name = name;
         CategoryId = categoryId;
-        BaseUoM = baseUoMCode;
         DaysUntilExpiration = daysUntilExpiration;
         DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = false;
@@ -57,10 +54,6 @@ public class Food : BaseDeletableEntity
     [Column("category_id")]
     [ForeignKey(nameof(Category))]
     public int CategoryId { get; set; }
-
-    [Column("base_uom")]
-    [ForeignKey(nameof(BaseUoMInstance))]
-    public string BaseUoM { get; set; }
 
     [Column("days_until_expiration")] public int? DaysUntilExpiration { get; set; }
 
@@ -84,8 +77,6 @@ public class Food : BaseDeletableEntity
 
     public FoodCategory Category { get; set; }
 
-    public UoM BaseUoMInstance { get; set; }
-
     public Household? Household { get; private set; }
 
     public Food? ModifiedGlobalFood { get; private set; }
@@ -93,11 +84,21 @@ public class Food : BaseDeletableEntity
     public User? CreatedByUser { get; private set; }
 
     [InverseProperty(nameof(FoodUoM.Food))]
-    public ICollection<FoodUoM> UoM { get; } = new List<FoodUoM>();
+    public ICollection<FoodUoM> UoM { get; private set; } = new List<FoodUoM>();
 
-    public void AddUoM(string uom)
+    public void FromHousehold(int householdId)
     {
-        UoM.Add(new FoodUoM(this, uom, null, null, null));
+        UoM = UoM.Where(x => x.HouseholdId == null || x.HouseholdId == householdId)
+            .Where(x => x.HouseholdId == householdId
+                        || !UoM.Any(y => y.FoodId == x.FoodId
+                                         && y.UoM == x.UoM
+                                         && y.HouseholdId == householdId))
+            .Where(x => !x.IsDeleted).ToList();
+    }
+
+    public void AddUoM(FoodUoM uom)
+    {
+        UoM.Add(uom);
     }
 
     public void DeleteUom(string uom)
@@ -111,7 +112,6 @@ public class Food : BaseDeletableEntity
     {
         Name = food.Name;
         CategoryId = food.CategoryId;
-        BaseUoM = food.BaseUoM;
         DaysUntilExpiration = food.DaysUntilExpiration;
         DaysUntilBestBefore = food.DaysUntilBestBefore;
     }
@@ -124,8 +124,15 @@ public static class FoodExtensions
         return food.Where(x => !x.IsDeleted);
     }
 
-    public static IQueryable<Food> IncludeUoM(this IQueryable<Food> food)
+    /**
+     * FoodUoM has extension FromHousehold to retrieve only the UoM that are either global or belong to the household
+     * 
+     * FromHousehold cannot be used in IncludeUoM neither copied because EF is not able to translate to sql
+     * 
+     * The adopted solution is retrieving both and then removing entities that have been replaced by household units of measure
+     */
+    public static IQueryable<Food> IncludeUoM(this IQueryable<Food> food, int? householdId)
     {
-        return food.Include(x => x.UoM);
+        return food.Include(x => x.UoM.Where(u => u.HouseholdId == householdId || u.HouseholdId == null));
     }
 }

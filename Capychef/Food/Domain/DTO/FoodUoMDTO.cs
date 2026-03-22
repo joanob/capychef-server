@@ -6,14 +6,18 @@ public class FoodUoMDTO
 {
     public FoodUoMDTO(FoodUoM foodUoM)
     {
-        Code = foodUoM.UoM;
-        BaseUoM = foodUoM.BaseUoM;
+        UoM = foodUoM.UoM;
+        IsHouseholdUoM = foodUoM.HouseholdId.HasValue;
+        IsBaseUoM = foodUoM.IsBaseUoM;
         Numerator = foodUoM.Numerator;
         Denominator = foodUoM.Denominator;
+        IsApproxConversion = foodUoM.IsApproxConversion;
     }
 
-    public string Code { get; }
-    public string? BaseUoM { get; }
+    public string UoM { get; }
+    public bool IsHouseholdUoM { get; }
+    public bool IsBaseUoM { get; }
     public int? Numerator { get; }
     public int? Denominator { get; }
+    public bool? IsApproxConversion { get; }
 }

@@ -220,8 +220,8 @@ public class AuthService(
 
         Household? activeHousehold = null;
 
-        if (userDetails.HouseholdId.HasValue)
-            activeHousehold = await householdRepository.GetHouseholdById(userDetails.HouseholdId.Value);
+        if (userDetails.HasHouseholdId)
+            activeHousehold = await householdRepository.GetHouseholdById(userDetails.GetHouseholdId());
 
         return new Result<AuthSessionDTO>(new AuthSessionDTO(user, activeHousehold));
     }

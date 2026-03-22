@@ -47,22 +47,22 @@ public class HouseholdService(
 
     public async Task<AppError?> CheckHouseholdOwnership(AuthUserDetails userDetails)
     {
-        if (userDetails.HouseholdId == null) return new NoHouseholdSelectedError(userDetails.UserId);
+        if (!userDetails.HasHouseholdId) return new NoHouseholdSelectedError(userDetails.UserId);
 
-        if (await householdRepository.CheckHouseholdOwnership(userDetails.UserId, userDetails.HouseholdId.Value))
+        if (await householdRepository.CheckHouseholdOwnership(userDetails.UserId, userDetails.GetHouseholdId()))
             return null;
 
-        return new HouseholdMembershipError(userDetails.UserId, userDetails.HouseholdId.Value);
+        return new HouseholdMembershipError(userDetails.UserId, userDetails.GetHouseholdId());
     }
 
     public async Task<AppError?> CheckHouseholdMembership(AuthUserDetails userDetails)
     {
-        if (userDetails.HouseholdId == null) return new NoHouseholdSelectedError(userDetails.UserId);
+        if (!userDetails.HasHouseholdId) return new NoHouseholdSelectedError(userDetails.UserId);
 
-        if (await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, userDetails.HouseholdId.Value))
+        if (await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, userDetails.GetHouseholdId()))
             return null;
 
-        return new HouseholdMembershipError(userDetails.UserId, userDetails.HouseholdId.Value);
+        return new HouseholdMembershipError(userDetails.UserId, userDetails.GetHouseholdId());
     }
 
     public async Task<List<HouseholdDTO>> GetAllHouseholds(AuthUserDetails userDetails)
@@ -109,17 +109,17 @@ public class HouseholdService(
 
     public async Task<Result<HouseholdDTO>> GetActiveHousehold(AuthUserDetails userDetails)
     {
-        var household = await householdRepository.GetHouseholdByIdIncludingStorageSpaces(userDetails.HouseholdId.Value);
+        var household = await householdRepository.GetHouseholdByIdIncludingStorageSpaces(userDetails.GetHouseholdId());
         if (household == null)
-            return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value));
+            return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, userDetails.GetHouseholdId()));
 
         return new Result<HouseholdDTO>(new HouseholdDTO(household));
     }
 
     public async Task<AppError> DeleteHousehold(AuthUserDetails userDetails)
     {
-        var household = await householdRepository.GetTrackedHouseholdById(userDetails.HouseholdId.Value);
-        if (household == null) return new NotFoundError(EntityType.Household, userDetails.HouseholdId.Value);
+        var household = await householdRepository.GetTrackedHouseholdById(userDetails.GetHouseholdId());
+        if (household == null) return new NotFoundError(EntityType.Household, userDetails.GetHouseholdId());
 
         household.Delete();
 
