@@ -37,15 +37,15 @@ public class BatchService(
 
         if (cmd.BestBeforeDate.HasValue)
             bestBeforeDate = cmd.BestBeforeDate.Value;
-        else if (food.DaysUntilBestBefore.HasValue)
-            bestBeforeDate = DateTime.UtcNow.AddDays(food.DaysUntilBestBefore.Value);
+        else if (food.HouseholdFoodDetails.DaysUntilBestBefore.HasValue)
+            bestBeforeDate = DateTime.UtcNow.AddDays(food.HouseholdFoodDetails.DaysUntilBestBefore.Value);
 
         DateTime? expirationDate = null;
 
         if (cmd.ExpirationDate.HasValue)
             expirationDate = cmd.ExpirationDate.Value;
-        else if (food.DaysUntilExpiration.HasValue)
-            expirationDate = DateTime.UtcNow.AddDays(food.DaysUntilExpiration.Value);
+        else if (food.HouseholdFoodDetails.DaysUntilExpiration.HasValue)
+            expirationDate = DateTime.UtcNow.AddDays(food.HouseholdFoodDetails.DaysUntilExpiration.Value);
 
         var batch = new Batch(userDetails.GetHouseholdId(), cmd.FoodId, cmd.StorageSpaceId, cmd.Quantity,
             cmd.FoodUoMId, bestBeforeDate, expirationDate);

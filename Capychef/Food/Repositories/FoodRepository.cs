@@ -14,18 +14,21 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
 
     public async Task<List<Domain.Entities.Food>> GetTrackedAllGlobalFood(int? householdId)
     {
-        return await dbContext.Food.Active().IncludeUoM(householdId).Where(x => x.IsGlobal).ToListAsync();
+        return await dbContext.Food.Active().IncludeUoM(householdId).IncludeHouseholdFoodDetails(householdId)
+            .Where(x => x.IsGlobal).ToListAsync();
     }
 
     public async Task<List<Domain.Entities.Food>> GetAllGlobalFood(int? householdId)
     {
-        return await dbContext.Food.AsNoTracking().Active().IncludeUoM(householdId).Where(x => x.IsGlobal)
+        return await dbContext.Food.AsNoTracking().Active().IncludeUoM(householdId)
+            .IncludeHouseholdFoodDetails(householdId).Where(x => x.IsGlobal)
             .ToListAsync();
     }
 
     public async Task<List<Domain.Entities.Food>> GetAllHouseholdFood(int householdId)
     {
         var food = await dbContext.Food.AsNoTracking().Active().IncludeUoM(householdId)
+            .IncludeHouseholdFoodDetails(householdId)
             .Where(x => x.HouseholdId == householdId)
             .ToListAsync();
 
@@ -36,8 +39,10 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
 
     public async Task<Domain.Entities.Food?> GetTrackedHouseholdFoodById(int foodId, int householdId)
     {
-        var food = await dbContext.Food.Active().IncludeUoM(householdId)
+        var food = await dbContext.Food.Active().IncludeUoM(householdId).IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == foodId && x.HouseholdId == householdId);
+
+        if (food == null) return null;
 
         food.FromHousehold(householdId);
 
@@ -53,6 +58,7 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
     public async Task<Domain.Entities.Food?> GetFoodById(int id, int householdId)
     {
         var food = await dbContext.Food.AsNoTracking().Active().IncludeUoM(householdId)
+            .IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == id && (x.IsGlobal || x.HouseholdId == householdId));
 
         food.FromHousehold(householdId);
@@ -62,7 +68,7 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
 
     public async Task<Domain.Entities.Food?> GetTrackedFoodById(int id, int householdId)
     {
-        var food = await dbContext.Food.Active().IncludeUoM(householdId)
+        var food = await dbContext.Food.Active().IncludeUoM(householdId).IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == id && (x.IsGlobal || x.HouseholdId == householdId));
 
         food.FromHousehold(householdId);
@@ -73,12 +79,13 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
     public async Task<Domain.Entities.Food?> GetGlobalFoodById(int foodId, int? householdId)
     {
         return await dbContext.Food.AsNoTracking().Active().IncludeUoM(householdId)
+            .IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == foodId && x.IsGlobal);
     }
 
     public async Task<Domain.Entities.Food?> GetTrackedGlobalFoodById(int foodId, int? householdId)
     {
-        return await dbContext.Food.Active().IncludeUoM(householdId)
+        return await dbContext.Food.Active().IncludeUoM(householdId).IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == foodId && x.IsGlobal);
     }
 }

@@ -41,7 +41,7 @@ public class TestFood(CapychefDbContext dbContext)
                     householdMembers.ElementAt(RandomGenerator.GenerateRandomNumber(householdMembers.Count));
 
                 var food = new Food.Domain.Entities.Food(household.Id, RandomGenerator.GenerateRandomAlphabetString(10),
-                    foodCategory.Id, createdBy.UserId, null, null);
+                    foodCategory.Id, createdBy.UserId);
 
                 if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_FOOD_PERCENTAJE))
                     food.Delete();

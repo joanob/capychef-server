@@ -35,6 +35,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<UoMDimension> UoMDimensions => Set<UoMDimension>();
     public DbSet<UoM> UoM => Set<UoM>();
     public DbSet<Food.Domain.Entities.Food> Food => Set<Food.Domain.Entities.Food>();
+    public DbSet<HouseholdFoodDetails> HouseholdFoodDetails => Set<HouseholdFoodDetails>();
     public DbSet<FoodUoM> FoodUoM => Set<FoodUoM>();
     public DbSet<FoodModificationHistory> FoodModificationsHistory => Set<FoodModificationHistory>();
 
@@ -96,8 +97,6 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         Env.Load("../../.env");
-
-        Console.WriteLine(Environment.GetEnvironmentVariable("ENVIRONMENT"));
 
         if (Environment.GetEnvironmentVariable("ENVIRONMENT") == "Development")
             optionsBuilder.EnableSensitiveDataLogging();

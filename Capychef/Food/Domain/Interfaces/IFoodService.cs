@@ -8,11 +8,10 @@ namespace Capychef.Food.Domain.Interfaces;
 
 public interface IFoodService
 {
-    Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, CreateHouseholdFoodCmd cmd);
+    Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, HouseholdFoodCmd cmd);
     Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails);
     Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails);
     Task<AppError?> DeleteHouseholdFood(int foodId, AuthUserDetails userDetails);
-    Task<Result<FoodDTO>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd, AuthUserDetails userDetails);
+    Task<Result<FoodDTO>> UpdateFood(int id, HouseholdFoodCmd cmd, AuthUserDetails userDetails);
     Task<Result<FoodDTO>> GetFoodById(AuthUserDetails userDetails, int id);
-    Task<AppError> UpdateFoodUoM(int foodId, List<FoodUoMCmd> cmd, AuthUserDetails userDetails);
 }

@@ -24,25 +24,20 @@ public class Food : BaseDeletableEntity
         GlobalId = globalId;
     }
 
-    public Food(int householdId, string name, int categoryId, int createdBy,
-        int? daysUntilExpiration, int? daysUntilBestBefore)
+    public Food(int householdId, string name, int categoryId, int createdBy)
     {
         Name = name;
         CategoryId = categoryId;
-        DaysUntilExpiration = daysUntilExpiration;
-        DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = false;
         HouseholdId = householdId;
         CreatedBy = createdBy;
     }
 
     public Food(int householdId, int modifiedGlobalFoodId, string name, int categoryId,
-        int createdBy, int? daysUntilExpiration, int? daysUntilBestBefore)
+        int createdBy)
     {
         Name = name;
         CategoryId = categoryId;
-        DaysUntilExpiration = daysUntilExpiration;
-        DaysUntilBestBefore = daysUntilBestBefore;
         IsGlobal = false;
         HouseholdId = householdId;
         ModifiedGlobalFoodId = modifiedGlobalFoodId;
@@ -65,7 +60,7 @@ public class Food : BaseDeletableEntity
 
     [Column("household_id")]
     [ForeignKey(nameof(Household))]
-    public int? HouseholdId { get; private set; }
+    public int? HouseholdId { get; }
 
     [Column("modified_global_food_id")]
     [ForeignKey(nameof(ModifiedGlobalFood))]
@@ -85,6 +80,26 @@ public class Food : BaseDeletableEntity
 
     [InverseProperty(nameof(FoodUoM.Food))]
     public ICollection<FoodUoM> UoM { get; private set; } = new List<FoodUoM>();
+
+    [InverseProperty(nameof(HouseholdFoodDetails.Food))]
+    public ICollection<HouseholdFoodDetails> HouseholdDetailsCollection { get; private set; } =
+        new List<HouseholdFoodDetails>();
+
+    public HouseholdFoodDetails? HouseholdFoodDetails => HouseholdDetailsCollection.FirstOrDefault();
+
+    public int? GetDaysUntilBestBefore()
+    {
+        if (HouseholdId.HasValue) return HouseholdFoodDetails.DaysUntilBestBefore;
+
+        return DaysUntilBestBefore;
+    }
+
+    public int? GetDaysUntilExpiration()
+    {
+        if (HouseholdId.HasValue) return HouseholdFoodDetails.DaysUntilExpiration;
+
+        return DaysUntilExpiration;
+    }
 
     public void FromHousehold(int householdId)
     {
@@ -112,8 +127,25 @@ public class Food : BaseDeletableEntity
     {
         Name = food.Name;
         CategoryId = food.CategoryId;
-        DaysUntilExpiration = food.DaysUntilExpiration;
         DaysUntilBestBefore = food.DaysUntilBestBefore;
+        DaysUntilExpiration = food.DaysUntilExpiration;
+    }
+
+    public void AddHouseholdFoodDetails(int householdId, double? minQuantity, string? minQuantityUoM,
+        int? daysUntilExpiration,
+        int? daysUntilBestBefore)
+    {
+        if (!minQuantity.HasValue && string.IsNullOrEmpty(minQuantityUoM) && !daysUntilExpiration.HasValue &&
+            !daysUntilBestBefore.HasValue) return;
+
+
+        HouseholdDetailsCollection = new List<HouseholdFoodDetails>
+            { new(householdId, this, minQuantity, minQuantityUoM, daysUntilExpiration, daysUntilBestBefore) };
+    }
+
+    public void SetHouseholdFoodDetails(HouseholdFoodDetails details)
+    {
+        HouseholdDetailsCollection = new List<HouseholdFoodDetails> { details };
     }
 }
 
@@ -124,15 +156,15 @@ public static class FoodExtensions
         return food.Where(x => !x.IsDeleted);
     }
 
-    /**
-     * FoodUoM has extension FromHousehold to retrieve only the UoM that are either global or belong to the household
-     * 
-     * FromHousehold cannot be used in IncludeUoM neither copied because EF is not able to translate to sql
-     * 
-     * The adopted solution is retrieving both and then removing entities that have been replaced by household units of measure
-     */
     public static IQueryable<Food> IncludeUoM(this IQueryable<Food> food, int? householdId)
     {
         return food.Include(x => x.UoM.Where(u => u.HouseholdId == householdId || u.HouseholdId == null));
+    }
+
+    public static IQueryable<Food> IncludeHouseholdFoodDetails(this IQueryable<Food> food, int? householdId)
+    {
+        if (!householdId.HasValue) return food;
+
+        return food.Include(x => x.HouseholdDetailsCollection.Where(h => h.HouseholdId == householdId.Value));
     }
 }

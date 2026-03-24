@@ -81,6 +81,24 @@ CREATE VIEW active_food AS
 SELECT *
 FROM food
 WHERE is_deleted = FALSE;
+
+-- FOOD HOUSEHOLD DETAILS
+
+CREATE TABLE household_food_details
+(
+    id                         SERIAL PRIMARY KEY,
+    created_at                 TIMESTAMP NOT NULL,
+    row_version                INTEGER   NOT NULL,
+    household_id               INT       NOT NULL,
+    food_id                    INT       NOT NULL,
+    min_quantity               REAL,
+    min_quantity_uom           VARCHAR(4),
+    days_until_expiration INTEGER,
+    days_until_best_before INTEGER,
+    FOREIGN KEY (household_id) REFERENCES households (id),
+    FOREIGN KEY (food_id) REFERENCES food (id),
+    FOREIGN KEY (min_quantity_uom) REFERENCES uom (code)
+);    
             
 -- FOOD MODIFICATIONS HISTORY
                                   
@@ -88,12 +106,14 @@ CREATE TABLE food_modifications_history
 (
     id      SERIAL PRIMARY KEY,
     food_id INTEGER NOT NULL,
+    household_id INTEGER NOT NULL,
     column_name TEXT NOT NULL,
     previous_value TEXT,
     new_value TEXT,
     modified_at TIMESTAMP NOT NULL,
     modified_by INTEGER NOT NULL,
     FOREIGN KEY (food_id) REFERENCES food (id),
+    FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (modified_by) REFERENCES users (id)
 );
 

@@ -7,8 +7,10 @@ public class FoodDTO
         Id = food.Id;
         Name = food.Name;
         CategoryId = food.CategoryId;
-        DaysUntilExpiration = food.DaysUntilExpiration;
-        DaysUntilBestBefore = food.DaysUntilBestBefore;
+        MinQuantity = food.HouseholdFoodDetails?.MinQuantity;
+        MinQuantityUoM = food.HouseholdFoodDetails?.MinQuantityUoM;
+        DaysUntilExpiration = food.GetDaysUntilExpiration();
+        DaysUntilBestBefore = food.GetDaysUntilBestBefore();
         IsGlobal = food.IsGlobal;
         HouseholdId = food.HouseholdId;
         ModifiedGlobalFoodId = food.ModifiedGlobalFoodId;
@@ -25,6 +27,10 @@ public class FoodDTO
     public string Name { get; }
 
     public int CategoryId { get; }
+
+    public double? MinQuantity { get; }
+
+    public string? MinQuantityUoM { get; }
 
     public int? DaysUntilExpiration { get; set; }
 

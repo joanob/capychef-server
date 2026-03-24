@@ -11,13 +11,12 @@ namespace Capychef.Api.Controllers;
 [ApiController]
 [Route("food")]
 public class FoodController(
-    IServiceScopeFactory serviceScopeFactory,
     IFoodService foodService,
     ILoggerFactory loggerFactory) : ControllerBase
 {
     [CheckMembership]
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<FoodDTO>>> CreateHouseholdFood(CreateHouseholdFoodCmd cmd)
+    public async Task<ActionResult<ApiResponse<FoodDTO>>> CreateHouseholdFood(HouseholdFoodCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -58,32 +57,17 @@ public class FoodController(
 
     [CheckMembership]
     [HttpPut("{id}")]
-    public async Task<ActionResult<ApiResponse<FoodDTO>>> UpdateHouseholdFood(int id, UpdateHouseholdFoodCmd cmd)
+    public async Task<ActionResult<ApiResponse<FoodDTO>>> UpdateFood(int id, HouseholdFoodCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
-        var food = await foodService.UpdateHouseholdFood(id, cmd, userDetails);
+        var food = await foodService.UpdateFood(id, cmd, userDetails);
 
         var logger = loggerFactory.CreateLogger("FoodService.UpdateHouseholdFood");
 
         if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
 
         return Ok(new ApiResponse<FoodDTO>(food.get()));
-    }
-
-    [CheckMembership]
-    [HttpPut("{foodId}/uom")]
-    public async Task<ActionResult> UpdateFoodUoM(int foodId, List<FoodUoMCmd> cmd)
-    {
-        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
-
-        var error = await foodService.UpdateFoodUoM(foodId, cmd, userDetails);
-
-        var logger = loggerFactory.CreateLogger("FoodService.UpdateFoodUoM");
-
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
-
-        return Ok();
     }
 
     [CheckMembership]

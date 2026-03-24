@@ -22,10 +22,9 @@
 - [x] Cargar unidades de medida y dimensiones masivamente
 - [x] Cargar categorías masivamente
 - [x] Cargar alimentos globales masivamente
-- [ ] Modificar unidades de medida o conversiones de un alimento global
-- [ ] Modificar tiempo de consumo preferente o de caducidad de un alimento global
-- [ ] Modificar notificaciones de un alimento global
-- [ ] Modificar cantidad mínima de un alimento global
+- [x] Modificar unidades de medida o conversiones de un alimento global
+- [x] Modificar tiempo de consumo preferente o de caducidad de un alimento global
+- [x] Modificar cantidad mínima de un alimento global
 - [ ] Modificar supermercado preferido, precio o impacto ambiental de un alimento global
 - [ ] Crear alimentos
 - [ ] Editar alimentos

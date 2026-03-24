@@ -160,6 +160,7 @@
       "globalId": "TOMATE",
       "name": "Tomate",
       "category": 2,
+      "daysUntilBestBefore": 5,
       "baseUoM": "UN",
       "unitsOfMeasure": [{ "isBaseUoM": true, "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
     },
@@ -167,6 +168,7 @@
       "globalId": "MANZANA",
       "name": "Manzana",
       "category": 1,
+      "daysUntilExpiration": 10,
       "baseUoM": "UN",
       "unitsOfMeasure": [{ "isBaseUoM": true, "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
     },
@@ -174,6 +176,8 @@
       "globalId": "PLATANO",
       "name": "Plátano",
       "category": 1,
+      "daysUntilBestBefore": 15,
+      "daysUntilExpiration": 20,
       "baseUoM": "UN",
       "unitsOfMeasure": [{ "isBaseUoM": true, "uom": "UN" }, { "uom": "KG" }, { "uom": "G" }]
     },

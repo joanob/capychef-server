@@ -11,10 +11,12 @@ public class FoodModificationHistory
     {
     }
 
-    public FoodModificationHistory(int foodId, FoodModifiableColumn columnName, string previousValue, string newValue,
+    public FoodModificationHistory(int foodId, int householdId, FoodModifiableColumn columnName, string previousValue,
+        string newValue,
         int modifiedBy)
     {
         FoodId = foodId;
+        HouseholdId = householdId;
         ColumnName = columnName;
         PreviousValue = previousValue;
         NewValue = newValue;
@@ -27,6 +29,8 @@ public class FoodModificationHistory
     [Column("food_id")]
     [ForeignKey(nameof(Food))]
     public int FoodId { get; private set; }
+
+    [Column("household_id")] public int HouseholdId { get; private set; }
 
     [Column("column_name")] public FoodModifiableColumn ColumnName { get; private set; }
 

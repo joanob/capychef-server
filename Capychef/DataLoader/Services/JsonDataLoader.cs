@@ -221,6 +221,11 @@ public class JsonDataLoader(CapychefDbContext dbContext)
             if (foodData.UnitsOfMeasure.Count(u => u.IsBaseUoM ?? false) != 1)
                 throw new Exception($"Food {foodData.GlobalId} must have exactly one base UoM");
 
+            if (foodData.DaysUntilBestBefore is < 0 ||
+                foodData.DaysUntilExpiration is < 0)
+                throw new Exception(
+                    $"Food {foodData.GlobalId} days until best before or expiration cannot be negative");
+
             var food = new Food.Domain.Entities.Food(foodData.GlobalId, foodData.Name, foodData.Category,
                 foodData.DaysUntilExpiration, foodData.DaysUntilBestBefore);
 
