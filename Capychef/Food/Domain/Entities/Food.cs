@@ -89,14 +89,14 @@ public class Food : BaseDeletableEntity
 
     public int? GetDaysUntilBestBefore()
     {
-        if (HouseholdId.HasValue) return HouseholdFoodDetails.DaysUntilBestBefore;
+        if (HouseholdId.HasValue) return HouseholdFoodDetails?.DaysUntilBestBefore;
 
         return DaysUntilBestBefore;
     }
 
     public int? GetDaysUntilExpiration()
     {
-        if (HouseholdId.HasValue) return HouseholdFoodDetails.DaysUntilExpiration;
+        if (HouseholdId.HasValue) return HouseholdFoodDetails?.DaysUntilExpiration;
 
         return DaysUntilExpiration;
     }

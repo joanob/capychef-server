@@ -26,11 +26,11 @@
 - [x] Modificar tiempo de consumo preferente o de caducidad de un alimento global
 - [x] Modificar cantidad mínima de un alimento global
 - [ ] Modificar supermercado preferido, precio o impacto ambiental de un alimento global
-- [ ] Crear alimentos
-- [ ] Editar alimentos
-- [ ] Eliminar alimentos
-- [ ] Modificar unidades de medida o conversiones de un alimento del hogar
-- [ ] Modificar tiempo de consumo preferente o de caducidad de un alimento del hogar
+- [x] Crear alimentos
+- [x] Editar alimentos
+- [x] Eliminar alimentos
+- [x] Modificar unidades de medida o conversiones de un alimento del hogar
+- [x] Modificar tiempo de consumo preferente o de caducidad de un alimento del hogar
 - [ ] Modificar notificaciones de un alimento del hogar
 - [ ] Modificar impacto ambiental de un alimento del hogar
 
