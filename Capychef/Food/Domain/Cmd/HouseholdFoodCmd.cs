@@ -5,13 +5,13 @@ namespace Capychef.Food.Domain.Cmd;
 
 public class HouseholdFoodCmd : ICmd
 {
-    public string Name { get; set; }
-    public int CategoryId { get; set; }
-    public double? MinQuantity { get; set; }
-    public string? MinQuantityUoM { get; set; }
-    public int? DaysUntilExpiration { get; set; }
-    public int? DaysUntilBestBefore { get; set; }
-    public List<FoodUoMCmd> UoM { get; set; }
+    public required string Name { get; init; }
+    public required int CategoryId { get; init; }
+    public double? MinQuantity { get; init; }
+    public string? MinQuantityUoM { get; init; }
+    public int? DaysUntilExpiration { get; init; }
+    public int? DaysUntilBestBefore { get; init; }
+    public required List<FoodUoMCmd> UoM { get; init; }
 
     public ValidationError? Validate()
     {

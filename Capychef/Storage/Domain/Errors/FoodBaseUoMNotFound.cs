@@ -1,6 +1,6 @@
 ﻿using Capychef.Common.Errors;
 
-namespace Capychef.Food.Domain.Errors;
+namespace Capychef.Storage.Domain.Errors;
 
 public class BatchDoesNotHaveEnoughQuantityError : AppError
 {

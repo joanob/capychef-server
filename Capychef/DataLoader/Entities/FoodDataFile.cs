@@ -1,14 +1,14 @@
-﻿namespace Capychef.Data;
+﻿namespace Capychef.DataLoader.Entities;
 
 public class FoodDataFile
 {
-    public string GlobalId { get; set; }
+    public required string GlobalId { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public int Category { get; set; }
-    public int? DaysUntilExpiration { get; set; }
-    public int? DaysUntilBestBefore { get; set; }
+    public int Category { get; init; }
+    public int? DaysUntilExpiration { get; init; }
+    public int? DaysUntilBestBefore { get; init; }
 
-    public List<FoodUoMDataFile> UnitsOfMeasure { get; set; }
+    public List<FoodUoMDataFile> UnitsOfMeasure { get; init; } = [];
 }

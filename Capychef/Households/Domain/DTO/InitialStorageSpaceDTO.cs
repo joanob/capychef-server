@@ -2,9 +2,9 @@
 
 namespace Capychef.Households.Domain.DTO;
 
-public class InitialStorageSpaceDTO
+public class InitialStorageSpaceDto
 {
-    public InitialStorageSpaceDTO(InitialStorageSpace s)
+    public InitialStorageSpaceDto(InitialStorageSpace s)
     {
         Id = s.Id;
         Name = s.Name;
@@ -15,8 +15,8 @@ public class InitialStorageSpaceDTO
     public string Name { get; set; }
     public string StorageCondition { get; set; }
 
-    public static List<InitialStorageSpaceDTO> ToDTOList(List<InitialStorageSpace> list)
+    public static List<InitialStorageSpaceDto> ToDtoList(List<InitialStorageSpace> list)
     {
-        return list.Select(x => new InitialStorageSpaceDTO(x)).ToList();
+        return list.Select(x => new InitialStorageSpaceDto(x)).ToList();
     }
 }

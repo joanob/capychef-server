@@ -14,16 +14,16 @@ public class UoMController(
 ) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<List<UoMDTO>>>> GetAllUoM()
+    public async Task<ActionResult<ApiResponse<List<UoMdto>>>> GetAllUoM()
     {
         var uoMs = await uoMService.GetAllUoM();
 
-        return Ok(new ApiResponse<List<UoMDTO>>(uoMs));
+        return Ok(new ApiResponse<List<UoMdto>>(uoMs));
     }
 
 
     [HttpPost]
-    public async Task<ActionResult> LoadGlobalUoM(GlobalUoMFileCmd fileCmd)
+    public ActionResult LoadGlobalUoM(GlobalUoMFileCmd fileCmd)
     {
         Task.Run(async () =>
         {

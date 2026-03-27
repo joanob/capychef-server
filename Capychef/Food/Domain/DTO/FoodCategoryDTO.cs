@@ -2,9 +2,9 @@
 
 namespace Capychef.Food.Domain.DTO;
 
-public class FoodCategoryDTO
+public class FoodCategoryDto
 {
-    public FoodCategoryDTO(FoodCategory foodCategory)
+    public FoodCategoryDto(FoodCategory foodCategory)
     {
         Id = foodCategory.Id;
         Name = foodCategory.Name;
@@ -16,13 +16,13 @@ public class FoodCategoryDTO
     public string Name { get; }
     public bool IsLeaf { get; }
     public int? ParentCategoryId { get; }
-    public List<FoodCategoryDTO>? Children { get; private set; }
+    public List<FoodCategoryDto>? Children { get; private set; }
 
     public void AddChildren(List<FoodCategory> categories)
     {
-        if (categories != null)
+        if (categories.Count > 0)
         {
-            Children = categories.Where(x => x.ParentCategoryId == Id).Select(x => new FoodCategoryDTO(x)).ToList();
+            Children = categories.Where(x => x.ParentCategoryId == Id).Select(x => new FoodCategoryDto(x)).ToList();
             foreach (var child in Children) child.AddChildren(categories);
         }
     }

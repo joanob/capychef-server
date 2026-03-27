@@ -7,51 +7,49 @@ namespace Capychef.Testdata;
 
 public class TestUsers(CapychefDbContext dbContext)
 {
-    private readonly int BLOCKED_USERS = 50;
-    private readonly int DELETED_USERS = 50;
-    private readonly int GUEST_USERS = 100;
-    private readonly int NON_VERIFIED_EMAIL_USERS = 50;
-    private readonly int PASSWORD_USERS = 100;
+    private readonly int _blockedUsers = 50;
+    private readonly int _deletedUsers = 50;
+    private readonly int _guestUsers = 100;
+    private readonly int _nonVerifiedEmailUsers = 50;
+    private readonly int _passwordUsers = 100;
 
-    private readonly HashSet<string> Usernames = new();
-    private readonly int VERIFIED_EMAIL_USERS = 50;
+    private readonly HashSet<string> _usernames = new();
+    private readonly int _verifiedEmailUsers = 50;
 
     public async Task Generate()
     {
         Console.WriteLine("Generating users");
-        Usernames.Clear();
+        _usernames.Clear();
 
         GenerateUniqueUsernames();
 
-        await GenerateVerifiedEmailUsers();
+        GenerateVerifiedEmailUsers();
 
-        await GenerateNonVerifiedEmailUsers();
+        GenerateNonVerifiedEmailUsers();
 
-        await GeneratePasswordUsers();
+        GeneratePasswordUsers();
 
-        await GenerateGuestUsers();
+        GenerateGuestUsers();
 
-        await GenerateBlockedUsers();
+        GenerateBlockedUsers();
 
-        await GenerateDeletedUsers();
+        GenerateDeletedUsers();
 
         await dbContext.SaveChangesAsync();
 
         Console.WriteLine("Generated users saved");
     }
 
-    private async Task GenerateVerifiedEmailUsers()
+    private void GenerateVerifiedEmailUsers()
     {
         Console.WriteLine("Generating verified email users");
-        for (var i = 0; i < VERIFIED_EMAIL_USERS; i++)
+        for (var i = 0; i < _verifiedEmailUsers; i++)
         {
-            var username = Usernames.ElementAt(0);
-            Usernames.Remove(username);
+            var username = _usernames.ElementAt(0);
+            _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd();
-            signupCmd.Username = username;
-            signupCmd.Password = username;
-            signupCmd.Email = $"{username}@capychef.com";
+            var signupCmd = new SignupCmd
+                { Username = username, Password = username, Email = $"{username}@capychef.com" };
 
             var user = new User(signupCmd);
             user.IsEmailValid = true;
@@ -70,18 +68,16 @@ public class TestUsers(CapychefDbContext dbContext)
         Console.WriteLine("Done");
     }
 
-    private async Task GenerateNonVerifiedEmailUsers()
+    private void GenerateNonVerifiedEmailUsers()
     {
         Console.WriteLine("Generating non verified email users");
-        for (var i = 0; i < NON_VERIFIED_EMAIL_USERS; i++)
+        for (var i = 0; i < _nonVerifiedEmailUsers; i++)
         {
-            var username = Usernames.ElementAt(0);
-            Usernames.Remove(username);
+            var username = _usernames.ElementAt(0);
+            _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd();
-            signupCmd.Username = username;
-            signupCmd.Password = username;
-            signupCmd.Email = $"{username}@capychef.com";
+            var signupCmd = new SignupCmd
+                { Username = username, Password = username, Email = $"{username}@capychef.com" };
 
             var user = new User(signupCmd);
             dbContext.Add(user);
@@ -96,17 +92,15 @@ public class TestUsers(CapychefDbContext dbContext)
         Console.WriteLine("Done");
     }
 
-    private async Task GeneratePasswordUsers()
+    private void GeneratePasswordUsers()
     {
         Console.WriteLine("Generating password users");
-        for (var i = 0; i < PASSWORD_USERS; i++)
+        for (var i = 0; i < _passwordUsers; i++)
         {
-            var username = Usernames.ElementAt(0);
-            Usernames.Remove(username);
+            var username = _usernames.ElementAt(0);
+            _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd();
-            signupCmd.Username = username;
-            signupCmd.Password = username;
+            var signupCmd = new SignupCmd { Username = username, Password = username };
 
             var user = new User(signupCmd);
             dbContext.Add(user);
@@ -118,16 +112,15 @@ public class TestUsers(CapychefDbContext dbContext)
         Console.WriteLine("Done");
     }
 
-    private async Task GenerateGuestUsers()
+    private void GenerateGuestUsers()
     {
         Console.WriteLine("Generating guest users");
-        for (var i = 0; i < GUEST_USERS; i++)
+        for (var i = 0; i < _guestUsers; i++)
         {
-            var username = Usernames.ElementAt(0);
-            Usernames.Remove(username);
+            var username = _usernames.ElementAt(0);
+            _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd();
-            signupCmd.Username = username;
+            var signupCmd = new SignupCmd { Username = username };
 
             var user = new User(signupCmd);
             dbContext.Add(user);
@@ -139,17 +132,15 @@ public class TestUsers(CapychefDbContext dbContext)
         Console.WriteLine("Done");
     }
 
-    private async Task GenerateBlockedUsers()
+    private void GenerateBlockedUsers()
     {
         Console.WriteLine("Generating blocked users");
-        for (var i = 0; i < BLOCKED_USERS; i++)
+        for (var i = 0; i < _blockedUsers; i++)
         {
-            var username = Usernames.ElementAt(0);
-            Usernames.Remove(username);
+            var username = _usernames.ElementAt(0);
+            _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd();
-            signupCmd.Username = username;
-            signupCmd.Password = username;
+            var signupCmd = new SignupCmd { Username = username, Password = username };
 
             var user = new User(signupCmd);
             user.IsBlocked = true;
@@ -163,17 +154,15 @@ public class TestUsers(CapychefDbContext dbContext)
         Console.WriteLine("Done");
     }
 
-    private async Task GenerateDeletedUsers()
+    private void GenerateDeletedUsers()
     {
         Console.WriteLine("Generating deleted users");
-        for (var i = 0; i < DELETED_USERS; i++)
+        for (var i = 0; i < _deletedUsers; i++)
         {
-            var username = Usernames.ElementAt(0);
-            Usernames.Remove(username);
+            var username = _usernames.ElementAt(0);
+            _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd();
-            signupCmd.Username = username;
-            signupCmd.Password = username;
+            var signupCmd = new SignupCmd { Username = username, Password = username };
 
             var user = new User(signupCmd);
             user.Delete();
@@ -189,18 +178,18 @@ public class TestUsers(CapychefDbContext dbContext)
 
     private void GenerateUniqueUsernames()
     {
-        var totalUsers = VERIFIED_EMAIL_USERS + NON_VERIFIED_EMAIL_USERS + PASSWORD_USERS + GUEST_USERS +
-                         BLOCKED_USERS + DELETED_USERS;
+        var totalUsers = _verifiedEmailUsers + _nonVerifiedEmailUsers + _passwordUsers + _guestUsers +
+                         _blockedUsers + _deletedUsers;
 
         for (var i = 0; i < totalUsers; i++)
         {
-            var username = "";
+            string username;
             do
             {
                 username = RandomGenerator.GenerateRandomCapsAndNumbersString(6);
-            } while (Usernames.Contains(username));
+            } while (_usernames.Contains(username));
 
-            Usernames.Add(username);
+            _usernames.Add(username);
         }
     }
 }

@@ -2,5 +2,5 @@
 
 public class CreateHouseholdJoinRequestCmd
 {
-    public string HouseholdPublicId { get; set; }
+    public required string HouseholdPublicId { get; set; }
 }

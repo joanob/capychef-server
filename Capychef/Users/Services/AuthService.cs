@@ -23,15 +23,15 @@ public class AuthService(
     IHouseholdRepository householdRepository,
     IEmailSender emailSender) : IAuthService
 {
-    public async Task<Result<(UserDTO, AuthUserDetails)>> Signup(SignupCmd cmd)
+    public async Task<Result<(UserDto, AuthUserDetails)>> Signup(SignupCmd cmd)
     {
         var error = cmd.Validate();
 
-        if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
+        if (error != null) return new Result<(UserDto, AuthUserDetails)>(error);
 
         var usernameInUse = await userRepository.CheckUserExistsByUsernameAsync(cmd.Username);
 
-        if (usernameInUse) return new Result<(UserDTO, AuthUserDetails)>(new UsernameInUseError(cmd.Username));
+        if (usernameInUse) return new Result<(UserDto, AuthUserDetails)>(new UsernameInUseError(cmd.Username));
 
         var user = new User(cmd);
 
@@ -52,7 +52,7 @@ public class AuthService(
         {
             var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
 
-            if (emailInUse) return new Result<(UserDTO, AuthUserDetails)>(new UsernameInUseError(cmd.Email));
+            if (emailInUse) return new Result<(UserDto, AuthUserDetails)>(new UsernameInUseError(cmd.Email));
 
             var userToken = UserToken.CreateEmailValidationUserToken(user);
 
@@ -63,29 +63,29 @@ public class AuthService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
+        return new Result<(UserDto, AuthUserDetails)>((new UserDto(user), new AuthUserDetails(user.Id, session.Id)));
     }
 
-    public async Task<Result<(UserDTO, AuthUserDetails)>> Login(LoginCmd cmd)
+    public async Task<Result<(UserDto, AuthUserDetails)>> Login(LoginCmd cmd)
     {
         var error = cmd.Validate();
 
-        if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
+        if (error != null) return new Result<(UserDto, AuthUserDetails)>(error);
 
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null)
         {
             user = await userRepository.GetTrackedUserByEmailAsync(cmd.Username);
             if (user == null)
-                return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, cmd.Username));
+                return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User, cmd.Username));
         }
 
         var password = await userPasswordRepository.GetActiveUserPasswordByUserIdAsync(user.Id);
         if (password == null)
-            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, user.Id));
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User, user.Id));
 
-        if (!password.checkPassword(cmd.Password))
-            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User,
+        if (!password.CheckPassword(cmd.Password))
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User,
                 user.Id + " password mismatch"));
 
         var session = new UserSession(user);
@@ -94,10 +94,10 @@ public class AuthService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
+        return new Result<(UserDto, AuthUserDetails)>((new UserDto(user), new AuthUserDetails(user.Id, session.Id)));
     }
 
-    public async Task<AppError> RecoverPassword(string email)
+    public async Task<AppError?> RecoverPassword(string email)
     {
         var user = await userRepository.GetTrackedUserByEmailAsync(email);
 
@@ -123,7 +123,7 @@ public class AuthService(
         return null;
     }
 
-    public async Task<AppError> ResetPassword(ResetPasswordCmd cmd)
+    public async Task<AppError?> ResetPassword(ResetPasswordCmd cmd)
     {
         var error = cmd.Validate();
 
@@ -137,7 +137,7 @@ public class AuthService(
         if (userToken.TokenType != UserTokenType.PasswordRecovery)
             return new NotFoundError(EntityType.Token, cmd.PasswordRecoveryToken);
 
-        userToken.markUsed();
+        userToken.MarkUsed();
 
         var user = await userRepository.GetTrackedUserById(userToken.UserId);
 
@@ -179,28 +179,28 @@ public class AuthService(
         return new Result<string>(userToken.Token);
     }
 
-    public async Task<Result<(UserDTO, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd)
+    public async Task<Result<(UserDto, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd)
     {
         var error = cmd.Validate();
 
-        if (error != null) return new Result<(UserDTO, AuthUserDetails)>(error);
+        if (error != null) return new Result<(UserDto, AuthUserDetails)>(error);
 
         var userToken = await userTokenRepository.GetTrackedUsableUserTokenByTokenAsync(cmd.GuestTransferenceToken);
 
         if (userToken == null)
-            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.Token,
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.Token,
                 cmd.GuestTransferenceToken));
 
         if (userToken.TokenType != UserTokenType.GuestAccountTransfer)
-            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.Token,
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.Token,
                 cmd.GuestTransferenceToken));
 
-        userToken.markUsed();
+        userToken.MarkUsed();
 
         var user = await userRepository.GetTrackedUserById(userToken.UserId);
 
         if (user == null)
-            return new Result<(UserDTO, AuthUserDetails)>(new NotFoundError(EntityType.User, userToken.UserId));
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User, userToken.UserId));
 
         var session = new UserSession(user);
 
@@ -208,21 +208,21 @@ public class AuthService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<(UserDTO, AuthUserDetails)>((new UserDTO(user), new AuthUserDetails(user.Id, session.Id)));
+        return new Result<(UserDto, AuthUserDetails)>((new UserDto(user), new AuthUserDetails(user.Id, session.Id)));
     }
 
-    public async Task<Result<AuthSessionDTO>> GetAuthSession(AuthUserDetails userDetails)
+    public async Task<Result<AuthSessionDto>> GetAuthSession(AuthUserDetails userDetails)
     {
         var user = await userRepository.GetUserById(userDetails.UserId);
 
         if (user == null)
-            return new Result<AuthSessionDTO>(new NotFoundError(EntityType.User, userDetails.UserId));
+            return new Result<AuthSessionDto>(new NotFoundError(EntityType.User, userDetails.UserId));
 
         Household? activeHousehold = null;
 
         if (userDetails.HasHouseholdId)
             activeHousehold = await householdRepository.GetHouseholdById(userDetails.GetHouseholdId());
 
-        return new Result<AuthSessionDTO>(new AuthSessionDTO(user, activeHousehold));
+        return new Result<AuthSessionDto>(new AuthSessionDto(user, activeHousehold));
     }
 }

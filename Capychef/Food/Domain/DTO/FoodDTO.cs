@@ -1,8 +1,8 @@
 ﻿namespace Capychef.Food.Domain.DTO;
 
-public class FoodDTO
+public class FoodDto
 {
-    public FoodDTO(Entities.Food food)
+    public FoodDto(Entities.Food food)
     {
         Id = food.Id;
         Name = food.Name;
@@ -16,10 +16,10 @@ public class FoodDTO
         ModifiedGlobalFoodId = food.ModifiedGlobalFoodId;
         CreatedBy = food.CreatedBy;
 
-        if (food.UoM != null)
-            UoM = food.UoM.Select(x => new FoodUoMDTO(x)).ToList();
+        if (food.UoM.Count > 0)
+            UoM = food.UoM.Select(x => new FoodUoMdto(x)).ToList();
         else
-            UoM = new List<FoodUoMDTO>();
+            UoM = new List<FoodUoMdto>();
     }
 
     public int Id { get; }
@@ -44,10 +44,10 @@ public class FoodDTO
 
     public int? CreatedBy { get; }
 
-    public ICollection<FoodUoMDTO> UoM { get; }
+    public ICollection<FoodUoMdto> UoM { get; }
 
-    public static List<FoodDTO> ToList(List<Entities.Food> food)
+    public static List<FoodDto> ToList(List<Entities.Food> food)
     {
-        return food.Select(x => new FoodDTO(x)).ToList();
+        return food.Select(x => new FoodDto(x)).ToList();
     }
 }

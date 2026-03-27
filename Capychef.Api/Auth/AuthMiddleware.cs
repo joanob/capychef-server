@@ -5,7 +5,7 @@ namespace Capychef.Api.Auth;
 
 public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger)
 {
-    private readonly string[] publicRoutes =
+    private readonly string[] _publicRoutes =
     {
         "/data/load",
         "/auth/signup",
@@ -19,13 +19,13 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (publicRoutes.Any(x => context.Request.Path.Value.StartsWith(x)))
+        if (_publicRoutes.Any(x => context.Request.Path.Value?.StartsWith(x) ?? false))
         {
             await next(context);
             return;
         }
 
-        var userDetails = JWTService.getUserDetailsFromSessionJWT(context.Request);
+        var userDetails = JwtService.GetUserDetailsFromSessionJwt(context.Request);
         if (userDetails != null)
         {
             LogAuthUserDetails(userDetails);
@@ -34,14 +34,14 @@ public class AuthMiddleware(RequestDelegate next, ILogger<AuthMiddleware> logger
             return;
         }
 
-        userDetails = JWTService.getUserDetailsFromRefreshJWT(context.Request);
+        userDetails = JwtService.GetUserDetailsFromRefreshJwt(context.Request);
         if (userDetails != null)
         {
             var userSesionService = context.RequestServices.GetRequiredService<IUserSessionService>();
             if (await userSesionService.ValidateAuthUserSession(userDetails))
             {
                 LogAuthUserDetails(userDetails);
-                JWTService.CreateAndSendJWT(userDetails, context.Response);
+                JwtService.CreateAndSendJwt(userDetails, context.Response);
                 AuthUserDetailsService.AddAuthUserDetailsToContext(context, userDetails);
                 await next(context);
                 return;

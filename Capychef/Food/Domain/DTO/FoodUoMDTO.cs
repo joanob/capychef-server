@@ -2,9 +2,9 @@
 
 namespace Capychef.Food.Domain.DTO;
 
-public class FoodUoMDTO
+public class FoodUoMdto
 {
-    public FoodUoMDTO(FoodUoM foodUoM)
+    public FoodUoMdto(FoodUoM foodUoM)
     {
         UoM = foodUoM.UoM;
         IsHouseholdUoM = foodUoM.HouseholdId.HasValue;

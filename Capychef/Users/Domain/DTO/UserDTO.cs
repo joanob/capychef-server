@@ -2,9 +2,9 @@
 
 namespace Capychef.Users.Domain.DTO;
 
-public class UserDTO
+public class UserDto
 {
-    public UserDTO(User user)
+    public UserDto(User user)
     {
         Id = user.Id;
         Username = user.Username;
@@ -21,8 +21,8 @@ public class UserDTO
     public bool IsEmailValid { get; }
     public DateTime CreatedAt { get; }
 
-    public static List<UserDTO> ToDTOList(List<User> users)
+    public static List<UserDto> ToDtoList(List<User> users)
     {
-        return users.Select(u => new UserDTO(u)).ToList();
+        return users.Select(u => new UserDto(u)).ToList();
     }
 }

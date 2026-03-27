@@ -7,9 +7,9 @@ namespace Capychef.Users.Repositories;
 
 public class UserTokenRepository(CapychefDbContext dbContext) : IUserTokenRepository
 {
-    public async Task AddUserTokenAsync(UserToken Token)
+    public async Task AddUserTokenAsync(UserToken token)
     {
-        await dbContext.UsersTokens.AddAsync(Token);
+        await dbContext.UsersTokens.AddAsync(token);
     }
 
     public async Task<UserToken?> GetTrackedUsableUserTokenByTokenAsync(string token)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,6 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food_modifications_history")]
 public class FoodModificationHistory
 {
-    public FoodModificationHistory()
-    {
-    }
-
     public FoodModificationHistory(int foodId, int householdId, FoodModifiableColumn columnName, string previousValue,
         string newValue,
         int modifiedBy)
@@ -24,28 +21,26 @@ public class FoodModificationHistory
         ModifiedBy = modifiedBy;
     }
 
-    [Column("id")] public int Id { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
-    [Column("food_id")]
-    [ForeignKey(nameof(Food))]
-    public int FoodId { get; private set; }
+    [Column("food_id")] public int FoodId { get; init; }
 
-    [Column("household_id")] public int HouseholdId { get; private set; }
+    [Column("household_id")] public int HouseholdId { get; init; }
 
-    [Column("column_name")] public FoodModifiableColumn ColumnName { get; private set; }
+    [Column("column_name")] public FoodModifiableColumn ColumnName { get; init; }
 
-    [Column("previous_value")] public string PreviousValue { get; private set; }
+    [Column("previous_value")]
+    [MaxLength(100)]
+    public string PreviousValue { get; init; }
 
-    [Column("new_value")] public string NewValue { get; private set; }
+    [Column("new_value")] [MaxLength(100)] public string NewValue { get; init; }
 
-    [Column("modified_at")] public DateTime ModifiedAt { get; private set; }
+    [Column("modified_at")] public DateTime ModifiedAt { get; init; }
 
-    [Column("modified_by")]
-    [ForeignKey(nameof(ModifiedByUser))]
-    public int ModifiedBy { get; private set; }
+    [Column("modified_by")] public int ModifiedBy { get; init; }
 
-    public Food Food { get; private set; }
-    public User ModifiedByUser { get; private set; }
+    [InverseProperty(nameof(FoodId))] public Food? Food { get; init; }
+    [InverseProperty(nameof(ModifiedBy))] public User? ModifiedByUser { get; init; }
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {

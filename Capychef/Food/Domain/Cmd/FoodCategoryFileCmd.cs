@@ -2,5 +2,5 @@
 
 public class FoodCategoryFileCmd
 {
-    public List<FoodCategoryCmd> FoodCategories { get; set; }
+    public List<FoodCategoryCmd> FoodCategories { get; init; } = [];
 }

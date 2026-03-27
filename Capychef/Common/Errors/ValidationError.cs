@@ -6,9 +6,4 @@ public class ValidationError : AppError
     {
         Message = message;
     }
-
-    public ValidationError(string affectedClass, string field, string message) : base(ErrorType.Validation)
-    {
-        Message = affectedClass + " " + field + " " + message;
-    }
 }

@@ -21,11 +21,11 @@ public class HouseholdService(
     ISubscriptionService subscriptionService
 ) : IHouseholdService
 {
-    public async Task<Result<HouseholdDTO>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
+    public async Task<Result<HouseholdDto>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
     {
         var error = await subscriptionService.CheckUserCanCreateHousehold(userDetails.UserId);
 
-        if (error != null) return new Result<HouseholdDTO>(error);
+        if (error != null) return new Result<HouseholdDto>(error);
 
         var household = new Household(userDetails.UserId, cmd.Name);
 
@@ -42,7 +42,7 @@ public class HouseholdService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+        return new Result<HouseholdDto>(new HouseholdDto(household));
     }
 
     public async Task<AppError?> CheckHouseholdOwnership(AuthUserDetails userDetails)
@@ -65,58 +65,60 @@ public class HouseholdService(
         return new HouseholdMembershipError(userDetails.UserId, userDetails.GetHouseholdId());
     }
 
-    public async Task<List<HouseholdDTO>> GetAllHouseholds(AuthUserDetails userDetails)
+    public async Task<List<HouseholdDto>> GetAllHouseholds(AuthUserDetails userDetails)
     {
         var households = await householdRepository.GetAllHouseholds(userDetails.UserId);
 
-        return HouseholdDTO.ToDTOList(households);
+        return HouseholdDto.ToDtoList(households);
     }
 
-    public async Task<Result<HouseholdDTO>> GetHouseholdById(AuthUserDetails userDetails, int householdId)
+    public async Task<Result<HouseholdDto>> GetHouseholdById(AuthUserDetails userDetails, int householdId)
     {
         var household = await householdRepository.GetHouseholdById(householdId);
 
-        if (household == null) return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, householdId));
+        if (household == null) return new Result<HouseholdDto>(new NotFoundError(EntityType.Household, householdId));
 
         if (!await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, householdId))
-            return new Result<HouseholdDTO>(new HouseholdMembershipError(userDetails.UserId, householdId));
+            return new Result<HouseholdDto>(new HouseholdMembershipError(userDetails.UserId, householdId));
 
-        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+        return new Result<HouseholdDto>(new HouseholdDto(household));
     }
 
-    public async Task<Result<HouseholdDTO>> SelectHousehold(AuthUserDetails userDetails, int householdId)
+    public async Task<Result<HouseholdDto>> SelectHousehold(AuthUserDetails userDetails, int householdId)
     {
         if (!await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, householdId))
-            return new Result<HouseholdDTO>(new HouseholdMembershipError(userDetails.UserId, householdId));
+            return new Result<HouseholdDto>(new HouseholdMembershipError(userDetails.UserId, householdId));
 
         var household = await householdRepository.GetHouseholdById(householdId);
-        if (household == null) return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, householdId));
+        if (household == null) return new Result<HouseholdDto>(new NotFoundError(EntityType.Household, householdId));
 
-        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+        return new Result<HouseholdDto>(new HouseholdDto(household));
     }
 
-    public async Task<Result<HouseholdDTO>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
+    public async Task<Result<HouseholdDto>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
         HouseholdCmd cmd)
     {
         var household = await householdRepository.GetTrackedHouseholdById(householdId);
+
+        if (household == null) return new Result<HouseholdDto>(new NotFoundError(EntityType.Household, householdId));
 
         household.Name = cmd.Name;
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+        return new Result<HouseholdDto>(new HouseholdDto(household));
     }
 
-    public async Task<Result<HouseholdDTO>> GetActiveHousehold(AuthUserDetails userDetails)
+    public async Task<Result<HouseholdDto>> GetActiveHousehold(AuthUserDetails userDetails)
     {
         var household = await householdRepository.GetHouseholdByIdIncludingStorageSpaces(userDetails.GetHouseholdId());
         if (household == null)
-            return new Result<HouseholdDTO>(new NotFoundError(EntityType.Household, userDetails.GetHouseholdId()));
+            return new Result<HouseholdDto>(new NotFoundError(EntityType.Household, userDetails.GetHouseholdId()));
 
-        return new Result<HouseholdDTO>(new HouseholdDTO(household));
+        return new Result<HouseholdDto>(new HouseholdDto(household));
     }
 
-    public async Task<AppError> DeleteHousehold(AuthUserDetails userDetails)
+    public async Task<AppError?> DeleteHousehold(AuthUserDetails userDetails)
     {
         var household = await householdRepository.GetTrackedHouseholdById(userDetails.GetHouseholdId());
         if (household == null) return new NotFoundError(EntityType.Household, userDetails.GetHouseholdId());

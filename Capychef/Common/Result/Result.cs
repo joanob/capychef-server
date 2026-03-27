@@ -4,8 +4,8 @@ namespace Capychef.Common.Result;
 
 public class Result<T>
 {
-    private readonly AppError _error;
-    private readonly T _result;
+    private readonly AppError? _error;
+    private readonly T? _result;
 
     public Result(T result)
     {
@@ -17,24 +17,18 @@ public class Result<T>
         _error = error;
     }
 
-    public Result(T result, AppError error)
-    {
-        _result = result;
-        _error = error;
-    }
-
-    public bool failed()
+    public bool Failed()
     {
         return _error != null;
     }
 
-    public T get()
+    public T Get()
     {
-        return _result;
+        return _result ?? throw new Exception("Result object is null");
     }
 
-    public AppError error()
+    public AppError Error()
     {
-        return _error;
+        return _error ?? throw new Exception("Result error is null");
     }
 }

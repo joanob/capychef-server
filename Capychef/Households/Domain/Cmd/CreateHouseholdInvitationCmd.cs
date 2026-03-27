@@ -2,5 +2,5 @@
 
 public class CreateHouseholdInvitationCmd
 {
-    public string Username { get; set; }
+    public required string Username { get; init; }
 }

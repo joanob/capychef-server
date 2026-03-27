@@ -4,33 +4,29 @@ namespace Capychef.Households.Domain.Entities;
 
 public class StorageConditions
 {
-    private const string _ambient = "A";
-    private const string _refrigerated = "R";
-    private const string _frozen = "F";
+    private const string AmbientConst = "A";
+    private const string RefrigeratedConst = "R";
+    private const string FrozenConst = "F";
 
     private readonly string _value;
-
-    private StorageConditions()
-    {
-    }
 
     private StorageConditions(string value)
     {
         _value = value;
     }
 
-    public static StorageConditions AmbientTemperature => new(_ambient);
-    public static StorageConditions Refrigerated => new(_refrigerated);
-    public static StorageConditions Frozen => new(_frozen);
+    public static StorageConditions AmbientTemperature => new(AmbientConst);
+    public static StorageConditions Refrigerated => new(RefrigeratedConst);
+    public static StorageConditions Frozen => new(FrozenConst);
 
-    public static StorageConditions from(string value)
+    public static StorageConditions From(string value)
     {
         return value switch
         {
-            _ambient => AmbientTemperature,
-            _refrigerated => Refrigerated,
-            _frozen => Frozen,
-            _ => null
+            AmbientConst => AmbientTemperature,
+            RefrigeratedConst => Refrigerated,
+            FrozenConst => Frozen,
+            _ => new StorageConditions("")
         };
     }
 
@@ -40,14 +36,5 @@ public class StorageConditions
     }
 }
 
-public class StorageConditionsConverter
-    : ValueConverter<StorageConditions, string>
-{
-    public StorageConditionsConverter()
-        : base(
-            v => v.ToString(),
-            v => StorageConditions.from(v)
-        )
-    {
-    }
-}
+public class StorageConditionsConverter() : ValueConverter<StorageConditions, string>(v => v.ToString(),
+    v => StorageConditions.From(v));

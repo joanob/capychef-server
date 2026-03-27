@@ -4,23 +4,23 @@ namespace Capychef.Food.Domain.Cmd;
 
 public class GlobalUoMFileCmd
 {
-    [JsonPropertyName("uomDimensions")] public List<GlobalUoMDimensionCmd> UomDimensions { get; set; }
+    [JsonPropertyName("uomDimensions")] public required List<GlobalUoMDimensionCmd> UomDimensions { get; init; } = [];
 
-    public List<GlobalUoMCmd> Uom { get; set; }
+    public required List<GlobalUoMCmd> Uom { get; init; } = [];
 }
 
 public class GlobalUoMDimensionCmd
 {
-    public string Code { get; set; }
-    public string Name { get; set; }
+    public required string Code { get; init; }
+    public required string Name { get; init; }
 }
 
 public class GlobalUoMCmd
 {
-    public string Code { get; set; }
-    public string Name { get; set; }
-    public string DimensionCode { get; set; }
-    public string? BaseUom { get; set; }
-    public int? Numerator { get; set; }
-    public int? Denominator { get; set; }
+    public required string Code { get; init; }
+    public required string Name { get; init; }
+    public required string DimensionCode { get; init; }
+    public string? BaseUom { get; init; }
+    public int? Numerator { get; init; }
+    public int? Denominator { get; init; }
 }

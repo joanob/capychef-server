@@ -9,31 +9,25 @@ public class AppError
         ErrorType = errorType;
     }
 
-    public AppError(ErrorType errorType, EntityType entityType)
-    {
-        ErrorType = errorType;
-        Entity = new EntityDetails(entityType);
-    }
-
-    public AppError(ErrorType errorType, EntityType entityType, int entityId)
+    protected AppError(ErrorType errorType, EntityType entityType, int entityId)
     {
         ErrorType = errorType;
         Entity = new EntityDetails(entityType, entityId);
     }
 
-    public AppError(ErrorType errorType, EntityType entityType, string entityId)
+    protected AppError(ErrorType errorType, EntityType entityType, string entityId)
     {
         ErrorType = errorType;
         Entity = new EntityDetails(entityType, entityId);
     }
 
-    public ErrorType ErrorType { get; protected set; }
-    public EntityDetails? Entity { get; protected set; }
-    public string? Message { get; protected set; }
+    public ErrorType ErrorType { get; }
+    public EntityDetails? Entity { get; }
+    public string? Message { get; protected init; }
 
-    public bool isEqual(AppError error)
+    public bool IsEqual(AppError error)
     {
-        return ErrorType == error.ErrorType;
+        return ErrorType.Equals(error.ErrorType);
     }
 
     public override string ToString()

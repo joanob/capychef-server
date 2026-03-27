@@ -21,11 +21,11 @@ public class HouseholdInvitation : BaseDeletableEntity
 
     [Column("household_id")]
     [ForeignKey(nameof(Household))]
-    public int HouseholdId { get; private set; }
+    public int HouseholdId { get; init; }
 
     [Column("user_id")]
     [ForeignKey(nameof(User))]
-    public int UserId { get; private set; }
+    public int UserId { get; init; }
 
     [Column("is_answered")] public bool IsAnswered { get; set; }
 

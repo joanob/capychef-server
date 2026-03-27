@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Capychef.Food.Domain.Entities;
 
 [Table("food_categories")]
 public class FoodCategory
 {
-    public FoodCategory()
-    {
-    }
-
     public FoodCategory(int id, string name, bool isLeaf, int? parentCategoryId)
     {
         Id = id;
@@ -19,7 +16,7 @@ public class FoodCategory
 
     [Column("id")] public int Id { get; set; }
 
-    [Column("name")] public string Name { get; set; }
+    [Column("name")] [MaxLength(100)] public string Name { get; set; }
 
     // Leaf categories are those that do not have any subcategories 
     // Food always belongs to leaf categories

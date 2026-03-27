@@ -3,6 +3,8 @@ using Capychef.Gourmet.Domain.Interfaces;
 using Capychef.Persistence;
 using Microsoft.EntityFrameworkCore;
 
+namespace Capychef.Gourmet.Repositories;
+
 public class UserSubscriptionRepository : IUserSubscriptionRepository
 {
     private readonly CapychefDbContext _dbContext;

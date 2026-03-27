@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Capychef.Common.Errors;
+namespace Capychef.Gourmet.Domain.Entities;
 
 public class SubscriptionType
 {
-    private const string _monthly = "M";
-    private const string _annually = "A";
+    private const string MonthlyConst = "M";
+    private const string AnnuallyConst = "A";
 
     private readonly string _value;
 
@@ -14,16 +14,16 @@ public class SubscriptionType
         _value = value;
     }
 
-    public static SubscriptionType Monthly => new(_monthly);
-    public static SubscriptionType Annually => new(_annually);
+    public static SubscriptionType Monthly => new(MonthlyConst);
+    public static SubscriptionType Annually => new(AnnuallyConst);
 
-    public static SubscriptionType from(string value)
+    public static SubscriptionType From(string value)
     {
         return value switch
         {
-            _monthly => Monthly,
-            _annually => Annually,
-            _ => null
+            MonthlyConst => Monthly,
+            AnnuallyConst => Annually,
+            _ => new SubscriptionType("")
         };
     }
 
@@ -39,7 +39,7 @@ public class SubscriptionTypeConverter
     public SubscriptionTypeConverter()
         : base(
             v => v.ToString(),
-            v => SubscriptionType.from(v)
+            v => SubscriptionType.From(v)
         )
     {
     }

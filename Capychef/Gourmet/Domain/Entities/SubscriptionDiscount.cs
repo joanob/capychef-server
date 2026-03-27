@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Gourmet.Domain.Entities;
@@ -7,10 +6,6 @@ namespace Capychef.Gourmet.Domain.Entities;
 [Table("discounts")]
 public class SubscriptionDiscount
 {
-    public SubscriptionDiscount()
-    {
-    }
-
     public SubscriptionDiscount(string discountCode, DiscountType discountType, double percentageOrAmount,
         DateTime validFrom, DateTime validUntil)
     {

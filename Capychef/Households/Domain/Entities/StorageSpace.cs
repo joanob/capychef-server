@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Entities;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,6 @@ namespace Capychef.Households.Domain.Entities;
 [Table("storage_spaces")]
 public class StorageSpace : BaseDeletableEntity
 {
-    public StorageSpace()
-    {
-    }
-
     public StorageSpace(string name, StorageConditions storageCondition, int householdId, int userId)
     {
         Name = name;
@@ -28,7 +25,7 @@ public class StorageSpace : BaseDeletableEntity
         CreatedBy = userId;
     }
 
-    [Column("name")] public string Name { get; set; }
+    [Column("name")] [MaxLength(100)] public string Name { get; set; }
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
 
@@ -36,9 +33,9 @@ public class StorageSpace : BaseDeletableEntity
 
     [Column("created_by")] public int CreatedBy { get; private set; }
 
-    [ForeignKey(nameof(HouseholdId))] public Household Household { get; private set; }
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
 
-    [ForeignKey(nameof(CreatedBy))] public User User { get; private set; }
+    [ForeignKey(nameof(CreatedBy))] public User? User { get; private set; }
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {

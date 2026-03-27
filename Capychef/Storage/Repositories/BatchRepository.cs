@@ -3,7 +3,7 @@ using Capychef.Storage.Domain.Entities;
 using Capychef.Storage.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Capychef.Storage;
+namespace Capychef.Storage.Repositories;
 
 public class BatchRepository(CapychefDbContext dbContext) : IBatchRepository
 {

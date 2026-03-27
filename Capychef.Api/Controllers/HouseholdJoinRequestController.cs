@@ -23,14 +23,14 @@ public class HouseholdJoinRequestController(
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.CreateJoinRequest");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }
 
     [CheckOwnership]
     [HttpGet("household")]
-    public async Task<ActionResult<List<HouseholdJoinRequestDTO>>> GetHouseholdJoinRequests()
+    public async Task<ActionResult<List<HouseholdJoinRequestDto>>> GetHouseholdJoinRequests()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -40,7 +40,7 @@ public class HouseholdJoinRequestController(
     }
 
     [HttpGet("user")]
-    public async Task<ActionResult<List<HouseholdJoinRequestDTO>>> GetHousholdJoinRequestsByUser()
+    public async Task<ActionResult<List<HouseholdJoinRequestDto>>> GetHousholdJoinRequestsByUser()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -58,7 +58,7 @@ public class HouseholdJoinRequestController(
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.AcceptJoinRequest");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }
@@ -72,7 +72,7 @@ public class HouseholdJoinRequestController(
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.RejectJoinRequest");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }

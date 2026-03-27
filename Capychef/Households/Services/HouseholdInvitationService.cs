@@ -39,23 +39,23 @@ public class HouseholdInvitationService(
 
         await dbContext.SaveChangesAsync();
 
-        householdInvitationRealtimeService.SendHouseholdInvitationReceivedMessage(invitation);
+        _ = householdInvitationRealtimeService.SendHouseholdInvitationReceivedMessage(invitation);
 
         return null;
     }
 
-    public async Task<List<HouseholdInvitationDTO>> GetAllHouseholdInvitations(AuthUserDetails userDetails)
+    public async Task<List<HouseholdInvitationDto>> GetAllHouseholdInvitations(AuthUserDetails userDetails)
     {
         var invitations = await invitationRepository.GetHouseholdInvitations(userDetails.GetHouseholdId());
 
-        return HouseholdInvitationDTO.toList(invitations);
+        return HouseholdInvitationDto.ToList(invitations);
     }
 
-    public async Task<List<HouseholdInvitationDTO>> GetHouseholdInvitationsByUser(AuthUserDetails userDetails)
+    public async Task<List<HouseholdInvitationDto>> GetHouseholdInvitationsByUser(AuthUserDetails userDetails)
     {
         var invitations = await invitationRepository.GetHouseholdInvitationsByUserId(userDetails.UserId);
 
-        return HouseholdInvitationDTO.toList(invitations);
+        return HouseholdInvitationDto.ToList(invitations);
     }
 
     public async Task<AppError?> AcceptInvitation(AuthUserDetails userDetails, int invitationId)

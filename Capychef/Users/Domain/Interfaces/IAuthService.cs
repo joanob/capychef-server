@@ -8,11 +8,11 @@ namespace Capychef.Users.Domain.Interfaces;
 
 public interface IAuthService
 {
-    Task<Result<(UserDTO, AuthUserDetails)>> Signup(SignupCmd cmd);
-    Task<Result<(UserDTO, AuthUserDetails)>> Login(LoginCmd cmd);
-    Task<AppError> RecoverPassword(string email);
-    Task<AppError> ResetPassword(ResetPasswordCmd cmd);
+    Task<Result<(UserDto, AuthUserDetails)>> Signup(SignupCmd cmd);
+    Task<Result<(UserDto, AuthUserDetails)>> Login(LoginCmd cmd);
+    Task<AppError?> RecoverPassword(string email);
+    Task<AppError?> ResetPassword(ResetPasswordCmd cmd);
     Task<Result<string>> GuestTransference(AuthUserDetails userDetails);
-    Task<Result<(UserDTO, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd);
-    Task<Result<AuthSessionDTO>> GetAuthSession(AuthUserDetails userDetails);
+    Task<Result<(UserDto, AuthUserDetails)>> GuestLogin(GuestLoginCmd cmd);
+    Task<Result<AuthSessionDto>> GetAuthSession(AuthUserDetails userDetails);
 }

@@ -19,9 +19,20 @@ public class CheckOwnershipFilter(IHouseholdService householdService)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(context.HttpContext);
 
+        if (!userDetails.IsValid())
+        {
+            context.Result = new ObjectResult(new ApiResponse<object>(
+                new ApiError(new AppError(ErrorType.Authentication), "")))
+            {
+                StatusCode = 401
+            };
+
+            return;
+        }
+
         if (!userDetails.HasHouseholdId)
         {
-            context.Result = new ObjectResult(new ApiResponse<HouseholdDTO>(
+            context.Result = new ObjectResult(new ApiResponse<HouseholdDto>(
                 new ApiError(new NoHouseholdSelectedError(userDetails.UserId), "NO_HOUSEHOLD_SELECTED")))
             {
                 StatusCode = 404
@@ -35,7 +46,7 @@ public class CheckOwnershipFilter(IHouseholdService householdService)
         if (error == null)
             await next();
         else
-            context.Result = new ObjectResult(new ApiResponse<HouseholdDTO>(new ApiError(new NotFoundError(
+            context.Result = new ObjectResult(new ApiResponse<HouseholdDto>(new ApiError(new NotFoundError(
                 EntityType.Household,
                 userDetails.GetHouseholdId()))))
             {

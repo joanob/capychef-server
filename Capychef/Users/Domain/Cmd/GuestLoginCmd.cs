@@ -5,8 +5,7 @@ namespace Capychef.Users.Domain.Cmd;
 
 public class GuestLoginCmd : ICmd
 {
-    public string GuestTransferenceToken { get; set; }
-
+    public required string GuestTransferenceToken { get; init; }
 
     public ValidationError? Validate()
     {

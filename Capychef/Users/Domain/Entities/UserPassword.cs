@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Errors;
 using JetBrains.Annotations;
 
@@ -7,10 +8,6 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users_passwords")]
 public class UserPassword
 {
-    public UserPassword()
-    {
-    }
-
     public UserPassword(User user, string password)
     {
         User = user;
@@ -19,21 +16,24 @@ public class UserPassword
         Password = BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    [Column("id")] public int Id { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
     [Column("user_id")]
     [ForeignKey(nameof(User))]
-    public int UserId { get; private set; }
+    public int UserId { get; init; }
 
-    [UsedImplicitly] [Column("password")] public string Password { get; private set; }
+    [UsedImplicitly]
+    [Column("password")]
+    [MaxLength(500)]
+    public string Password { get; private set; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    [Column("created_at")] public DateTime CreatedAt { get; private set; }
 
     [Column("is_active")] public bool IsActive { get; set; }
 
-    public User User { get; private set; } = null!;
+    public User User { get; private set; }
 
-    public static ValidationError ValidatePassword(string password)
+    public static ValidationError? ValidatePassword(string password)
     {
         if (string.IsNullOrEmpty(password))
             return new ValidationError("Password is empty.");
@@ -41,10 +41,10 @@ public class UserPassword
         if (password.Length > 1024)
             return new ValidationError("Password is too long. Max length is 1024 characters.");
 
-        return null!;
+        return null;
     }
 
-    public bool checkPassword(string password)
+    public bool CheckPassword(string password)
     {
         return BCrypt.Net.BCrypt.Verify(password, Password);
     }

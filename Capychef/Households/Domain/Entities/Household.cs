@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Entities;
 using Capychef.Common.Utils;
 using Capychef.Users.Domain.Entities;
@@ -9,10 +10,6 @@ namespace Capychef.Households.Domain.Entities;
 [Table("households")]
 public class Household : BaseDeletableEntity
 {
-    public Household()
-    {
-    }
-
     public Household(User user, string name)
     {
         User = user;
@@ -31,19 +28,17 @@ public class Household : BaseDeletableEntity
     [ForeignKey(nameof(User))]
     public int OwnerId { get; private set; }
 
-    [Column("name")] public string Name { get; set; }
+    [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
-    [Column("public_id")] public string PublicId { get; set; }
+    [Column("public_id")] [MaxLength(50)] public string PublicId { get; set; }
 
     [InverseProperty(nameof(StorageSpace.Household))]
-    public ICollection<StorageSpace> StorageSpaces { get; private set; } = new List<StorageSpace>();
+    public ICollection<StorageSpace> StorageSpaces { get; } = new List<StorageSpace>();
 
     public User User { get; private set; } = null!;
 
     public void AddStorageSpace(StorageSpace storageSpace)
     {
-        if (StorageSpaces == null) StorageSpaces = new List<StorageSpace>();
-
         StorageSpaces.Add(storageSpace);
     }
 }

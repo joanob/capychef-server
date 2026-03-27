@@ -24,10 +24,10 @@ public class UoMService(
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<UoMDTO>> GetAllUoM()
+    public async Task<List<UoMdto>> GetAllUoM()
     {
         var uoMs = await uoMRepository.GetAllUoM();
 
-        return UoMDTO.ToList(uoMs);
+        return UoMdto.ToList(uoMs);
     }
 }

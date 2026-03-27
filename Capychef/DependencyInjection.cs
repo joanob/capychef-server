@@ -1,18 +1,18 @@
-﻿using Capychef.Data;
-using Capychef.DataLoader.Services;
+﻿using Capychef.DataLoader.Services;
 using Capychef.Food.Domain.Interfaces;
 using Capychef.Food.Repositories;
 using Capychef.Food.Services;
 using Capychef.Gourmet.Domain.Interfaces;
-using Capychef.Gourmet.Domain.Services;
+using Capychef.Gourmet.Repositories;
+using Capychef.Gourmet.Services;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Households.Repositories;
 using Capychef.Households.Services;
 using Capychef.Infrastructure.DevImplementations;
 using Capychef.Infrastructure.Interfaces;
 using Capychef.Persistence;
-using Capychef.Storage;
 using Capychef.Storage.Domain.Interfaces;
+using Capychef.Storage.Repositories;
 using Capychef.Storage.Services;
 using Capychef.Testdata;
 using Capychef.Users.Domain.Interfaces;
@@ -26,7 +26,7 @@ namespace Capychef;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationDI(this IServiceCollection services)
+    public static void AddApplicationDi(this IServiceCollection services)
     {
         // DATABASE
         Env.Load("../.env");
@@ -92,7 +92,5 @@ public static class DependencyInjection
 
         // DATA LOADER
         services.AddScoped<IDataLoader, JsonDataLoader>();
-
-        return services;
     }
 }

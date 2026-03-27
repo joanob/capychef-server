@@ -73,7 +73,7 @@ public class Login
         var (u6, _, p6) = await CreateUserAsync();
         // Mark user as blocked in DB
         var updateBlockedSql = "UPDATE users SET is_blocked = TRUE WHERE username = @User";
-        var updated = await DbHelper.ExecuteSqlAsync(updateBlockedSql, new { User = u6 });
+        await DbHelper.ExecuteSqlAsync(updateBlockedSql, new { User = u6 });
         var payload6 = new { username = u6, password = p6 };
         var resp6 = await _client.PostAsJsonAsync("/auth/login", payload6);
         Assert.That(resp6.StatusCode == HttpStatusCode.BadRequest, Is.True, "Login to a blocked user should fail");
@@ -82,7 +82,7 @@ public class Login
         var (u7, _, p7) = await CreateUserAsync();
         // Mark user as deleted in DB (soft delete)
         var updateDeletedSql = "UPDATE users SET is_deleted = TRUE WHERE username = @User";
-        var updatedDel = await DbHelper.ExecuteSqlAsync(updateDeletedSql, new { User = u7 });
+        await DbHelper.ExecuteSqlAsync(updateDeletedSql, new { User = u7 });
         var payload7 = new { username = u7, password = p7 };
         var resp7 = await _client.PostAsJsonAsync("/auth/login", payload7);
         Assert.That(resp7.StatusCode == HttpStatusCode.BadRequest, Is.True, "Login to a deleted user should fail");

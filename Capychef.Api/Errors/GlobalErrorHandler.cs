@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Capychef.Api.Errors;
 
-public class GlobalErrorHandler
+public static class GlobalErrorHandler
 {
-    public static ActionResult handleError(AppError error, ILogger logger)
+    public static ActionResult HandleError(AppError error, ILogger logger)
     {
         logger.LogError(error.ToString());
 
-        var statusCode = 0;
+        int statusCode;
 
         if (error.ErrorType.Equals(ErrorType.CannotCreate) || error.ErrorType.Equals(ErrorType.Validation))
             statusCode = 400;

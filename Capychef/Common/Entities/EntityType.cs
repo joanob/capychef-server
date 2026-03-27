@@ -2,26 +2,26 @@
 
 public class EntityType
 {
-    private const string _userType = "USER";
-    private const string _userPasswordType = "USER_PASSWORD";
-    private const string _tokenType = "TOKEN";
+    private const string UserType = "USER";
+    private const string UserPasswordType = "USER_PASSWORD";
+    private const string TokenType = "TOKEN";
 
-    private const string _householdType = "HOUSEHOLD";
-    private const string _householdMemberType = "HOUSHOLD_MEMBER";
-    private const string _householdInvitationType = "HOUSHOLD_INVITATION";
-    private const string _householdJoinRequestType = "HOUSHOLD_JOIN_REQUEST";
+    private const string HouseholdType = "HOUSEHOLD";
+    private const string HouseholdMemberType = "HOUSHOLD_MEMBER";
+    private const string HouseholdInvitationType = "HOUSHOLD_INVITATION";
+    private const string HouseholdJoinRequestType = "HOUSHOLD_JOIN_REQUEST";
 
-    private const string _storageSpaceType = "STORAGE_SPACE";
-    private const string _storageConditionType = "STORAGE_CONDITION";
+    private const string StorageSpaceType = "STORAGE_SPACE";
+    private const string StorageConditionType = "STORAGE_CONDITION";
 
-    private const string _uomType = "UOM";
+    private const string UomType = "UOM";
 
-    private const string _foodType = "FOOD";
-    private const string _foodUoMType = "FOOD_UOM";
-    private const string _foodBaseUoMType = "FOOD_BASE_UOM";
-    private const string _foodCategoryType = "FOOD_CATEGORY";
+    private const string FoodType = "FOOD";
+    private const string FoodUoMType = "FOOD_UOM";
+    private const string FoodBaseUoMType = "FOOD_BASE_UOM";
+    private const string FoodCategoryType = "FOOD_CATEGORY";
 
-    private const string _batchType = "BATCH";
+    private const string BatchType = "BATCH";
 
     private readonly string _value;
 
@@ -30,42 +30,42 @@ public class EntityType
         _value = value;
     }
 
-    public static EntityType User => new(_userType);
-    public static EntityType UserPassword => new(_userPasswordType);
-    public static EntityType Token => new(_tokenType);
-    public static EntityType Household => new(_householdType);
-    public static EntityType HouseholdMember => new(_householdMemberType);
-    public static EntityType HouseholdInvitation => new(_householdInvitationType);
-    public static EntityType HouseholdJoinRequest => new(_householdJoinRequestType);
-    public static EntityType StorageSpace => new(_storageSpaceType);
-    public static EntityType StorageCondition => new(_storageConditionType);
-    public static EntityType UoM => new(_uomType);
-    public static EntityType Food => new(_foodType);
-    public static EntityType FoodUoM => new(_foodUoMType);
-    public static EntityType FoodBaseUoM => new(_foodBaseUoMType);
-    public static EntityType FoodCategory => new(_foodCategoryType);
-    public static EntityType Batch => new(_batchType);
+    public static EntityType User => new(UserType);
+    public static EntityType UserPassword => new(UserPasswordType);
+    public static EntityType Token => new(TokenType);
+    public static EntityType Household => new(HouseholdType);
+    public static EntityType HouseholdMember => new(HouseholdMemberType);
+    public static EntityType HouseholdInvitation => new(HouseholdInvitationType);
+    public static EntityType HouseholdJoinRequest => new(HouseholdJoinRequestType);
+    public static EntityType StorageSpace => new(StorageSpaceType);
+    public static EntityType StorageCondition => new(StorageConditionType);
+    public static EntityType UoM => new(UomType);
+    public static EntityType Food => new(FoodType);
+    public static EntityType FoodUoM => new(FoodUoMType);
+    public static EntityType FoodBaseUoM => new(FoodBaseUoMType);
+    public static EntityType FoodCategory => new(FoodCategoryType);
+    public static EntityType Batch => new(BatchType);
 
-    public static EntityType from(string value)
+    public static EntityType From(string value)
     {
         return value switch
         {
-            _userType => User,
-            _userPasswordType => UserPassword,
-            _tokenType => Token,
-            _householdType => Household,
-            _householdMemberType => HouseholdMember,
-            _householdInvitationType => HouseholdInvitation,
-            _householdJoinRequestType => HouseholdJoinRequest,
-            _storageSpaceType => StorageSpace,
-            _storageConditionType => StorageCondition,
-            _uomType => UoM,
-            _foodType => Food,
-            _foodUoMType => FoodUoM,
-            _foodBaseUoMType => FoodBaseUoM,
-            _foodCategoryType => FoodCategory,
-            _batchType => Batch,
-            _ => null
+            UserType => User,
+            UserPasswordType => UserPassword,
+            TokenType => Token,
+            HouseholdType => Household,
+            HouseholdMemberType => HouseholdMember,
+            HouseholdInvitationType => HouseholdInvitation,
+            HouseholdJoinRequestType => HouseholdJoinRequest,
+            StorageSpaceType => StorageSpace,
+            StorageConditionType => StorageCondition,
+            UomType => UoM,
+            FoodType => Food,
+            FoodUoMType => FoodUoM,
+            FoodBaseUoMType => FoodBaseUoM,
+            FoodCategoryType => FoodCategory,
+            BatchType => Batch,
+            _ => new EntityType("")
         };
     }
 

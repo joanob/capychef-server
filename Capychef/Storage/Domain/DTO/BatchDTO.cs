@@ -2,9 +2,9 @@
 
 namespace Capychef.Storage.Domain.DTO;
 
-public class BatchDTO
+public class BatchDto
 {
-    public BatchDTO(Batch batch)
+    public BatchDto(Batch batch)
     {
         Id = batch.Id;
         HouseholdId = batch.HouseholdId;
@@ -34,8 +34,8 @@ public class BatchDTO
     public bool IsDiscarded { get; set; }
     public DateTime? DiscardedAt { get; set; }
 
-    public static List<BatchDTO> ToBatchDTOList(IEnumerable<Batch> batches)
+    public static List<BatchDto> ToBatchDtoList(IEnumerable<Batch> batches)
     {
-        return batches.Select(batch => new BatchDTO(batch)).ToList();
+        return batches.Select(batch => new BatchDto(batch)).ToList();
     }
 }

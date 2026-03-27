@@ -87,7 +87,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
             if (prop != null)
             {
                 var current = (int?)(prop.OriginalValue ?? 0);
-                entry.CurrentValues["RowVersion"] = (current ?? 0) + 1;
+                entry.CurrentValues["RowVersion"] = (int)current + 1;
             }
         }
 

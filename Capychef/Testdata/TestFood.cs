@@ -7,9 +7,9 @@ namespace Capychef.Testdata;
 
 public class TestFood(CapychefDbContext dbContext)
 {
-    private readonly float DELETED_FOOD_PERCENTAJE = 0.2f;
-    private readonly int MAX_FOOD_PER_HOUSEHOLD = 20;
-    private readonly int MIN_FOOD_PER_HOUSEHOLD = 0;
+    private readonly float _deletedFoodPercentaje = 0.2f;
+    private readonly int _maxFoodPerHousehold = 20;
+    private readonly int _minFoodPerHousehold = 0;
 
     public async Task Generate()
     {
@@ -24,8 +24,8 @@ public class TestFood(CapychefDbContext dbContext)
         foreach (var household in households)
         {
             var householdFoodNumber =
-                RandomGenerator.GenerateRandomNumber(MAX_FOOD_PER_HOUSEHOLD - MIN_FOOD_PER_HOUSEHOLD) +
-                MIN_FOOD_PER_HOUSEHOLD;
+                RandomGenerator.GenerateRandomNumber(_maxFoodPerHousehold - _minFoodPerHousehold) +
+                _minFoodPerHousehold;
 
             var householdMembers =
                 await dbContext.HouseholdMembers.Where(x => x.HouseholdId == household.Id).ToListAsync();
@@ -43,7 +43,7 @@ public class TestFood(CapychefDbContext dbContext)
                 var food = new Food.Domain.Entities.Food(household.Id, RandomGenerator.GenerateRandomAlphabetString(10),
                     foodCategory.Id, createdBy.UserId);
 
-                if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_FOOD_PERCENTAJE))
+                if (RandomGenerator.GenerateRandomBoolPercentage(_deletedFoodPercentaje))
                     food.Delete();
 
                 var foodUoM = new FoodUoM(food, household.Id, uom.Code, false, null, null, null);

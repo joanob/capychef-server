@@ -13,11 +13,11 @@ public class HouseholdMemberService(
     IHouseholdMemberRepository householdMemberRepository
 ) : IHouseholdMemberService
 {
-    public async Task<Result<List<UserDTO>>> GetHouseholdMembers(AuthUserDetails userDetails)
+    public async Task<Result<List<UserDto>>> GetHouseholdMembers(AuthUserDetails userDetails)
     {
         var members = await householdMemberRepository.GetHouseholdMembers(userDetails.GetHouseholdId());
 
-        return new Result<List<UserDTO>>(UserDTO.ToDTOList(members.Select(m => m.User).ToList()));
+        return new Result<List<UserDto>>(UserDto.ToDtoList(members.Select(m => m.User).ToList()));
     }
 
     public async Task<AppError?> LeaveHousehold(AuthUserDetails userDetails)
@@ -37,7 +37,7 @@ public class HouseholdMemberService(
         return null;
     }
 
-    public async Task<AppError> RemoveMember(AuthUserDetails userDetails, int householdMemberId)
+    public async Task<AppError?> RemoveMember(AuthUserDetails userDetails, int householdMemberId)
     {
         var member =
             await householdMemberRepository.GetTrackedByHouseholdMemberId(householdMemberId,

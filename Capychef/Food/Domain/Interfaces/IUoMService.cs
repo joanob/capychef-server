@@ -6,5 +6,5 @@ namespace Capychef.Food.Domain.Interfaces;
 public interface IUoMService
 {
     Task LoadGlobalUoM(GlobalUoMFileCmd fileCmd);
-    Task<List<UoMDTO>> GetAllUoM();
+    Task<List<UoMdto>> GetAllUoM();
 }

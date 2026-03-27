@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Utils;
 
 namespace Capychef.Users.Domain.Entities;
@@ -6,18 +7,13 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users_tokens")]
 public class UserToken
 {
-    private static readonly string capsAndNumbers = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-    private static readonly string
-        alphabetAndNumbers = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    [Column("id")] public int Id { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
     [Column("user_id")]
     [ForeignKey(nameof(User))]
-    public int UserId { get; private set; }
+    public int UserId { get; init; }
 
-    [Column("token")] public string Token { get; private set; }
+    [Column("token")] [MaxLength(50)] public string Token { get; private set; } = "";
 
     [Column("token_type")] public UserTokenType TokenType { get; private set; }
 
@@ -81,7 +77,7 @@ public class UserToken
         return userToken;
     }
 
-    public void markUsed()
+    public void MarkUsed()
     {
         IsUsed = true;
         UsedAt = DateTime.Now;

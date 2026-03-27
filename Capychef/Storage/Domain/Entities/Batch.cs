@@ -8,10 +8,6 @@ namespace Capychef.Storage.Domain.Entities;
 [Table("batches")]
 public class Batch : BaseDeletableEntity
 {
-    public Batch()
-    {
-    }
-
     public Batch(int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId,
         DateTime? bestBeforeDate, DateTime? expirationDate)
     {
@@ -68,13 +64,13 @@ public class Batch : BaseDeletableEntity
 
     [Column("discarded_at")] public DateTime? DiscardedAt { get; set; }
 
-    [ForeignKey(nameof(HouseholdId))] public Household Household { get; set; }
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; set; }
 
-    [ForeignKey(nameof(FoodId))] public Food.Domain.Entities.Food Food { get; set; }
+    [ForeignKey(nameof(FoodId))] public Food.Domain.Entities.Food? Food { get; set; }
 
-    [ForeignKey(nameof(StorageSpaceId))] public StorageSpace StorageSpace { get; set; }
+    [ForeignKey(nameof(StorageSpaceId))] public StorageSpace? StorageSpace { get; set; }
 
-    [ForeignKey(nameof(FoodUoMId))] public FoodUoM FoodUoM { get; set; }
+    [ForeignKey(nameof(FoodUoMId))] public FoodUoM? FoodUoM { get; set; }
 
     [ForeignKey(nameof(OriginalBatchId))] public Batch? OriginalBatch { get; set; }
 

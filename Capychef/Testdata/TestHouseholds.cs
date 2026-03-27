@@ -8,30 +8,30 @@ namespace Capychef.Testdata;
 
 public class TestHouseholds(CapychefDbContext dbContext)
 {
-    private readonly float DELETED_HOUSEHOLD_INVITATIONS_PERCENT = 0.2f;
-    private readonly float DELETED_HOUSEHOLD_JOIN_REQUESTS_PERCENT = 0.2f;
-    private readonly float DELETED_HOUSEHOLD_MEMBERS_PERCENT = 0.2f;
-    private readonly float DELETED_HOUSEHOLDS_PERCENTAJE = 0.2f;
-    private readonly float DELETED_STORAGE_SPACES_PERCENTAJE = 0.2f;
-    private readonly int HOUSEHOLDS = 200;
-    private readonly int MAX_HOUSEHOLD_INVITATIONS = 10;
-    private readonly int MAX_HOUSEHOLD_JOIN_REQUESTS = 10;
-    private readonly int MAX_HOUSEHOLD_MEMBERS = 5;
-    private readonly int MAX_STORAGE_SPACES = 5;
-    private readonly int MIN_HOUSEHOLD_INVITATIONS = 0;
-    private readonly int MIN_HOUSEHOLD_JOIN_REQUESTS = 0;
-    private readonly int MIN_HOUSEHOLD_MEMBERS = 2;
-    private readonly int MIN_STORAGE_SPACES = 0;
+    private readonly float _deletedHouseholdInvitationsPercent = 0.2f;
+    private readonly float _deletedHouseholdJoinRequestsPercent = 0.2f;
+    private readonly float _deletedHouseholdMembersPercent = 0.2f;
+    private readonly float _deletedHouseholdsPercentaje = 0.2f;
+    private readonly float _deletedStorageSpacesPercentaje = 0.2f;
+    private readonly int _households = 200;
+    private readonly int _maxHouseholdInvitations = 10;
+    private readonly int _maxHouseholdJoinRequests = 10;
+    private readonly int _maxHouseholdMembers = 5;
+    private readonly int _maxStorageSpaces = 5;
+    private readonly int _minHouseholdInvitations = 0;
+    private readonly int _minHouseholdJoinRequests = 0;
+    private readonly int _minHouseholdMembers = 2;
+    private readonly int _minStorageSpaces = 0;
 
-    private List<User> users = new();
+    private List<User> _users = new();
 
     public async Task Generate()
     {
-        users = await dbContext.Users.ToListAsync();
+        _users = await dbContext.Users.ToListAsync();
 
         Console.WriteLine("Generating households");
 
-        for (var i = 0; i < HOUSEHOLDS; i++)
+        for (var i = 0; i < _households; i++)
         {
             var household = await GenerateHousehold();
 
@@ -54,15 +54,15 @@ public class TestHouseholds(CapychefDbContext dbContext)
     {
         var householdJoinRequests = new List<HouseholdJoinRequest>();
         var householdJoinRequestsNumber =
-            RandomGenerator.GenerateRandomNumber(MAX_HOUSEHOLD_JOIN_REQUESTS - MIN_HOUSEHOLD_JOIN_REQUESTS) +
-            MIN_HOUSEHOLD_JOIN_REQUESTS;
+            RandomGenerator.GenerateRandomNumber(_maxHouseholdJoinRequests - _minHouseholdJoinRequests) +
+            _minHouseholdJoinRequests;
 
         for (var j = 0; j < householdJoinRequestsNumber; j++)
         {
-            var user = new User();
+            User user;
             do
             {
-                user = users.ElementAt(RandomGenerator.GenerateRandomNumber(users.Count));
+                user = _users.ElementAt(RandomGenerator.GenerateRandomNumber(_users.Count));
                 if (householdMembers.All(h => h.UserId != user.Id) &&
                     householdInvitations.All(h => h.UserId != user.Id) &&
                     householdJoinRequests.All(h => h.UserId != user.Id)) break;
@@ -70,7 +70,7 @@ public class TestHouseholds(CapychefDbContext dbContext)
 
             var householdJoinRequest = new HouseholdJoinRequest(household, user);
 
-            if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLD_JOIN_REQUESTS_PERCENT))
+            if (RandomGenerator.GenerateRandomBoolPercentage(_deletedHouseholdJoinRequestsPercent))
                 householdJoinRequest.Delete();
 
             householdJoinRequests.Add(householdJoinRequest);
@@ -84,22 +84,22 @@ public class TestHouseholds(CapychefDbContext dbContext)
     {
         var householdInvitations = new List<HouseholdInvitation>();
         var householdInvitationsNumber =
-            RandomGenerator.GenerateRandomNumber(MAX_HOUSEHOLD_INVITATIONS - MIN_HOUSEHOLD_INVITATIONS) +
-            MIN_HOUSEHOLD_INVITATIONS;
+            RandomGenerator.GenerateRandomNumber(_maxHouseholdInvitations - _minHouseholdInvitations) +
+            _minHouseholdInvitations;
 
         for (var j = 0; j < householdInvitationsNumber; j++)
         {
-            var user = new User();
+            User user;
             do
             {
-                user = users.ElementAt(RandomGenerator.GenerateRandomNumber(users.Count));
+                user = _users.ElementAt(RandomGenerator.GenerateRandomNumber(_users.Count));
                 if (householdMembers.All(h => h.UserId != user.Id) &&
                     householdInvitations.All(h => h.UserId != user.Id)) break;
             } while (true);
 
             var householdInvitation = new HouseholdInvitation(household, user);
 
-            if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLD_INVITATIONS_PERCENT))
+            if (RandomGenerator.GenerateRandomBoolPercentage(_deletedHouseholdInvitationsPercent))
                 householdInvitation.Delete();
 
             householdInvitations.Add(householdInvitation);
@@ -113,11 +113,11 @@ public class TestHouseholds(CapychefDbContext dbContext)
     private async Task<Household> GenerateHousehold()
     {
         var name = RandomGenerator.GenerateRandomAlphabetString(10);
-        var owner = users.ElementAt(RandomGenerator.GenerateRandomNumber(users.Count));
+        var owner = _users.ElementAt(RandomGenerator.GenerateRandomNumber(_users.Count));
 
         var household = new Household(owner, name);
 
-        if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLDS_PERCENTAJE)) household.Delete();
+        if (RandomGenerator.GenerateRandomBoolPercentage(_deletedHouseholdsPercentaje)) household.Delete();
 
         await dbContext.AddAsync(household);
 
@@ -132,21 +132,21 @@ public class TestHouseholds(CapychefDbContext dbContext)
     {
         var householdMembers = new List<HouseholdMember>();
         var householdMembersNumber =
-            RandomGenerator.GenerateRandomNumber(MAX_HOUSEHOLD_MEMBERS - MIN_HOUSEHOLD_MEMBERS) +
-            MIN_HOUSEHOLD_MEMBERS;
+            RandomGenerator.GenerateRandomNumber(_maxHouseholdMembers - _minHouseholdMembers) +
+            _minHouseholdMembers;
 
         for (var j = 0; j < householdMembersNumber; j++)
         {
-            var user = new User();
+            User user;
             do
             {
-                user = users.ElementAt(RandomGenerator.GenerateRandomNumber(users.Count));
+                user = _users.ElementAt(RandomGenerator.GenerateRandomNumber(_users.Count));
                 if (householdMembers.All(h => h.UserId != user.Id)) break;
             } while (true);
 
             var householdMember = new HouseholdMember(household, user);
 
-            if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_HOUSEHOLD_MEMBERS_PERCENT))
+            if (RandomGenerator.GenerateRandomBoolPercentage(_deletedHouseholdMembersPercent))
                 householdMember.Delete();
 
             householdMembers.Add(householdMember);
@@ -159,10 +159,9 @@ public class TestHouseholds(CapychefDbContext dbContext)
 
     private async Task GenerateHouseholdStorageSpaces(Household household, List<HouseholdMember> householdMembers)
     {
-        var storageSpaces = new List<StorageSpace>();
         var storageSpacesNumber =
-            RandomGenerator.GenerateRandomNumber(MAX_STORAGE_SPACES - MIN_STORAGE_SPACES) +
-            MIN_STORAGE_SPACES;
+            RandomGenerator.GenerateRandomNumber(_maxStorageSpaces - _minStorageSpaces) +
+            _minStorageSpaces;
         var storageConditionsList = new List<StorageConditions>
         {
             StorageConditions.AmbientTemperature,
@@ -179,10 +178,8 @@ public class TestHouseholds(CapychefDbContext dbContext)
                 storageConditionsList.ElementAt(RandomGenerator.GenerateRandomNumber(storageConditionsList.Count)),
                 household, storageSpaceCreator.UserId);
 
-            if (RandomGenerator.GenerateRandomBoolPercentage(DELETED_STORAGE_SPACES_PERCENTAJE))
+            if (RandomGenerator.GenerateRandomBoolPercentage(_deletedStorageSpacesPercentaje))
                 storageSpace.Delete();
-
-            storageSpaces.Add(storageSpace);
 
             await dbContext.AddAsync(storageSpace);
         }

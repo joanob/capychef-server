@@ -16,7 +16,7 @@ public class FoodController(
 {
     [CheckMembership]
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<FoodDTO>>> CreateHouseholdFood(HouseholdFoodCmd cmd)
+    public async Task<ActionResult<ApiResponse<FoodDto>>> CreateHouseholdFood(HouseholdFoodCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -24,25 +24,25 @@ public class FoodController(
 
         var logger = loggerFactory.CreateLogger("FoodService.CreateHousehold");
 
-        if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
+        if (food.Failed()) return GlobalErrorHandler.HandleError(food.Error(), logger);
 
-        return Ok(new ApiResponse<FoodDTO>(food.get()));
+        return Ok(new ApiResponse<FoodDto>(food.Get()));
     }
 
     [CheckMembership]
     [HttpGet("household/{householdId}")]
-    public async Task<ActionResult<ApiResponse<List<FoodDTO>>>> GetAllHouseholdFood(int householdId)
+    public async Task<ActionResult<ApiResponse<List<FoodDto>>>> GetAllHouseholdFood(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
         var foodList = await foodService.GetAllHouseholdFood(userDetails);
 
-        return Ok(new ApiResponse<List<FoodDTO>>(foodList));
+        return Ok(new ApiResponse<List<FoodDto>>(foodList));
     }
 
     [CheckMembership]
     [HttpGet("{id}")]
-    public async Task<ActionResult<ApiResponse<FoodDTO>>> GetFoodById(int id)
+    public async Task<ActionResult<ApiResponse<FoodDto>>> GetFoodById(int id)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -50,14 +50,14 @@ public class FoodController(
 
         var logger = loggerFactory.CreateLogger("FoodService.GetFoodById");
 
-        if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
+        if (food.Failed()) return GlobalErrorHandler.HandleError(food.Error(), logger);
 
-        return Ok(new ApiResponse<FoodDTO>(food.get()));
+        return Ok(new ApiResponse<FoodDto>(food.Get()));
     }
 
     [CheckMembership]
     [HttpPut("{id}")]
-    public async Task<ActionResult<ApiResponse<FoodDTO>>> UpdateFood(int id, HouseholdFoodCmd cmd)
+    public async Task<ActionResult<ApiResponse<FoodDto>>> UpdateFood(int id, HouseholdFoodCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -65,9 +65,9 @@ public class FoodController(
 
         var logger = loggerFactory.CreateLogger("FoodService.UpdateHouseholdFood");
 
-        if (food.failed()) return GlobalErrorHandler.handleError(food.error(), logger);
+        if (food.Failed()) return GlobalErrorHandler.HandleError(food.Error(), logger);
 
-        return Ok(new ApiResponse<FoodDTO>(food.get()));
+        return Ok(new ApiResponse<FoodDto>(food.Get()));
     }
 
     [CheckMembership]
@@ -80,7 +80,7 @@ public class FoodController(
 
         var logger = loggerFactory.CreateLogger("FoodService.DeleteHouseholdFood");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }

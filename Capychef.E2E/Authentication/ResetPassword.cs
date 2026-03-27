@@ -66,7 +66,7 @@ public class ResetPassword
 
         // 1) Reset password with valid token and new password
         {
-            var (u1, e1, p1) = await CreateUserAsync();
+            var (u1, e1, _) = await CreateUserAsync();
             // Mark email as valid for this user immediately after creation
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u1 });
@@ -91,7 +91,7 @@ public class ResetPassword
 
         // 2) Reset password with invalid token should fail
         {
-            var (u2, e2, p2) = await CreateUserAsync();
+            var (u2, e2, _) = await CreateUserAsync();
             // Mark email as valid and ensure a token exists but we'll use an invalid one
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u2 });
@@ -104,7 +104,7 @@ public class ResetPassword
 
         // 3) Reset password with expired token should fail
         {
-            var (u3, e3, p3) = await CreateUserAsync();
+            var (u3, e3, _) = await CreateUserAsync();
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u3 });
             var token3 = await RequestAndGetToken(u3, e3);
@@ -120,7 +120,7 @@ public class ResetPassword
 
         // 4) Reset password with blocked user should fail
         {
-            var (u4, e4, p4) = await CreateUserAsync();
+            var (u4, e4, _) = await CreateUserAsync();
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u4 });
             var token4 = await RequestAndGetToken(u4, e4);
@@ -143,7 +143,7 @@ public class ResetPassword
 
         // 6) Reset password with valid token and empty password should fail
         {
-            var (u6, e6, p6) = await CreateUserAsync();
+            var (u6, e6, _) = await CreateUserAsync();
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u6 });
             var token6 = await RequestAndGetToken(u6, e6);
@@ -155,7 +155,7 @@ public class ResetPassword
 
         // 7) Reset password with valid token but blocked user should fail
         {
-            var (u7, e7, p7) = await CreateUserAsync();
+            var (u7, e7, _) = await CreateUserAsync();
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u7 });
             var token7 = await RequestAndGetToken(u7, e7);
@@ -170,7 +170,7 @@ public class ResetPassword
 
         // 8) Reset password with valid token but deleted user should fail
         {
-            var (u8, e8, p8) = await CreateUserAsync();
+            var (u8, e8, _) = await CreateUserAsync();
             await DbHelper.ExecuteSqlAsync("UPDATE users SET is_email_valid = TRUE WHERE username = @User",
                 new { User = u8 });
             var token8 = await RequestAndGetToken(u8, e8);

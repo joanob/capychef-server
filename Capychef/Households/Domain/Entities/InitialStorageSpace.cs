@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Domain.Entities;
@@ -6,10 +7,6 @@ namespace Capychef.Households.Domain.Entities;
 [Table("initial_storage_spaces")]
 public class InitialStorageSpace
 {
-    public InitialStorageSpace()
-    {
-    }
-
     public InitialStorageSpace(int id, string name, StorageConditions storageCondition)
     {
         Id = id;
@@ -25,7 +22,7 @@ public class InitialStorageSpace
 
     [Column("id")] public int Id { get; private set; }
 
-    [Column("name")] public string Name { get; set; }
+    [Column("name")] [MaxLength(100)] public string Name { get; set; }
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
 

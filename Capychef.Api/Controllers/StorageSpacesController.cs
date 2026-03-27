@@ -17,7 +17,7 @@ public class StorageSpacesController(
 {
     [CheckOwnership]
     [HttpPost]
-    public async Task<ActionResult<StorageSpaceDTO>> CreateStorageSpace(StorageSpaceCmd cmd)
+    public async Task<ActionResult<StorageSpaceDto>> CreateStorageSpace(StorageSpaceCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -25,14 +25,14 @@ public class StorageSpacesController(
 
         var logger = loggerFactory.CreateLogger("StorageSpaceService.CreateStorageSpace");
 
-        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error(), logger);
+        if (storageSpace.Failed()) return GlobalErrorHandler.HandleError(storageSpace.Error(), logger);
 
-        return Ok(storageSpace.get());
+        return Ok(storageSpace.Get());
     }
 
     [CheckMembership]
     [HttpGet("household/{householdId}")]
-    public async Task<ActionResult<ApiResponse<List<StorageSpaceDTO>>>> GetHouseholdStorageSpaces(int householdId)
+    public async Task<ActionResult<ApiResponse<List<StorageSpaceDto>>>> GetHouseholdStorageSpaces(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -40,14 +40,14 @@ public class StorageSpacesController(
 
         var logger = loggerFactory.CreateLogger("StorageSpaceService.GetHouseholdStorageSpaces");
 
-        if (storageSpaces.failed()) return GlobalErrorHandler.handleError(storageSpaces.error(), logger);
+        if (storageSpaces.Failed()) return GlobalErrorHandler.HandleError(storageSpaces.Error(), logger);
 
-        return Ok(new ApiResponse<List<StorageSpaceDTO>>(storageSpaces.get()));
+        return Ok(new ApiResponse<List<StorageSpaceDto>>(storageSpaces.Get()));
     }
 
     [CheckMembership]
     [HttpPut("{id}")]
-    public async Task<ActionResult<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd)
+    public async Task<ActionResult<StorageSpaceDto>> UpdateStorageSpace(int id, StorageSpaceCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -55,9 +55,9 @@ public class StorageSpacesController(
 
         var logger = loggerFactory.CreateLogger("StorageSpaceService.UpdateStorageSpace");
 
-        if (storageSpace.failed()) return GlobalErrorHandler.handleError(storageSpace.error(), logger);
+        if (storageSpace.Failed()) return GlobalErrorHandler.HandleError(storageSpace.Error(), logger);
 
-        return Ok(storageSpace.get());
+        return Ok(storageSpace.Get());
     }
 
     [CheckOwnership]
@@ -70,20 +70,20 @@ public class StorageSpacesController(
 
         var logger = loggerFactory.CreateLogger("StorageSpaceService.DeleteStorageSpace");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }
 
     [HttpGet("initial")]
-    public async Task<ActionResult<ApiResponse<List<InitialStorageSpaceDTO>>>> GetInitialStorageSpaces()
+    public async Task<ActionResult<ApiResponse<List<InitialStorageSpaceDto>>>> GetInitialStorageSpaces()
     {
         var result = await storageSpaceService.GetInitialStorageSpaces();
 
         var logger = loggerFactory.CreateLogger("StorageSpaceService.GetInitialStorageSpaces");
 
-        if (result.failed()) return GlobalErrorHandler.handleError(result.error(), logger);
+        if (result.Failed()) return GlobalErrorHandler.HandleError(result.Error(), logger);
 
-        return Ok(new ApiResponse<List<InitialStorageSpaceDTO>>(result.get()));
+        return Ok(new ApiResponse<List<InitialStorageSpaceDto>>(result.Get()));
     }
 }

@@ -2,5 +2,5 @@
 
 public class HouseholdCmd
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }

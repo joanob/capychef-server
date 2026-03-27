@@ -2,11 +2,11 @@
 
 public class FoodCategoryCmd
 {
-    public int Id { get; set; }
+    public required int Id { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public bool IsLeaf { get; set; }
+    public bool IsLeaf { get; init; }
 
-    public int? ParentCategoryId { get; set; }
+    public int? ParentCategoryId { get; init; }
 }

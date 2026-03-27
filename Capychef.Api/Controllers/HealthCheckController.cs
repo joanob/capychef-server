@@ -9,7 +9,7 @@ public class HealthCheckController(HealthCheckService healthCheckService) : Cont
     [HttpGet]
     public async Task<ActionResult<string>> CheckServerHealth()
     {
-        var status = await healthCheckService.checkServiceHealth();
+        var status = await healthCheckService.CheckServiceHealth();
 
         return Ok(status);
     }

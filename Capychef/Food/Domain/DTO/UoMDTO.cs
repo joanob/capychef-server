@@ -2,9 +2,9 @@
 
 namespace Capychef.Food.Domain.DTO;
 
-public class UoMDTO
+public class UoMdto
 {
-    public UoMDTO(UoM uom)
+    public UoMdto(UoM uom)
     {
         Code = uom.Code;
         Name = uom.Name;
@@ -26,8 +26,8 @@ public class UoMDTO
 
     public int? Denominator { get; }
 
-    public static List<UoMDTO> ToList(List<UoM> uoms)
+    public static List<UoMdto> ToList(List<UoM> uoms)
     {
-        return uoms.Select(x => new UoMDTO(x)).ToList();
+        return uoms.Select(x => new UoMdto(x)).ToList();
     }
 }

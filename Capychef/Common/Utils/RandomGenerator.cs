@@ -4,44 +4,44 @@ namespace Capychef.Common.Utils;
 
 public static class RandomGenerator
 {
-    private static readonly string caps = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static readonly string lowercase = "abcdefghijklmnopqrstuvwxyz";
-    private static readonly string numbers = "0123456789";
-    private static readonly string alphabet = caps + lowercase;
-    private static readonly string capsAndNumbers = caps + numbers;
-    private static readonly string alphabetAndNumbers = alphabet + numbers;
+    private const string Caps = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const string Lowercase = "abcdefghijklmnopqrstuvwxyz";
+    private const string Numbers = "0123456789";
+    private const string Alphabet = Caps + Lowercase;
+    private const string CapsAndNumbers = Caps + Numbers;
+    private const string AlphabetAndNumbers = Alphabet + Numbers;
 
     public static string GenerateRandomCapsString(int length)
     {
-        return createRandomString(length, caps);
+        return CreateRandomString(length, Caps);
     }
 
     public static string GenerateRandomLowercaseString(int length)
     {
-        return createRandomString(length, lowercase);
+        return CreateRandomString(length, Lowercase);
     }
 
     public static string GenerateRandomNumberString(int length)
     {
-        return createRandomString(length, numbers);
+        return CreateRandomString(length, Numbers);
     }
 
     public static string GenerateRandomAlphabetString(int length)
     {
-        return createRandomString(length, alphabet);
+        return CreateRandomString(length, Alphabet);
     }
 
     public static string GenerateRandomCapsAndNumbersString(int length)
     {
-        return createRandomString(length, capsAndNumbers);
+        return CreateRandomString(length, CapsAndNumbers);
     }
 
     public static string GenerateRandomAlphabetAndNumbersString(int length)
     {
-        return createRandomString(length, alphabetAndNumbers);
+        return CreateRandomString(length, AlphabetAndNumbers);
     }
 
-    private static string createRandomString(int length, string characterSet)
+    private static string CreateRandomString(int length, string characterSet)
     {
         var resut = new char[length];
         var buffer = new byte[length];

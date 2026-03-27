@@ -24,6 +24,8 @@ public static class DbHelper
 
         var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
+        if (connectionString == null) throw new Exception("DB_CONNECTION_STRING environment variable not set");
+
         return connectionString;
     }
 

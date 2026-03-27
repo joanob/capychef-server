@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Errors;
 using Capychef.Households.Domain.Entities;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +8,6 @@ namespace Capychef.Gourmet.Domain.Entities;
 [Table("subscriptions")]
 public class Subscription
 {
-    public Subscription()
-    {
-    }
-
     public Subscription(int userId, DateTime purchasedAt, DateTime validFrom, DateTime expiresAt,
         SubscriptionType subscriptionType, bool automaticRenewal, bool isPrimarySubscription,
         int? primarySubscriptionId, int? householdId, int? discountId, double amountPayed, double amountSaved)

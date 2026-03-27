@@ -16,7 +16,7 @@ public class StorageController(
 {
     [CheckMembership]
     [HttpPost]
-    public async Task<ActionResult<BatchDTO>> CreateBatch(CreateBatchCmd cmd)
+    public async Task<ActionResult<BatchDto>> CreateBatch(CreateBatchCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -24,14 +24,14 @@ public class StorageController(
 
         var logger = loggerFactory.CreateLogger("BatchService.CreateBatch");
 
-        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
 
-        return Ok(batch.get());
+        return Ok(batch.Get());
     }
 
     [CheckMembership]
     [HttpGet]
-    public async Task<ActionResult<List<BatchDTO>>> GetAllBatches()
+    public async Task<ActionResult<List<BatchDto>>> GetAllBatches()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -42,7 +42,7 @@ public class StorageController(
 
     [CheckMembership]
     [HttpPut("{id}")]
-    public async Task<ActionResult<BatchDTO>> UpdateBatch(int id, UpdateBatchCmd cmd)
+    public async Task<ActionResult<BatchDto>> UpdateBatch(int id, UpdateBatchCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -50,14 +50,14 @@ public class StorageController(
 
         var logger = loggerFactory.CreateLogger("BatchService.UpdateBatch");
 
-        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
 
-        return Ok(batch.get());
+        return Ok(batch.Get());
     }
 
     [CheckMembership]
     [HttpPut("{id}/consume")]
-    public async Task<ActionResult<BatchDTO>> ConsumeBatch(int id, ConsumeBatchCmd cmd)
+    public async Task<ActionResult<BatchDto>> ConsumeBatch(int id, ConsumeBatchCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -65,14 +65,14 @@ public class StorageController(
 
         var logger = loggerFactory.CreateLogger("BatchService.ConsumeBatch");
 
-        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
 
-        return Ok(batch.get());
+        return Ok(batch.Get());
     }
 
     [CheckMembership]
     [HttpPut("{id}/discard")]
-    public async Task<ActionResult<BatchDTO>> DiscardBatch(int id, DiscardBatchCmd cmd)
+    public async Task<ActionResult<BatchDto>> DiscardBatch(int id, DiscardBatchCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -80,14 +80,14 @@ public class StorageController(
 
         var logger = loggerFactory.CreateLogger("BatchService.DiscardBatch");
 
-        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
 
-        return Ok(batch.get());
+        return Ok(batch.Get());
     }
 
     [CheckMembership]
     [HttpPut("{id}/move")]
-    public async Task<ActionResult<BatchDTO>> MoveBatch(int id, MoveBatchCmd cmd)
+    public async Task<ActionResult<BatchDto>> MoveBatch(int id, MoveBatchCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -95,8 +95,8 @@ public class StorageController(
 
         var logger = loggerFactory.CreateLogger("BatchService.MoveBatch");
 
-        if (batch.failed()) return GlobalErrorHandler.handleError(batch.error(), logger);
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
 
-        return Ok(batch.get());
+        return Ok(batch.Get());
     }
 }

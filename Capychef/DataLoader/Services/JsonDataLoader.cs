@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Capychef.Data;
+using Capychef.DataLoader.Entities;
 using Capychef.Food.Domain.Entities;
 using Capychef.Households.Domain.Entities;
 using Capychef.Persistence;
@@ -47,7 +47,7 @@ public class JsonDataLoader(CapychefDbContext dbContext)
         var storedInitialStorageSpaces = await dbContext.InitialStorageSpaces.ToListAsync();
 
         var initialStorageSpaces = initialStorageSpacesData
-            .Select(x => new InitialStorageSpace(x.Id, x.Name, StorageConditions.from(x.StorageCondition))).ToList();
+            .Select(x => new InitialStorageSpace(x.Id, x.Name, StorageConditions.From(x.StorageCondition))).ToList();
 
         foreach (var initialStorageSpace in initialStorageSpaces)
         {

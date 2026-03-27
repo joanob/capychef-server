@@ -7,7 +7,7 @@ namespace Capychef.Users.Domain.Cmd;
 
 public class SignupCmd : ICmd
 {
-    public string Username { get; set; }
+    public required string Username { get; set; }
 
     public string? Email { get; set; }
 
@@ -15,7 +15,7 @@ public class SignupCmd : ICmd
 
     public ValidationError? Validate()
     {
-        Username = Username?.Trim();
+        Username = Username.Trim();
         Email = Email?.Trim();
 
         if (string.IsNullOrEmpty(Username)) return new ValidationError("SignupCmd username is null or empty");

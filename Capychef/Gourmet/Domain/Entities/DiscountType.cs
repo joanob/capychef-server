@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Capychef.Common.Errors;
+namespace Capychef.Gourmet.Domain.Entities;
 
 public class DiscountType
 {
-    private const string _percentage = "PERCENTAJE";
-    private const string _free_month = "FREE_MONTH";
-    private const string _fixed_amount = "FIXED_AMOUNT";
+    private const string PercentageConst = "PERCENTAJE";
+    private const string FreeMonthConst = "FREE_MONTH";
+    private const string FixedAmountConst = "FIXED_AMOUNT";
 
     private readonly string _value;
 
@@ -15,18 +15,18 @@ public class DiscountType
         _value = value;
     }
 
-    public static DiscountType Percentage => new(_percentage);
-    public static DiscountType FreeMonth => new(_free_month);
-    public static DiscountType FixedAmount => new(_fixed_amount);
+    public static DiscountType Percentage => new(PercentageConst);
+    public static DiscountType FreeMonth => new(FreeMonthConst);
+    public static DiscountType FixedAmount => new(FixedAmountConst);
 
-    public static DiscountType from(string value)
+    public static DiscountType From(string value)
     {
         return value switch
         {
-            _percentage => Percentage,
-            _free_month => FreeMonth,
-            _fixed_amount => FixedAmount,
-            _ => null
+            PercentageConst => Percentage,
+            FreeMonthConst => FreeMonth,
+            FixedAmountConst => FixedAmount,
+            _ => new DiscountType("")
         };
     }
 
@@ -42,7 +42,7 @@ public class DiscountTypeConverter
     public DiscountTypeConverter()
         : base(
             v => v.ToString(),
-            v => DiscountType.from(v)
+            v => DiscountType.From(v)
         )
     {
     }

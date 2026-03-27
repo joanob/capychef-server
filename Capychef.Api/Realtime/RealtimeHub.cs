@@ -3,25 +3,22 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Capychef.Api.Realtime;
 
-public class RealtimeHub : Hub
+public class RealtimeHub(IConnectionMappingStore connections) : Hub
 {
-    private readonly IConnectionMappingStore _connections;
-
-    public RealtimeHub(IConnectionMappingStore connections)
-    {
-        _connections = connections;
-    }
-
     public override Task OnConnectedAsync()
     {
-        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(Context.GetHttpContext());
+        var context = Context.GetHttpContext();
 
-        if (userDetails != null)
+        if (context == null) return base.OnConnectedAsync();
+
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(context);
+
+        if (userDetails.IsValid())
         {
             var connectionDetails = new ConnectionDetails
                 (Context.ConnectionId, userDetails);
 
-            _ = _connections.AddAsync(connectionDetails);
+            _ = connections.AddAsync(connectionDetails);
         }
 
         return base.OnConnectedAsync();
@@ -29,7 +26,7 @@ public class RealtimeHub : Hub
 
     public override Task OnDisconnectedAsync(Exception? exception)
     {
-        _ = _connections.RemoveAsync(Context.ConnectionId);
+        _ = connections.RemoveAsync(Context.ConnectionId);
         return base.OnDisconnectedAsync(exception);
     }
 }

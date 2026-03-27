@@ -2,7 +2,7 @@
 
 public class StorageSpaceCmd
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string StorageCondition { get; set; }
+    public required string StorageCondition { get; init; }
 }

@@ -8,9 +8,9 @@ namespace Capychef.Households.Domain.Interfaces;
 
 public interface IStorageSpaceService
 {
-    public Task<Result<StorageSpaceDTO>> CreateStorageSpace(StorageSpaceCmd cmd, AuthUserDetails userDetails);
-    Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd, AuthUserDetails userDetails);
-    Task<AppError> DeleteStorageSpace(int id, AuthUserDetails userDetails);
-    Task<Result<List<StorageSpaceDTO>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails);
-    Task<Result<List<InitialStorageSpaceDTO>>> GetInitialStorageSpaces();
+    public Task<Result<StorageSpaceDto>> CreateStorageSpace(StorageSpaceCmd cmd, AuthUserDetails userDetails);
+    Task<Result<StorageSpaceDto>> UpdateStorageSpace(int id, StorageSpaceCmd cmd, AuthUserDetails userDetails);
+    Task<AppError?> DeleteStorageSpace(int id, AuthUserDetails userDetails);
+    Task<Result<List<StorageSpaceDto>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails);
+    Task<Result<List<InitialStorageSpaceDto>>> GetInitialStorageSpaces();
 }

@@ -61,6 +61,8 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
             .IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == id && (x.IsGlobal || x.HouseholdId == householdId));
 
+        if (food == null) return null;
+
         food.FromHousehold(householdId);
 
         return food;
@@ -70,6 +72,8 @@ public class FoodRepository(CapychefDbContext dbContext) : IFoodRepository
     {
         var food = await dbContext.Food.Active().IncludeUoM(householdId).IncludeHouseholdFoodDetails(householdId)
             .FirstOrDefaultAsync(x => x.Id == id && (x.IsGlobal || x.HouseholdId == householdId));
+
+        if (food == null) return null;
 
         food.FromHousehold(householdId);
 

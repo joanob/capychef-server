@@ -12,7 +12,7 @@ public class FoodCategoriesController(
     IFoodCategoryService foodCategoryService) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult> LoadFoodCategories(FoodCategoryFileCmd fileCmd)
+    public ActionResult LoadFoodCategories(FoodCategoryFileCmd fileCmd)
     {
         Task.Run(async () =>
         {
@@ -34,7 +34,7 @@ public class FoodCategoriesController(
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<FoodCategoryDTO>>> GetAllFoodCategories([FromQuery] string? displayMode)
+    public async Task<ActionResult<List<FoodCategoryDto>>> GetAllFoodCategories([FromQuery] string? displayMode)
     {
         if (displayMode == "tree") return Ok(await foodCategoryService.GetAllCategoriesAsTree());
 

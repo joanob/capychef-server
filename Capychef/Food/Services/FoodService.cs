@@ -20,7 +20,7 @@ public class FoodService(
     IFoodModificationHistoryRepository foodModificationHistoryRepository)
     : IFoodService
 {
-    public async Task<List<FoodDTO>> GetAllHouseholdFood(AuthUserDetails userDetails)
+    public async Task<List<FoodDto>> GetAllHouseholdFood(AuthUserDetails userDetails)
     {
         var food = await foodRepository.GetAllHouseholdFood(userDetails.GetHouseholdId());
 
@@ -28,19 +28,19 @@ public class FoodService(
 
         food.AddRange(globalFood);
 
-        return FoodDTO.ToList(food);
+        return FoodDto.ToList(food);
     }
 
-    public async Task<Result<FoodDTO>> GetFoodById(AuthUserDetails userDetails, int id)
+    public async Task<Result<FoodDto>> GetFoodById(AuthUserDetails userDetails, int id)
     {
         var food = await foodRepository.GetFoodById(id, userDetails.GetHouseholdId());
 
-        if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
+        if (food == null) return new Result<FoodDto>(new NotFoundError(EntityType.Food, id));
 
-        return new Result<FoodDTO>(new FoodDTO(food));
+        return new Result<FoodDto>(new FoodDto(food));
     }
 
-    public async Task<List<FoodCategoryWithFoodDTO>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails)
+    public async Task<List<FoodCategoryWithFoodDto>> GetAllHouseholdFoodGroupedByCategory(AuthUserDetails userDetails)
     {
         var categories = await foodCategoryRepository.GetAllCategories();
 
@@ -50,7 +50,7 @@ public class FoodService(
 
         food.AddRange(globalFood);
 
-        return FoodCategoryWithFoodDTO.ToTree(categories, food);
+        return FoodCategoryWithFoodDto.ToTree(categories, food);
     }
 
     public async Task<AppError?> DeleteHouseholdFood(int foodId, AuthUserDetails userDetails)
@@ -66,16 +66,16 @@ public class FoodService(
         return null;
     }
 
-    public async Task<Result<FoodDTO>> UpdateFood(int id, HouseholdFoodCmd cmd,
+    public async Task<Result<FoodDto>> UpdateFood(int id, HouseholdFoodCmd cmd,
         AuthUserDetails userDetails)
     {
         var validationError = cmd.Validate();
 
-        if (validationError != null) return new Result<FoodDTO>(validationError);
+        if (validationError != null) return new Result<FoodDto>(validationError);
 
         var food = await foodRepository.GetTrackedFoodById(id, userDetails.GetHouseholdId());
 
-        if (food == null) return new Result<FoodDTO>(new NotFoundError(EntityType.Food, id));
+        if (food == null) return new Result<FoodDto>(new NotFoundError(EntityType.Food, id));
 
         // Some properties can only be updated on household food 
 
@@ -95,10 +95,10 @@ public class FoodService(
             {
                 var foodCategory = await foodCategoryRepository.GetTrackedCategoryById(cmd.CategoryId);
                 if (foodCategory == null)
-                    return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+                    return new Result<FoodDto>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
 
                 if (!foodCategory.IsLeaf)
-                    return new Result<FoodDTO>(new FoodCategoryCannotContainFood(foodCategory.Id));
+                    return new Result<FoodDto>(new FoodCategoryCannotContainFood(foodCategory.Id));
 
                 await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
                     userDetails.GetHouseholdId(),
@@ -119,7 +119,10 @@ public class FoodService(
         var householdFoodDetails = food.HouseholdFoodDetails ?? new HouseholdFoodDetails(userDetails.GetHouseholdId(),
             food.Id, null, null, food.GetDaysUntilExpiration(), food.GetDaysUntilBestBefore());
 
-        if (householdFoodDetails.MinQuantity != cmd.MinQuantity)
+        if ((householdFoodDetails.MinQuantity.HasValue && !cmd.MinQuantity.HasValue) ||
+            (!householdFoodDetails.MinQuantity.HasValue && cmd.MinQuantity.HasValue) ||
+            (householdFoodDetails.MinQuantity.HasValue && cmd.MinQuantity.HasValue &&
+             Math.Abs(householdFoodDetails.MinQuantity.Value - cmd.MinQuantity.Value) < 1e-6))
         {
             await foodModificationHistoryRepository.AddAsync(new FoodModificationHistory(food.Id,
                 userDetails.GetHouseholdId(),
@@ -174,25 +177,25 @@ public class FoodService(
         var error = await UpdateFoodUoM(food, cmd.UoM, userDetails);
 
         if (error != null)
-            return new Result<FoodDTO>(error);
+            return new Result<FoodDto>(error);
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<FoodDTO>(new FoodDTO(food));
+        return new Result<FoodDto>(new FoodDto(food));
     }
 
-    public async Task<Result<FoodDTO>> CreateHouseholdFood(AuthUserDetails userDetails, HouseholdFoodCmd cmd)
+    public async Task<Result<FoodDto>> CreateHouseholdFood(AuthUserDetails userDetails, HouseholdFoodCmd cmd)
     {
         var validationError = cmd.Validate();
 
-        if (validationError != null) return new Result<FoodDTO>(validationError);
+        if (validationError != null) return new Result<FoodDto>(validationError);
 
         var foodCategory = await foodCategoryRepository.GetTrackedCategoryById(cmd.CategoryId);
         if (foodCategory == null)
-            return new Result<FoodDTO>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
+            return new Result<FoodDto>(new NotFoundError(EntityType.FoodCategory, cmd.CategoryId));
 
         if (!foodCategory.IsLeaf)
-            return new Result<FoodDTO>(new FoodCategoryCannotContainFood(foodCategory.Id));
+            return new Result<FoodDto>(new FoodCategoryCannotContainFood(foodCategory.Id));
 
         var food = new Domain.Entities.Food(userDetails.GetHouseholdId(), cmd.Name, cmd.CategoryId,
             userDetails.UserId);
@@ -205,7 +208,7 @@ public class FoodService(
         foreach (var uom in cmd.UoM)
         {
             if (!await uoMRepository.CheckUoMExists(uom.UoM))
-                return new Result<FoodDTO>(new NotFoundError(EntityType.UoM, uom.UoM));
+                return new Result<FoodDto>(new NotFoundError(EntityType.UoM, uom.UoM));
 
             await foodUoMRepository.AddAsync(new FoodUoM(food, userDetails.GetHouseholdId(), uom.UoM, uom.IsBaseUoM,
                 null, null, null));
@@ -213,7 +216,7 @@ public class FoodService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<FoodDTO>(new FoodDTO(food));
+        return new Result<FoodDto>(new FoodDto(food));
     }
 
     /**
@@ -289,10 +292,10 @@ public class FoodService(
         return null;
     }
 
-    public async Task<List<FoodDTO>> GetAllGlobalFood(AuthUserDetails userDetails)
+    public async Task<List<FoodDto>> GetAllGlobalFood(AuthUserDetails userDetails)
     {
         var food = await foodRepository.GetAllGlobalFood(userDetails.GetHouseholdId());
 
-        return FoodDTO.ToList(food);
+        return FoodDto.ToList(food);
     }
 }

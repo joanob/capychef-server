@@ -39,18 +39,18 @@ public class HouseholdJoinRequestService(
         return null;
     }
 
-    public async Task<List<HouseholdJoinRequestDTO>> GetAllHouseholdJoinRequests(AuthUserDetails userDetails)
+    public async Task<List<HouseholdJoinRequestDto>> GetAllHouseholdJoinRequests(AuthUserDetails userDetails)
     {
         var joinRequests = await joinRequestRepository.GetHouseholdJoinRequests(userDetails.GetHouseholdId());
 
-        return HouseholdJoinRequestDTO.toList(joinRequests);
+        return HouseholdJoinRequestDto.ToList(joinRequests);
     }
 
-    public async Task<List<HouseholdJoinRequestDTO>> GetHouseholdJoinRequestsByUser(AuthUserDetails userDetails)
+    public async Task<List<HouseholdJoinRequestDto>> GetHouseholdJoinRequestsByUser(AuthUserDetails userDetails)
     {
         var joinRequests = await joinRequestRepository.GetHouseholdJoinRequestsByUserId(userDetails.UserId);
 
-        return HouseholdJoinRequestDTO.toList(joinRequests);
+        return HouseholdJoinRequestDto.ToList(joinRequests);
     }
 
     public async Task<AppError?> AcceptJoinRequest(AuthUserDetails userDetails, int joinRequestId)

@@ -6,9 +6,9 @@ namespace Capychef.Users.Domain.Cmd;
 
 public class ResetPasswordCmd : ICmd
 {
-    public string? PasswordRecoveryToken { get; set; }
+    public required string PasswordRecoveryToken { get; set; }
 
-    public string Password { get; set; }
+    public required string Password { get; set; }
 
     public ValidationError? Validate()
     {
@@ -19,9 +19,7 @@ public class ResetPasswordCmd : ICmd
             return new ValidationError("ResetPasswordCmd Password is required");
 
         var error = UserPassword.ValidatePassword(Password);
-        if (error != null)
-            return error;
 
-        return null;
+        return error;
     }
 }

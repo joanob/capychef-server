@@ -16,13 +16,13 @@ public class StorageSpaceService(
     IStorageSpaceModificationHistoryRepository storageSpaceModificationHistoryRepository)
     : IStorageSpaceService
 {
-    public async Task<Result<StorageSpaceDTO>> CreateStorageSpace(StorageSpaceCmd cmd,
+    public async Task<Result<StorageSpaceDto>> CreateStorageSpace(StorageSpaceCmd cmd,
         AuthUserDetails userDetails)
     {
-        var storageCondition = StorageConditions.from(cmd.StorageCondition);
+        var storageCondition = StorageConditions.From(cmd.StorageCondition);
 
-        if (storageCondition == null)
-            return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageCondition, cmd.StorageCondition));
+        if (string.IsNullOrEmpty(storageCondition.ToString()))
+            return new Result<StorageSpaceDto>(new NotFoundError(EntityType.StorageCondition, cmd.StorageCondition));
 
         var storageSpace =
             new StorageSpace(cmd.Name, storageCondition, userDetails.GetHouseholdId(), userDetails.UserId);
@@ -31,15 +31,15 @@ public class StorageSpaceService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<StorageSpaceDTO>(new StorageSpaceDTO(storageSpace));
+        return new Result<StorageSpaceDto>(new StorageSpaceDto(storageSpace));
     }
 
-    public async Task<Result<StorageSpaceDTO>> UpdateStorageSpace(int id, StorageSpaceCmd cmd,
+    public async Task<Result<StorageSpaceDto>> UpdateStorageSpace(int id, StorageSpaceCmd cmd,
         AuthUserDetails userDetails)
     {
         var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.GetHouseholdId());
 
-        if (storageSpace == null) return new Result<StorageSpaceDTO>(new NotFoundError(EntityType.StorageSpace, id));
+        if (storageSpace == null) return new Result<StorageSpaceDto>(new NotFoundError(EntityType.StorageSpace, id));
 
         if (storageSpace.Name != cmd.Name)
         {
@@ -51,10 +51,10 @@ public class StorageSpaceService(
 
         if (storageSpace.StorageCondition.ToString() != cmd.StorageCondition)
         {
-            var storageCondition = StorageConditions.from(cmd.StorageCondition);
+            var storageCondition = StorageConditions.From(cmd.StorageCondition);
 
-            if (storageCondition == null)
-                return new Result<StorageSpaceDTO>(
+            if (string.IsNullOrEmpty(storageCondition.ToString()))
+                return new Result<StorageSpaceDto>(
                     new NotFoundError(EntityType.StorageCondition, cmd.StorageCondition));
 
             await storageSpaceModificationHistoryRepository.AddAsync(new StorageSpacesModificationHistory(
@@ -66,10 +66,10 @@ public class StorageSpaceService(
 
         await dbContext.SaveChangesAsync();
 
-        return new Result<StorageSpaceDTO>(new StorageSpaceDTO(storageSpace));
+        return new Result<StorageSpaceDto>(new StorageSpaceDto(storageSpace));
     }
 
-    public async Task<AppError> DeleteStorageSpace(int id, AuthUserDetails userDetails)
+    public async Task<AppError?> DeleteStorageSpace(int id, AuthUserDetails userDetails)
     {
         var storageSpace = await storageSpaceRepository.GetTrackedStorageSpaceById(id, userDetails.GetHouseholdId());
 
@@ -82,16 +82,16 @@ public class StorageSpaceService(
         return null;
     }
 
-    public async Task<Result<List<StorageSpaceDTO>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails)
+    public async Task<Result<List<StorageSpaceDto>>> GetHouseholdStorageSpaces(AuthUserDetails userDetails)
     {
         var storageSpaces = await storageSpaceRepository.GetHouseholdStorageSpaces(userDetails.GetHouseholdId());
 
-        return new Result<List<StorageSpaceDTO>>(StorageSpaceDTO.ToDTOList(storageSpaces));
+        return new Result<List<StorageSpaceDto>>(StorageSpaceDto.ToDtoList(storageSpaces));
     }
 
-    public async Task<Result<List<InitialStorageSpaceDTO>>> GetInitialStorageSpaces()
+    public async Task<Result<List<InitialStorageSpaceDto>>> GetInitialStorageSpaces()
     {
         var items = await storageSpaceRepository.GetInitialStorageSpaces();
-        return new Result<List<InitialStorageSpaceDTO>>(InitialStorageSpaceDTO.ToDTOList(items));
+        return new Result<List<InitialStorageSpaceDto>>(InitialStorageSpaceDto.ToDtoList(items));
     }
 }

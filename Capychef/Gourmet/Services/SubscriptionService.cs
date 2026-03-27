@@ -3,15 +3,15 @@ using Capychef.Gourmet.Domain.Errors;
 using Capychef.Gourmet.Domain.Interfaces;
 using Capychef.Households.Domain.Interfaces;
 
-namespace Capychef.Gourmet.Domain.Services;
+namespace Capychef.Gourmet.Services;
 
 public class SubscriptionService(
     IUserSubscriptionRepository userSubscriptionRepository,
     IHouseholdRepository householdRepository,
     IHouseholdMemberRepository householdMemberRepository) : ISubscriptionService
 {
-    private readonly int MAX_MEMBERSHIPS_FREE_ACCOUNT = 2;
-    private readonly int MAX_OWNED_HOUSEHOLDS_FREE_ACCOUNT = 1;
+    private readonly int _maxMembershipsFreeAccount = 2;
+    private readonly int _maxOwnedHouseholdsFreeAccount = 1;
 
     public async Task<AppError?> CheckUserCanCreateHousehold(int userId)
     {
@@ -20,11 +20,11 @@ public class SubscriptionService(
             return null;
 
         var owned = await householdRepository.CountOwnedHouseholds(userId);
-        if (owned >= MAX_OWNED_HOUSEHOLDS_FREE_ACCOUNT)
+        if (owned >= _maxOwnedHouseholdsFreeAccount)
             return new SubscriptionRequiredError("Max owned households reached for free account");
 
         var memberships = await householdMemberRepository.CountHouseholdMemberships(userId);
-        if (memberships >= MAX_MEMBERSHIPS_FREE_ACCOUNT)
+        if (memberships >= _maxMembershipsFreeAccount)
             return new SubscriptionRequiredError("Max household memberships reached for free account");
 
         return null;
@@ -37,7 +37,7 @@ public class SubscriptionService(
             return null;
 
         var memberships = await householdMemberRepository.CountHouseholdMemberships(userId);
-        if (memberships >= MAX_MEMBERSHIPS_FREE_ACCOUNT)
+        if (memberships >= _maxMembershipsFreeAccount)
             return new SubscriptionRequiredError("Max household memberships reached for free account");
 
         return null;
@@ -49,6 +49,6 @@ public class SubscriptionService(
         if (hasSubscription) return false;
 
         var memberships = await householdMemberRepository.CountHouseholdMemberships(userId);
-        return memberships + additionalMemberships >= MAX_MEMBERSHIPS_FREE_ACCOUNT;
+        return memberships + additionalMemberships >= _maxMembershipsFreeAccount;
     }
 }

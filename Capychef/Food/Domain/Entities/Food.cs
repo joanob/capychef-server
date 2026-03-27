@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
 using Capychef.Users.Domain.Entities;
@@ -9,10 +10,6 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food")]
 public class Food : BaseDeletableEntity
 {
-    public Food()
-    {
-    }
-
     public Food(string globalId, string name, int categoryId, int? daysUntilExpiration,
         int? daysUntilBestBefore)
     {
@@ -44,11 +41,9 @@ public class Food : BaseDeletableEntity
         CreatedBy = createdBy;
     }
 
-    [Column("name")] public string Name { get; set; }
+    [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
-    [Column("category_id")]
-    [ForeignKey(nameof(Category))]
-    public int CategoryId { get; set; }
+    [Column("category_id")] public int CategoryId { get; set; }
 
     [Column("days_until_expiration")] public int? DaysUntilExpiration { get; set; }
 
@@ -56,27 +51,22 @@ public class Food : BaseDeletableEntity
 
     [Column("is_global")] public bool IsGlobal { get; private set; }
 
-    [Column("global_id")] public string? GlobalId { get; private set; }
+    [Column("global_id")] [MaxLength(50)] public string? GlobalId { get; private set; }
 
-    [Column("household_id")]
-    [ForeignKey(nameof(Household))]
-    public int? HouseholdId { get; }
+    [Column("household_id")] public int? HouseholdId { get; init; }
 
-    [Column("modified_global_food_id")]
-    [ForeignKey(nameof(ModifiedGlobalFood))]
-    public int? ModifiedGlobalFoodId { get; private set; }
+    [Column("modified_global_food_id")] public int? ModifiedGlobalFoodId { get; private set; }
 
-    [Column("created_by")]
-    [ForeignKey(nameof(CreatedByUser))]
-    public int? CreatedBy { get; private set; }
+    [Column("created_by")] public int? CreatedBy { get; private set; }
 
-    public FoodCategory Category { get; set; }
+    [InverseProperty(nameof(CategoryId))] public FoodCategory? Category { get; init; }
 
-    public Household? Household { get; private set; }
+    [InverseProperty(nameof(HouseholdId))] public Household? Household { get; init; }
 
-    public Food? ModifiedGlobalFood { get; private set; }
+    [InverseProperty(nameof(ModifiedGlobalFoodId))]
+    public Food? ModifiedGlobalFood { get; init; }
 
-    public User? CreatedByUser { get; private set; }
+    [InverseProperty(nameof(CreatedBy))] public User? CreatedByUser { get; init; }
 
     [InverseProperty(nameof(FoodUoM.Food))]
     public ICollection<FoodUoM> UoM { get; private set; } = new List<FoodUoM>();

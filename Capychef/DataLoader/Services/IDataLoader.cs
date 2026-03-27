@@ -1,4 +1,4 @@
-﻿namespace Capychef.Data;
+﻿namespace Capychef.DataLoader.Services;
 
 public interface IDataLoader
 {

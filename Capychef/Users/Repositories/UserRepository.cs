@@ -27,7 +27,7 @@ public class UserRepository(CapychefDbContext dbContext) : IUserRepository
         return await dbContext.Users.AsNoTracking().Active().Where(x => x.Username == username).FirstOrDefaultAsync();
     }
 
-    public async Task<User> GetTrackedUserByUsernameAsync(string username)
+    public async Task<User?> GetTrackedUserByUsernameAsync(string username)
     {
         return await dbContext.Users.Active().Where(x => x.Username == username).FirstOrDefaultAsync();
     }
@@ -37,7 +37,7 @@ public class UserRepository(CapychefDbContext dbContext) : IUserRepository
         return await dbContext.Users.AsNoTracking().Active().Where(x => x.Email == email).FirstOrDefaultAsync();
     }
 
-    public async Task<User> GetTrackedUserByEmailAsync(string email)
+    public async Task<User?> GetTrackedUserByEmailAsync(string email)
     {
         return await dbContext.Users.Active().Where(x => x.Email == email).FirstOrDefaultAsync();
     }

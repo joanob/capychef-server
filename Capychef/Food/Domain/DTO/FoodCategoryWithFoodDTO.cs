@@ -2,51 +2,51 @@
 
 namespace Capychef.Food.Domain.DTO;
 
-public class FoodCategoryWithFoodDTO
+public class FoodCategoryWithFoodDto
 {
-    public FoodCategoryWithFoodDTO(FoodCategory category)
+    public FoodCategoryWithFoodDto(FoodCategory category)
     {
-        Category = new FoodCategoryDTO(category);
-        Food = new List<FoodDTO>();
-        SubcategoriesWithFood = new List<FoodCategoryWithFoodDTO>();
+        Category = new FoodCategoryDto(category);
+        Food = new List<FoodDto>();
+        SubcategoriesWithFood = new List<FoodCategoryWithFoodDto>();
     }
 
-    public FoodCategoryWithFoodDTO(FoodCategory category, List<Entities.Food> food)
+    public FoodCategoryWithFoodDto(FoodCategory category, List<Entities.Food> food)
     {
-        Category = new FoodCategoryDTO(category);
-        Food = FoodDTO.ToList(food);
-        SubcategoriesWithFood = new List<FoodCategoryWithFoodDTO>();
+        Category = new FoodCategoryDto(category);
+        Food = FoodDto.ToList(food);
+        SubcategoriesWithFood = new List<FoodCategoryWithFoodDto>();
     }
 
-    public FoodCategoryDTO Category { get; }
-    public List<FoodDTO> Food { get; }
-    public List<FoodCategoryWithFoodDTO> SubcategoriesWithFood { get; }
+    public FoodCategoryDto Category { get; }
+    public List<FoodDto> Food { get; }
+    public List<FoodCategoryWithFoodDto> SubcategoriesWithFood { get; }
 
-    public void AddFood(FoodDTO food)
+    public void AddFood(FoodDto food)
     {
         Food.Add(food);
     }
 
-    private void AddSubcategoryWithFood(FoodCategoryWithFoodDTO categoryWithFood)
+    private void AddSubcategoryWithFood(FoodCategoryWithFoodDto categoryWithFood)
     {
         SubcategoriesWithFood.Add(categoryWithFood);
     }
 
-    public static List<FoodCategoryWithFoodDTO> ToTree(List<FoodCategory> categories, List<Entities.Food> food)
+    public static List<FoodCategoryWithFoodDto> ToTree(List<FoodCategory> categories, List<Entities.Food> food)
     {
-        var categoriesWithFoodDTOList = new List<FoodCategoryWithFoodDTO>();
+        var categoriesWithFoodDtoList = new List<FoodCategoryWithFoodDto>();
 
         foreach (var category in categories.Where(x => x.ParentCategoryId == null))
         {
-            var categoryWithFoodDTO =
-                new FoodCategoryWithFoodDTO(category, food.Where(x => x.CategoryId == category.Id).ToList());
+            var categoryWithFoodDto =
+                new FoodCategoryWithFoodDto(category, food.Where(x => x.CategoryId == category.Id).ToList());
 
-            categoryWithFoodDTO.AddSubcategoriesWithFood(categories, food);
+            categoryWithFoodDto.AddSubcategoriesWithFood(categories, food);
 
-            categoriesWithFoodDTOList.Add(categoryWithFoodDTO);
+            categoriesWithFoodDtoList.Add(categoryWithFoodDto);
         }
 
-        return categoriesWithFoodDTOList;
+        return categoriesWithFoodDtoList;
     }
 
     private void AddSubcategoriesWithFood(List<FoodCategory> categories, List<Entities.Food> food)
@@ -54,7 +54,7 @@ public class FoodCategoryWithFoodDTO
         foreach (var category in categories.Where(x => x.ParentCategoryId == Category.Id))
         {
             var subcategoryWithFoodDto =
-                new FoodCategoryWithFoodDTO(category, food.Where(x => x.CategoryId == category.Id).ToList());
+                new FoodCategoryWithFoodDto(category, food.Where(x => x.CategoryId == category.Id).ToList());
 
             subcategoryWithFoodDto.AddSubcategoriesWithFood(categories, food);
 

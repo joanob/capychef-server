@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Entities;
 using Capychef.Users.Domain.Cmd;
 
@@ -7,10 +8,6 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users")]
 public class User : BaseDeletableEntity
 {
-    public User()
-    {
-    }
-
     public User(SignupCmd signupCmd)
     {
         Username = signupCmd.Username;
@@ -21,17 +18,19 @@ public class User : BaseDeletableEntity
         BlockReason = null;
     }
 
-    [Column("username")] public string Username { get; set; }
+    [Column("username")] [MaxLength(50)] public string Username { get; set; }
 
     [Column("is_guest")] public bool IsGuest { get; set; }
 
-    [Column("email")] public string? Email { get; set; }
+    [Column("email")] [MaxLength(255)] public string? Email { get; set; }
 
     [Column("is_email_valid")] public bool IsEmailValid { get; set; }
 
     [Column("is_blocked")] public bool IsBlocked { get; set; }
 
-    [Column("block_reason")] public string? BlockReason { get; set; }
+    [Column("block_reason")]
+    [MaxLength(1000)]
+    public string? BlockReason { get; set; }
 }
 
 public static class UserExtensions

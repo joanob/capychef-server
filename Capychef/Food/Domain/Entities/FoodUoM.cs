@@ -7,29 +7,25 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food_uom")]
 public class FoodUoM : BaseDeletableEntity
 {
-    public FoodUoM()
-    {
-    }
-
-    public FoodUoM(int foodId, int? householdId, string UoM, bool isBaseUoM, int? numerator, int? denominator,
+    public FoodUoM(int foodId, int? householdId, string uoM, bool isBaseUoM, int? numerator, int? denominator,
         bool? isApproxConversion)
     {
         FoodId = foodId;
         HouseholdId = householdId;
-        this.UoM = UoM;
+        UoM = uoM;
         IsBaseUoM = isBaseUoM;
         Numerator = numerator;
         Denominator = denominator;
         IsApproxConversion = isApproxConversion;
     }
 
-    public FoodUoM(Food food, int? householdId, string UoM, bool isBaseUoM, int? numerator, int? denominator,
+    public FoodUoM(Food food, int? householdId, string uoM, bool isBaseUoM, int? numerator, int? denominator,
         bool? isApproxConversion)
     {
         Food = food;
         HouseholdId = householdId;
         IsBaseUoM = isBaseUoM;
-        this.UoM = UoM;
+        UoM = uoM;
         Numerator = numerator;
         Denominator = denominator;
         IsApproxConversion = isApproxConversion;
@@ -49,11 +45,11 @@ public class FoodUoM : BaseDeletableEntity
 
     [Column("is_approx_conversion")] public bool? IsApproxConversion { get; set; }
 
-    [ForeignKey(nameof(FoodId))] public Food Food { get; private set; }
+    [ForeignKey(nameof(FoodId))] public Food? Food { get; private set; }
 
-    [ForeignKey(nameof(HouseholdId))] public Household Household { get; private set; }
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }
 
-    [ForeignKey(nameof(UoM))] public UoM UoMInstance { get; private set; }
+    [ForeignKey(nameof(UoM))] public UoM? UoMInstance { get; init; }
 
     public void Set(bool isBaseUoM, int? numerator, int? denominator, bool? isApproxConversion)
     {

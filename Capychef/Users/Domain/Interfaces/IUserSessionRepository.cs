@@ -5,6 +5,6 @@ namespace Capychef.Users.Domain.Interfaces;
 public interface IUserSessionRepository
 {
     Task AddUserSessionAsync(UserSession session);
-    Task<UserSession> GetTrackedUserSessionByIdAsync(int id);
+    Task<UserSession?> GetTrackedUserSessionByIdAsync(int id);
     Task<List<UserSession>> GetTrackedActiveUserSessionsByUserIdAsync(int userId);
 }

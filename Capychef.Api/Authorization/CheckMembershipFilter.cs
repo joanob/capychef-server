@@ -1,5 +1,6 @@
 ﻿using Capychef.Api.Auth;
 using Capychef.Api.Errors;
+using Capychef.Common.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,6 +16,17 @@ public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFa
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(context.HttpContext);
 
+        if (!userDetails.IsValid())
+        {
+            context.Result = new ObjectResult(new ApiResponse<object>(
+                new ApiError(new AppError(ErrorType.Authentication), "")))
+            {
+                StatusCode = 401
+            };
+
+            return;
+        }
+
         if (!userDetails.HasHouseholdId)
         {
             context.Result = new NotFoundResult();
@@ -28,6 +40,6 @@ public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFa
         if (error == null)
             await next();
         else
-            GlobalErrorHandler.handleError(error, logger);
+            GlobalErrorHandler.HandleError(error, logger);
     }
 }

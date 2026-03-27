@@ -25,7 +25,7 @@ public class UserService(
 
         if (userToken.TokenType != UserTokenType.EmailValidation) return new NotFoundError(EntityType.Token, token);
 
-        userToken.markUsed();
+        userToken.MarkUsed();
 
         var user = await userRepository.GetTrackedUserById(userToken.UserId);
 

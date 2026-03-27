@@ -2,9 +2,9 @@
 
 namespace Capychef.Households.Domain.DTO;
 
-public class HouseholdJoinRequestDTO
+public class HouseholdJoinRequestDto
 {
-    public HouseholdJoinRequestDTO(HouseholdJoinRequest invitation)
+    public HouseholdJoinRequestDto(HouseholdJoinRequest invitation)
     {
         Id = invitation.Id;
         HouseholdId = invitation.HouseholdId;
@@ -15,8 +15,8 @@ public class HouseholdJoinRequestDTO
     public int HouseholdId { get; set; }
     public int UserId { get; set; }
 
-    public static List<HouseholdJoinRequestDTO> toList(List<HouseholdJoinRequest> invitations)
+    public static List<HouseholdJoinRequestDto> ToList(List<HouseholdJoinRequest> invitations)
     {
-        return invitations.Select(invitation => new HouseholdJoinRequestDTO(invitation)).ToList();
+        return invitations.Select(invitation => new HouseholdJoinRequestDto(invitation)).ToList();
     }
 }

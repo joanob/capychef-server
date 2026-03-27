@@ -2,25 +2,24 @@
 
 namespace Capychef.Households.Domain.DTO;
 
-public class HouseholdDTO
+public class HouseholdDto
 {
-    public HouseholdDTO(Household household)
+    public HouseholdDto(Household household)
     {
         Id = household.Id;
         OwnerId = household.OwnerId;
         Name = household.Name;
 
-        if (household.StorageSpaces != null)
-            StorageSpaces = household.StorageSpaces.Select(x => new StorageSpaceDTO(x)).ToList();
+        StorageSpaces = household.StorageSpaces.Select(x => new StorageSpaceDto(x)).ToList();
     }
 
     public int Id { get; set; }
     public int OwnerId { get; set; }
     public string Name { get; set; }
-    public List<StorageSpaceDTO> StorageSpaces { get; set; }
+    public List<StorageSpaceDto> StorageSpaces { get; set; }
 
-    public static List<HouseholdDTO> ToDTOList(List<Household> households)
+    public static List<HouseholdDto> ToDtoList(List<Household> households)
     {
-        return households.Select(h => new HouseholdDTO(h)).ToList();
+        return households.Select(h => new HouseholdDto(h)).ToList();
     }
 }

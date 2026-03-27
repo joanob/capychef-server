@@ -18,8 +18,8 @@ SerilogSetup.SetupSerilog(builder.Environment);
 
 builder.Host.UseSerilog();
 
-builder.Services.AddRealtimeDI();
-builder.Services.AddApplicationDI();
+builder.Services.AddRealtimeDi();
+builder.Services.AddApplicationDi();
 
 builder.Services.AddCors(options =>
 {
@@ -55,7 +55,7 @@ if (app.Environment.IsDevelopment())
     try
     {
         var swaggerProvider = app.Services.GetRequiredService<ISwaggerProvider>();
-        var doc = swaggerProvider.GetSwagger("v1");
+        swaggerProvider.GetSwagger("v1");
     }
     catch (Exception ex)
     {

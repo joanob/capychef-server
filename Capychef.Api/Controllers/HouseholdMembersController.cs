@@ -15,7 +15,7 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
 {
     [CheckMembership]
     [HttpGet("{householdId}")]
-    public async Task<ActionResult<ApiResponse<List<UserDTO>>>> GetHouseholdMembers(int householdId)
+    public async Task<ActionResult<ApiResponse<List<UserDto>>>> GetHouseholdMembers(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -23,9 +23,9 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
 
         var logger = loggerFactory.CreateLogger("HouseholdService.GetHouseholdMembers");
 
-        if (members.failed()) return GlobalErrorHandler.handleError(members.error(), logger);
+        if (members.Failed()) return GlobalErrorHandler.HandleError(members.Error(), logger);
 
-        return Ok(new ApiResponse<List<UserDTO>>(members.get()));
+        return Ok(new ApiResponse<List<UserDto>>(members.Get()));
     }
 
     [CheckMembership]
@@ -38,9 +38,9 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
 
         var logger = loggerFactory.CreateLogger("HouseholdService.LeaveHousehold");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
-        JWTService.CreateAndSendJWT(new AuthUserDetails(userDetails.UserId, userDetails.SessionId), Response);
+        JwtService.CreateAndSendJwt(new AuthUserDetails(userDetails.UserId, userDetails.SessionId), Response);
 
         return Ok();
     }
@@ -55,7 +55,7 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
 
         var logger = loggerFactory.CreateLogger("HouseholdService.LeaveHousehold");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }

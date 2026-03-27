@@ -17,11 +17,11 @@ public class UserSession
         IsRevoked = false;
     }
 
-    [Column("id")] public int Id { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
     [Column("user_id")]
     [ForeignKey(nameof(User))]
-    public int UserId { get; private set; }
+    public int UserId { get; init; }
 
     [Column("created_at")] public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 

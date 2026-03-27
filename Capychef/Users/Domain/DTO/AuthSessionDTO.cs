@@ -4,14 +4,14 @@ using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Users.Domain.DTO;
 
-public class AuthSessionDTO
+public class AuthSessionDto
 {
-    public AuthSessionDTO(User user, Household? activeHousehold)
+    public AuthSessionDto(User user, Household? activeHousehold)
     {
-        User = new UserDTO(user);
-        ActiveHousehold = activeHousehold != null ? new HouseholdDTO(activeHousehold) : null;
+        User = new UserDto(user);
+        ActiveHousehold = activeHousehold != null ? new HouseholdDto(activeHousehold) : null;
     }
 
-    public UserDTO User { get; set; }
-    public HouseholdDTO? ActiveHousehold { get; set; }
+    public UserDto User { get; set; }
+    public HouseholdDto? ActiveHousehold { get; set; }
 }

@@ -17,7 +17,7 @@ namespace Capychef.Api.Controllers;
 public class HouseholdController(IHouseholdService householdService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<HouseholdDTO>>> CreateHousehold(CreateHouseholdCmd cmd)
+    public async Task<ActionResult<ApiResponse<HouseholdDto>>> CreateHousehold(CreateHouseholdCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -25,27 +25,27 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
         var logger = loggerFactory.CreateLogger("HouseholdService.CreateHousehold");
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
+        if (household.Failed()) return GlobalErrorHandler.HandleError(household.Error(), logger);
 
-        userDetails.setHousehold(household.get().Id);
+        userDetails.SetHousehold(household.Get().Id);
 
-        JWTService.CreateAndSendJWT(userDetails, Response);
+        JwtService.CreateAndSendJwt(userDetails, Response);
 
-        return Ok(new ApiResponse<HouseholdDTO>(household.get()));
+        return Ok(new ApiResponse<HouseholdDto>(household.Get()));
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<List<HouseholdDTO>>>> GetAllHouseholds()
+    public async Task<ActionResult<ApiResponse<List<HouseholdDto>>>> GetAllHouseholds()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
         var households = await householdService.GetAllHouseholds(userDetails);
 
-        return Ok(new ApiResponse<List<HouseholdDTO>>(households));
+        return Ok(new ApiResponse<List<HouseholdDto>>(households));
     }
 
     [HttpGet("{householdId}")]
-    public async Task<ActionResult<ApiResponse<HouseholdDTO>>> GetHouseholdById(int householdId)
+    public async Task<ActionResult<ApiResponse<HouseholdDto>>> GetHouseholdById(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -53,14 +53,14 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
         var logger = loggerFactory.CreateLogger("HouseholdService.GetHouseholdById");
 
-        if (household.failed()) return handleError(household.error(), logger);
+        if (household.Failed()) return HandleError(household.Error(), logger);
 
-        return Ok(new ApiResponse<HouseholdDTO>(household.get()));
+        return Ok(new ApiResponse<HouseholdDto>(household.Get()));
     }
 
     [CheckMembership]
     [HttpGet("active")]
-    public async Task<ActionResult<List<HouseholdDTO>>> GetActiveHousehold()
+    public async Task<ActionResult<List<HouseholdDto>>> GetActiveHousehold()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -68,13 +68,13 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
         var logger = loggerFactory.CreateLogger("HouseholdService.GetActiveHousehold");
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
+        if (household.Failed()) return GlobalErrorHandler.HandleError(household.Error(), logger);
 
-        return Ok(household.get());
+        return Ok(household.Get());
     }
 
     [HttpGet("select/{householdId}")]
-    public async Task<ActionResult<HouseholdDTO>> SelectHousehold(int householdId)
+    public async Task<ActionResult<HouseholdDto>> SelectHousehold(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -82,18 +82,18 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
         var logger = loggerFactory.CreateLogger("HouseholdService.SelectHousehold");
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
+        if (household.Failed()) return GlobalErrorHandler.HandleError(household.Error(), logger);
 
-        userDetails.setHousehold(household.get().Id);
+        userDetails.SetHousehold(household.Get().Id);
 
-        JWTService.CreateAndSendJWT(userDetails, Response);
+        JwtService.CreateAndSendJwt(userDetails, Response);
 
-        return Ok(household.get());
+        return Ok(household.Get());
     }
 
     [CheckOwnership]
     [HttpPut("{householdId}")]
-    public async Task<ActionResult<HouseholdDTO>> UpdateHousehold(int householdId, HouseholdCmd cmd)
+    public async Task<ActionResult<HouseholdDto>> UpdateHousehold(int householdId, HouseholdCmd cmd)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -101,9 +101,9 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
         var logger = loggerFactory.CreateLogger("HouseholdService.UpdateHousehold");
 
-        if (household.failed()) return GlobalErrorHandler.handleError(household.error(), logger);
+        if (household.Failed()) return GlobalErrorHandler.HandleError(household.Error(), logger);
 
-        return Ok(household.get());
+        return Ok(household.Get());
     }
 
     [CheckOwnership]
@@ -116,21 +116,21 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
 
         var logger = loggerFactory.CreateLogger("HouseholdService.DeleteHousehold");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
-        JWTService.CreateAndSendJWT(new AuthUserDetails(userDetails.UserId, userDetails.SessionId), Response);
+        JwtService.CreateAndSendJwt(new AuthUserDetails(userDetails.UserId, userDetails.SessionId), Response);
 
         return Ok();
     }
 
-    private ActionResult handleError(AppError error, ILogger logger)
+    private ActionResult HandleError(AppError error, ILogger logger)
     {
         if (error is HouseholdMembershipError householdMembershipError)
         {
             logger.LogError(householdMembershipError.Message);
 
-            if (householdMembershipError.Entity.EntityId.HasValue)
-                return new ObjectResult(new ApiResponse<HouseholdDTO>(new ApiError(new NotFoundError(
+            if (householdMembershipError.Entity is { EntityId: not null })
+                return new ObjectResult(new ApiResponse<HouseholdDto>(new ApiError(new NotFoundError(
                     EntityType.Household,
                     householdMembershipError.Entity.EntityId.Value))))
                 {
@@ -138,6 +138,6 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
                 };
         }
 
-        return GlobalErrorHandler.handleError(error, logger);
+        return GlobalErrorHandler.HandleError(error, logger);
     }
 }

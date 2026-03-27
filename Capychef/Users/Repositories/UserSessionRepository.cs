@@ -12,7 +12,7 @@ public class UserSessionRepository(CapychefDbContext dbContext) : IUserSessionRe
         await dbContext.UsersSessions.AddAsync(session);
     }
 
-    public async Task<UserSession> GetTrackedUserSessionByIdAsync(int id)
+    public async Task<UserSession?> GetTrackedUserSessionByIdAsync(int id)
     {
         return await dbContext.UsersSessions.FirstOrDefaultAsync(session => session.Id == id);
     }

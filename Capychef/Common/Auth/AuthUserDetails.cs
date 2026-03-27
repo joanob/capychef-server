@@ -2,7 +2,11 @@
 
 public class AuthUserDetails
 {
-    private int? HouseholdId;
+    private int? _householdId;
+
+    public AuthUserDetails()
+    {
+    }
 
     public AuthUserDetails(int userId, int sessionId)
     {
@@ -14,23 +18,29 @@ public class AuthUserDetails
     {
         UserId = userId;
         SessionId = sessionId;
-        HouseholdId = householdId;
+        _householdId = householdId;
     }
 
     public int UserId { get; }
     public int SessionId { get; }
 
-    public bool HasHouseholdId => HouseholdId.HasValue;
+    public bool HasHouseholdId => _householdId.HasValue;
+
+    public bool IsValid()
+    {
+        return UserId != 0;
+    }
 
     public int GetHouseholdId()
     {
-        if (!HouseholdId.HasValue) throw new Exception($"HouseholdId is not set for user {UserId} session {SessionId}");
+        if (!_householdId.HasValue)
+            throw new Exception($"HouseholdId is not set for user {UserId} session {SessionId}");
 
-        return HouseholdId.Value;
+        return _householdId.Value;
     }
 
-    public void setHousehold(int householdId)
+    public void SetHousehold(int householdId)
     {
-        HouseholdId = householdId;
+        _householdId = householdId;
     }
 }

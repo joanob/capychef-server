@@ -4,30 +4,26 @@ namespace Capychef.Households.Domain.Entities;
 
 public class StorageSpaceModifiableColumn
 {
-    private const string _nameColumn = "name";
-    private const string _storageConditionColumn = "storage_condition";
+    private const string NameColumn = "name";
+    private const string StorageConditionColumn = "storage_condition";
 
     private readonly string _value;
-
-    private StorageSpaceModifiableColumn()
-    {
-    }
 
     private StorageSpaceModifiableColumn(string value)
     {
         _value = value;
     }
 
-    public static StorageSpaceModifiableColumn Name => new(_nameColumn);
-    public static StorageSpaceModifiableColumn StorageCondition => new(_storageConditionColumn);
+    public static StorageSpaceModifiableColumn Name => new(NameColumn);
+    public static StorageSpaceModifiableColumn StorageCondition => new(StorageConditionColumn);
 
-    public static StorageSpaceModifiableColumn from(string value)
+    public static StorageSpaceModifiableColumn From(string value)
     {
         return value switch
         {
-            _nameColumn => Name,
-            _storageConditionColumn => StorageCondition,
-            _ => null
+            NameColumn => Name,
+            StorageConditionColumn => StorageCondition,
+            _ => new StorageSpaceModifiableColumn("")
         };
     }
 
@@ -43,7 +39,7 @@ public class StorageSpaceModifiableColumnConverter
     public StorageSpaceModifiableColumnConverter()
         : base(
             v => v.ToString(),
-            v => StorageSpaceModifiableColumn.from(v)
+            v => StorageSpaceModifiableColumn.From(v)
         )
     {
     }

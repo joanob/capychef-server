@@ -1,11 +1,11 @@
-﻿namespace Capychef.Data;
+﻿namespace Capychef.DataLoader.Entities;
 
 public class UoMDataFile
 {
-    public string Code { get; set; }
-    public string Name { get; set; }
-    public string DimensionCode { get; set; }
-    public string? BaseUom { get; set; }
-    public int? Numerator { get; set; }
-    public int? Denominator { get; set; }
+    public required string Code { get; init; }
+    public required string Name { get; init; }
+    public required string DimensionCode { get; init; }
+    public string? BaseUom { get; init; }
+    public int? Numerator { get; init; }
+    public int? Denominator { get; init; }
 }

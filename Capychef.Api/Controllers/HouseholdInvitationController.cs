@@ -24,24 +24,24 @@ public class HouseholdInvitationController(
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.CreateInvitation");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }
 
     [CheckOwnership]
     [HttpGet("household/{householdId}")]
-    public async Task<ActionResult<ApiResponse<List<HouseholdInvitationDTO>>>> GetHousholdInvitations(int householdId)
+    public async Task<ActionResult<ApiResponse<List<HouseholdInvitationDto>>>> GetHousholdInvitations(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
         var invitations = await householdInvitationService.GetAllHouseholdInvitations(userDetails);
 
-        return Ok(new ApiResponse<List<HouseholdInvitationDTO>>(invitations));
+        return Ok(new ApiResponse<List<HouseholdInvitationDto>>(invitations));
     }
 
     [HttpGet("user")]
-    public async Task<ActionResult<List<HouseholdInvitationDTO>>> GetHousholdInvitationsByUser()
+    public async Task<ActionResult<List<HouseholdInvitationDto>>> GetHousholdInvitationsByUser()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -59,7 +59,7 @@ public class HouseholdInvitationController(
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.AcceptInvitation");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }
@@ -73,7 +73,7 @@ public class HouseholdInvitationController(
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.RejectInvitation");
 
-        if (error != null) return GlobalErrorHandler.handleError(error, logger);
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
         return Ok();
     }

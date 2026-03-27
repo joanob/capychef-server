@@ -1,9 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Capychef.Data;
+namespace Capychef.DataLoader.Entities;
 
 public class UoMDimensionDataFile
 {
-    [JsonPropertyName("code")] public string Code { get; set; }
-    [JsonPropertyName("name")] public string Name { get; set; }
+    [JsonPropertyName("code")] public required string Code { get; init; }
+    [JsonPropertyName("name")] public required string Name { get; init; }
 }
