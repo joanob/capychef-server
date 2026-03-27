@@ -24,7 +24,7 @@ public class UserPassword
 
     [UsedImplicitly]
     [Column("password")]
-    [MaxLength(500)]
+    [MaxLength(255)]
     public string Password { get; private set; }
 
     [Column("created_at")] public DateTime CreatedAt { get; private set; }

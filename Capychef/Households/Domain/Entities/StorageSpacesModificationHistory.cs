@@ -28,10 +28,10 @@ public class StorageSpacesModificationHistory
     [Column("column_name")] public StorageSpaceModifiableColumn ColumnName { get; private set; }
 
     [Column("previous_value")]
-    [MaxLength(100)]
+    [MaxLength(50)]
     public string PreviousValue { get; private set; }
 
-    [Column("new_value")] [MaxLength(100)] public string NewValue { get; private set; }
+    [Column("new_value")] [MaxLength(50)] public string NewValue { get; private set; }
 
     [Column("modified_at")] public DateTime ModifiedAt { get; private set; }
 

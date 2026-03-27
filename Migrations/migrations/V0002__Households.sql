@@ -2,14 +2,14 @@
 
 CREATE TABLE households
 (
-    id             SERIAL PRIMARY KEY,
-    created_at     TIMESTAMP NOT NULL,
-    row_version    INTEGER   NOT NULL,
-    is_deleted     BOOLEAN   NOT NULL,
-    deleted_at     TIMESTAMP,
-    owner_id INTEGER NOT NULL,
-    name       TEXT      NOT NULL,
-    public_id       TEXT UNIQUE   NOT NULL,
+    id          SERIAL PRIMARY KEY,
+    created_at  TIMESTAMP          NOT NULL,
+    row_version INTEGER            NOT NULL,
+    is_deleted  BOOLEAN            NOT NULL,
+    deleted_at  TIMESTAMP,
+    owner_id    INTEGER            NOT NULL,
+    name        VARCHAR(50)        NOT NULL,
+    public_id   VARCHAR(20) UNIQUE NOT NULL,
     FOREIGN KEY (owner_id) REFERENCES users (id)
 );
 
@@ -24,18 +24,21 @@ CREATE VIEW active_households AS
 SELECT *
 FROM households
 WHERE is_deleted = FALSE;
+
+-- HOUSEHOLD MEMBERS
                                                     
-CREATE TABLE household_members (
-  id SERIAL PRIMARY KEY,
-  created_at     TIMESTAMP NOT NULL,
-  row_version    INTEGER   NOT NULL,
-  is_deleted     BOOLEAN   NOT NULL,
-  deleted_at     TIMESTAMP,
-  household_id INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
-  did_leave BOOLEAN NOT NULL,
-  FOREIGN KEY (household_id) REFERENCES households (id),
-  FOREIGN KEY (user_id) REFERENCES users (id)
+CREATE TABLE household_members
+(
+    id           SERIAL PRIMARY KEY,
+    created_at   TIMESTAMP NOT NULL,
+    row_version  INTEGER   NOT NULL,
+    is_deleted   BOOLEAN   NOT NULL,
+    deleted_at   TIMESTAMP,
+    household_id INTEGER   NOT NULL,
+    user_id      INTEGER   NOT NULL,
+    did_leave    BOOLEAN   NOT NULL,
+    FOREIGN KEY (household_id) REFERENCES households (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE INDEX idx_household_members_household_id ON household_members(household_id);
@@ -47,21 +50,23 @@ CREATE RULE "household_members_soft_deletion" AS ON DELETE TO "household_members
     WHERE id = old.id
       AND NOT is_deleted
     );
-                
+     
+-- HOUSEHOLD INVITATIONS
                                                          
-CREATE TABLE household_invitations (
-     id SERIAL PRIMARY KEY,
-     created_at     TIMESTAMP NOT NULL,
-     row_version    INTEGER   NOT NULL,
-     is_deleted     BOOLEAN   NOT NULL,
-     deleted_at     TIMESTAMP,
-     household_id INTEGER NOT NULL,
-     user_id INTEGER NOT NULL,
-     is_answered BOOLEAN NOT NULL,
-     answered_at     TIMESTAMP,
-     is_accepted BOOLEAN NOT NULL,
-     FOREIGN KEY (household_id) REFERENCES households (id),
-     FOREIGN KEY (user_id) REFERENCES users (id)
+CREATE TABLE household_invitations
+(
+    id           SERIAL PRIMARY KEY,
+    created_at   TIMESTAMP NOT NULL,
+    row_version  INTEGER   NOT NULL,
+    is_deleted   BOOLEAN   NOT NULL,
+    deleted_at   TIMESTAMP,
+    household_id INTEGER   NOT NULL,
+    user_id      INTEGER   NOT NULL,
+    is_answered  BOOLEAN   NOT NULL,
+    answered_at  TIMESTAMP,
+    is_accepted  BOOLEAN   NOT NULL,
+    FOREIGN KEY (household_id) REFERENCES households (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE RULE "household_invitations_soft_delete" AS ON DELETE TO "household_invitations" DO INSTEAD (
@@ -71,20 +76,23 @@ CREATE RULE "household_invitations_soft_delete" AS ON DELETE TO "household_invit
       AND NOT is_deleted
     );
 
-CREATE TABLE household_join_requests (
-   id SERIAL PRIMARY KEY,
-   household_id INTEGER NOT NULL,
-   user_id INTEGER NOT NULL,
-   created_at     TIMESTAMP NOT NULL,
-   row_version    INTEGER   NOT NULL,
-   is_deleted     BOOLEAN   NOT NULL,
-   deleted_at     TIMESTAMP,
-   is_answered BOOLEAN NOT NULL,
-   answered_at     TIMESTAMP,
-   is_accepted BOOLEAN NOT NULL,
-   is_hidden BOOLEAN NOT NULL DEFAULT FALSE,
-   FOREIGN KEY (household_id) REFERENCES households (id),
-   FOREIGN KEY (user_id) REFERENCES users (id)
+-- HOUSEHOLD JOIN REQUESTS
+
+CREATE TABLE household_join_requests
+(
+    id           SERIAL PRIMARY KEY,
+    household_id INTEGER   NOT NULL,
+    user_id      INTEGER   NOT NULL,
+    created_at   TIMESTAMP NOT NULL,
+    row_version  INTEGER   NOT NULL,
+    is_deleted   BOOLEAN   NOT NULL,
+    deleted_at   TIMESTAMP,
+    is_answered  BOOLEAN   NOT NULL,
+    answered_at  TIMESTAMP,
+    is_accepted  BOOLEAN   NOT NULL,
+    is_hidden    BOOLEAN   NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (household_id) REFERENCES households (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE RULE "household_join_requests_soft_delete" AS ON DELETE TO "household_join_requests" DO INSTEAD (
@@ -96,16 +104,17 @@ CREATE RULE "household_join_requests_soft_delete" AS ON DELETE TO "household_joi
 
 -- STORAGE SPACES
 
-CREATE TABLE storage_spaces (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    storage_condition CHAR(1) NOT NULL,
-    household_id INTEGER NOT NULL,
-    created_at              TIMESTAMP NOT NULL,
-    created_by              INTEGER,
-    row_version             INTEGER   NOT NULL,
-    is_deleted              BOOLEAN   NOT NULL,
-    deleted_at              TIMESTAMP,
+CREATE TABLE storage_spaces
+(
+    id                SERIAL PRIMARY KEY,
+    name              VARCHAR(50) NOT NULL,
+    storage_condition CHAR(1)     NOT NULL,
+    household_id      INTEGER     NOT NULL,
+    created_at        TIMESTAMP   NOT NULL,
+    created_by        INTEGER,
+    row_version       INTEGER     NOT NULL,
+    is_deleted        BOOLEAN     NOT NULL,
+    deleted_at        TIMESTAMP,
     FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (created_by) REFERENCES users (id),
     CHECK (storage_condition IN ('A', 'R', 'F')) -- A = ambient, R = refrigerated, F = frozen
@@ -125,23 +134,28 @@ SELECT *
 FROM storage_spaces
 WHERE is_deleted = FALSE;
 
-CREATE TABLE initial_storage_spaces (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+-- INITIAL STORAGE SPACES
+
+CREATE TABLE initial_storage_spaces
+(
+    id                SERIAL PRIMARY KEY,
+    name              VARCHAR(50)    NOT NULL,
     storage_condition CHAR(1) NOT NULL
 );
 
 CREATE INDEX idx_initial_storage_spaces_name ON initial_storage_spaces(name);
 
+-- STORAGE SPACES MODIFICATIONS HISTORY
+
 CREATE TABLE storage_spaces_modifications_history
 (
-    id      SERIAL PRIMARY KEY,
-    storage_space_id INTEGER NOT NULL,
-    column_name TEXT NOT NULL,
-    previous_value TEXT,
-    new_value TEXT,
-    modified_at TIMESTAMP NOT NULL,
-    modified_by INTEGER NOT NULL,
+    id               SERIAL PRIMARY KEY,
+    storage_space_id INTEGER     NOT NULL,
+    column_name      VARCHAR(50) NOT NULL,
+    previous_value   VARCHAR(50),
+    new_value        VARCHAR(50),
+    modified_at      TIMESTAMP   NOT NULL,
+    modified_by      INTEGER     NOT NULL,
     FOREIGN KEY (storage_space_id) REFERENCES storage_spaces (id),
     FOREIGN KEY (modified_by) REFERENCES users (id)
 );

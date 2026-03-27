@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Gourmet.Domain.Entities;
 
-[Table("discounts")]
+[Table("subscription_discounts")]
 public class SubscriptionDiscount
 {
     public SubscriptionDiscount(string discountCode, DiscountType discountType, double percentageOrAmount,
@@ -18,11 +19,13 @@ public class SubscriptionDiscount
 
     [Column("id")] public int Id { get; private set; }
 
-    [Column("discount_code")] public string Name { get; }
+    [Column("discount_code")]
+    [MaxLength(50)]
+    public string Name { get; init; }
 
-    [Column("discount_type")] public DiscountType DiscountType { get; }
+    [Column("discount_type")] public DiscountType DiscountType { get; init; }
 
-    [Column("percentage_or_amount")] public double PercentageOrAmount { get; }
+    [Column("percentage_or_amount")] public double PercentageOrAmount { get; init; }
 
     [Column("valid_from")] public DateTime ValidFrom { get; set; }
 

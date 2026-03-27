@@ -1,20 +1,21 @@
 -- UNITS OF MEASURE
     
-CREATE TABLE uom_dimensions (
-  code VARCHAR(4) PRIMARY KEY,
-  name TEXT NOT NULL  
+CREATE TABLE uom_dimensions
+(
+    code VARCHAR(4) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
 );
 
 CREATE RULE "uom_dimensions_soft_delete" AS ON DELETE TO "uom_dimensions" DO INSTEAD NOTHING;
                                                       
 CREATE TABLE uom
 (
-    code                VARCHAR(4) PRIMARY KEY,
-    name                TEXT       NOT NULL,
-    dimension           VARCHAR(4) NOT NULL,
-    base_uom VARCHAR(4),
-    numerator           INTEGER,
-    denominator         INTEGER,
+    code        VARCHAR(4) PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL,
+    dimension   VARCHAR(4)  NOT NULL,
+    base_uom    VARCHAR(4),
+    numerator   INTEGER,
+    denominator INTEGER,
     FOREIGN KEY (dimension) REFERENCES uom_dimensions (code),
     FOREIGN KEY (base_uom) REFERENCES uom (code) DEFERRABLE INITIALLY DEFERRED, -- Avoid foreign key errors on mass load
     CHECK (
@@ -29,9 +30,9 @@ CREATE RULE "uom_soft_delete" AS ON DELETE TO "uom" DO INSTEAD NOTHING;
 
 CREATE TABLE food_categories
 (
-    id             INTEGER PRIMARY KEY,
-    name       TEXT      NOT NULL,
-    is_leaf BOOLEAN NOT NULL,
+    id                 INTEGER PRIMARY KEY,
+    name               VARCHAR(50) NOT NULL,
+    is_leaf            BOOLEAN     NOT NULL,
     parent_category_id INTEGER,
     FOREIGN KEY (parent_category_id) REFERENCES food_categories (id)
 );
@@ -43,18 +44,18 @@ CREATE RULE "food_categories_soft_deletion" AS ON DELETE TO "food_categories" DO
 CREATE TABLE food
 (
     id                      SERIAL PRIMARY KEY,
-    name                    TEXT      NOT NULL,
-    category_id             INTEGER   NOT NULL,
-    days_until_expiration INTEGER,
-    days_until_best_before INTEGER,
-    is_global               BOOLEAN   NOT NULL,
+    name                    VARCHAR(50) NOT NULL,
+    category_id             INTEGER     NOT NULL,
+    days_until_expiration   INTEGER,
+    days_until_best_before  INTEGER,
+    is_global               BOOLEAN     NOT NULL,
     global_id               VARCHAR,
     household_id            INTEGER,
     modified_global_food_id INTEGER,
-    created_at              TIMESTAMP NOT NULL,
+    created_at              TIMESTAMP   NOT NULL,
     created_by              INTEGER,
-    row_version             INTEGER   NOT NULL,
-    is_deleted              BOOLEAN   NOT NULL,
+    row_version             INTEGER     NOT NULL,
+    is_deleted              BOOLEAN     NOT NULL,
     deleted_at              TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES food_categories (id),
     FOREIGN KEY (modified_global_food_id) REFERENCES food (id),
@@ -86,14 +87,14 @@ WHERE is_deleted = FALSE;
 
 CREATE TABLE household_food_details
 (
-    id                         SERIAL PRIMARY KEY,
-    created_at                 TIMESTAMP NOT NULL,
-    row_version                INTEGER   NOT NULL,
-    household_id               INT       NOT NULL,
-    food_id                    INT       NOT NULL,
-    min_quantity               REAL,
-    min_quantity_uom           VARCHAR(4),
-    days_until_expiration INTEGER,
+    id                     SERIAL PRIMARY KEY,
+    created_at             TIMESTAMP NOT NULL,
+    row_version            INTEGER   NOT NULL,
+    household_id           INT       NOT NULL,
+    food_id                INT       NOT NULL,
+    min_quantity           REAL,
+    min_quantity_uom       VARCHAR(4),
+    days_until_expiration  INTEGER,
     days_until_best_before INTEGER,
     FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (food_id) REFERENCES food (id),
@@ -104,14 +105,14 @@ CREATE TABLE household_food_details
                                   
 CREATE TABLE food_modifications_history
 (
-    id      SERIAL PRIMARY KEY,
-    food_id INTEGER NOT NULL,
-    household_id INTEGER NOT NULL,
-    column_name TEXT NOT NULL,
-    previous_value TEXT,
-    new_value TEXT,
-    modified_at TIMESTAMP NOT NULL,
-    modified_by INTEGER NOT NULL,
+    id             SERIAL PRIMARY KEY,
+    food_id        INTEGER   NOT NULL,
+    household_id   INTEGER   NOT NULL,
+    column_name    VARCHAR(50) TEXT NOT NULL,
+    previous_value VARCHAR(100),
+    new_value      TEXT VARCHAR(100),
+    modified_at    TIMESTAMP NOT NULL,
+    modified_by    INTEGER   NOT NULL,
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (modified_by) REFERENCES users (id)
@@ -125,19 +126,19 @@ CREATE RULE "food_modifications_history_soft_deletion" AS ON DELETE TO "food_mod
 
 CREATE TABLE food_uom
 (
-    id                SERIAL PRIMARY KEY,
-    food_id INTEGER NOT NULL,
-    uom varchar(4) NOT NULL,
-    household_id INTEGER,
-    is_base BOOLEAN NOT NULL DEFAULT FALSE,
-    base_uom VARCHAR(4),
-    numerator           INTEGER,
-    denominator         INTEGER,
-    is_approx_conversion  BOOLEAN,
-    created_at              TIMESTAMP NOT NULL,
-    row_version INTEGER NOT NULL,
-    is_deleted              BOOLEAN   NOT NULL,
-    deleted_at              TIMESTAMP,
+    id                   SERIAL PRIMARY KEY,
+    food_id              INTEGER    NOT NULL,
+    uom                  varchar(4) NOT NULL,
+    household_id         INTEGER,
+    is_base              BOOLEAN    NOT NULL DEFAULT FALSE,
+    base_uom             VARCHAR(4),
+    numerator            INTEGER,
+    denominator          INTEGER,
+    is_approx_conversion BOOLEAN,
+    created_at           TIMESTAMP  NOT NULL,
+    row_version          INTEGER    NOT NULL,
+    is_deleted           BOOLEAN    NOT NULL,
+    deleted_at           TIMESTAMP,
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (base_uom) REFERENCES uom (code),
     CHECK (
@@ -146,11 +147,11 @@ CREATE TABLE food_uom
             numerator IS NULL AND
             denominator IS NULL AND
             is_approx_conversion IS NULL
-        ) OR (
+            ) OR (
             base_uom IS NOT NULL AND
             numerator IS NOT NULL AND
             denominator IS NOT NULL AND
             is_approx_conversion IS NOT NULL
+            )
         )
-    )
 );                                                                 

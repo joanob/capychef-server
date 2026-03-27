@@ -3,16 +3,16 @@
 CREATE TABLE users
 (
     id             SERIAL PRIMARY KEY,
-    created_at     TIMESTAMP NOT NULL,
-    row_version    INTEGER   NOT NULL,
-    is_deleted     BOOLEAN   NOT NULL,
+    created_at     TIMESTAMP   NOT NULL,
+    row_version    INTEGER     NOT NULL,
+    is_deleted     BOOLEAN     NOT NULL,
     deleted_at     TIMESTAMP,
-    username       TEXT      NOT NULL,
-    is_guest       BOOLEAN   NOT NULL,
-    email          TEXT,
-    is_email_valid BOOLEAN   NOT NULL,
-    is_blocked     BOOLEAN   NOT NULL,
-    block_reason   TEXT
+    username       VARCHAR(50) NOT NULL,
+    is_guest       BOOLEAN     NOT NULL,
+    email          VARCHAR(255),
+    is_email_valid BOOLEAN     NOT NULL,
+    is_blocked     BOOLEAN     NOT NULL,
+    block_reason   VARCHAR(5000)
 );
 
 CREATE UNIQUE INDEX idx_users_username ON users(username);
@@ -31,13 +31,15 @@ CREATE VIEW active_users AS
     WHERE is_deleted = FALSE 
       AND is_blocked = FALSE;
 
+-- USER PASSWORDS
+
 CREATE TABLE users_passwords
 (
     id         SERIAL PRIMARY KEY,
-    user_id    INTEGER   NOT NULL,
-    password   TEXT      NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    is_active  BOOLEAN   NOT NULL,
+    user_id    INTEGER      NOT NULL,
+    password   VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP    NOT NULL,
+    is_active  BOOLEAN      NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
@@ -46,6 +48,7 @@ CREATE INDEX idx_users_passwords_user_id_active ON users_passwords(user_id, is_a
 
 CREATE RULE "users_passwords_delete" AS ON DELETE TO "users_passwords" DO INSTEAD NOTHING;
 
+-- USERS SESSIONS
 
 CREATE TABLE users_sessions
 (
@@ -61,18 +64,19 @@ CREATE INDEX idx_users_sessions_user_id ON users_sessions(user_id);
 
 CREATE RULE "users_sessions_delete" AS ON DELETE TO "users_sessions" DO INSTEAD NOTHING;
 
+-- USERS TOKENS
 
 CREATE TABLE users_tokens
 (
     id         SERIAL PRIMARY KEY,
-    user_id    INTEGER   NOT NULL,
-    token      TEXT      NOT NULL,
-    token_type INTEGER   NOT NULL,
-    created_at TIMESTAMP NOT NULL,
+    user_id    INTEGER     NOT NULL,
+    token      VARCHAR(20) NOT NULL,
+    token_type INTEGER     NOT NULL,
+    created_at TIMESTAMP   NOT NULL,
     expires_at TIMESTAMP,
     used_at    TIMESTAMP,
-    is_active  BOOLEAN   NOT NULL,
-    is_used    BOOLEAN   NOT NULL,
+    is_active  BOOLEAN     NOT NULL,
+    is_used    BOOLEAN     NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

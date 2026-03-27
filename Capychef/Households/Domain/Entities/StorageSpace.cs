@@ -25,7 +25,7 @@ public class StorageSpace : BaseDeletableEntity
         CreatedBy = userId;
     }
 
-    [Column("name")] [MaxLength(100)] public string Name { get; set; }
+    [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
 

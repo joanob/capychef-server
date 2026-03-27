@@ -13,7 +13,7 @@ public class UserToken
     [ForeignKey(nameof(User))]
     public int UserId { get; init; }
 
-    [Column("token")] [MaxLength(50)] public string Token { get; private set; } = "";
+    [Column("token")] [MaxLength(20)] public string Token { get; private set; } = "";
 
     [Column("token_type")] public UserTokenType TokenType { get; private set; }
 

@@ -16,7 +16,7 @@ public class FoodCategory
 
     [Column("id")] public int Id { get; set; }
 
-    [Column("name")] [MaxLength(100)] public string Name { get; set; }
+    [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
     // Leaf categories are those that do not have any subcategories 
     // Food always belongs to leaf categories

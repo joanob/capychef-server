@@ -22,7 +22,7 @@ public class InitialStorageSpace
 
     [Column("id")] public int Id { get; private set; }
 
-    [Column("name")] [MaxLength(100)] public string Name { get; set; }
+    [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
 

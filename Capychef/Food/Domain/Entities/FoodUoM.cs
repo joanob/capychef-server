@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
 
@@ -31,25 +32,28 @@ public class FoodUoM : BaseDeletableEntity
         IsApproxConversion = isApproxConversion;
     }
 
-    [Column("food_id")] public int FoodId { get; }
+    [Column("food_id")] public int FoodId { get; init; }
 
-    [Column("uom")] public string UoM { get; }
+    [Column("uom")] [MaxLength(4)] public string UoM { get; }
 
     [Column("household_id")] public int? HouseholdId { get; }
 
     [Column("is_base")] public bool IsBaseUoM { get; set; }
+
+    [Column("base_uom")] public string? BaseUoM { get; init; }
 
     [Column("numerator")] public int? Numerator { get; private set; }
 
     [Column("denominator")] public int? Denominator { get; private set; }
 
     [Column("is_approx_conversion")] public bool? IsApproxConversion { get; set; }
-
     [ForeignKey(nameof(FoodId))] public Food? Food { get; private set; }
+
+    [ForeignKey(nameof(UoM))] public UoM? UoMInstance { get; init; }
 
     [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }
 
-    [ForeignKey(nameof(UoM))] public UoM? UoMInstance { get; init; }
+    [ForeignKey(nameof(BaseUoM))] public UoM? BaseUoMInstance { get; init; }
 
     public void Set(bool isBaseUoM, int? numerator, int? denominator, bool? isApproxConversion)
     {

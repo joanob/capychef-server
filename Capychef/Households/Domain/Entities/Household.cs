@@ -30,7 +30,7 @@ public class Household : BaseDeletableEntity
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
-    [Column("public_id")] [MaxLength(50)] public string PublicId { get; set; }
+    [Column("public_id")] [MaxLength(20)] public string PublicId { get; set; }
 
     [InverseProperty(nameof(StorageSpace.Household))]
     public ICollection<StorageSpace> StorageSpaces { get; } = new List<StorageSpace>();

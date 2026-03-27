@@ -29,7 +29,7 @@ public class User : BaseDeletableEntity
     [Column("is_blocked")] public bool IsBlocked { get; set; }
 
     [Column("block_reason")]
-    [MaxLength(1000)]
+    [MaxLength(5000)]
     public string? BlockReason { get; set; }
 }
 
