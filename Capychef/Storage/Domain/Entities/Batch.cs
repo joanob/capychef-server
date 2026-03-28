@@ -8,39 +8,43 @@ namespace Capychef.Storage.Domain.Entities;
 [Table("batches")]
 public class Batch : BaseDeletableEntity
 {
-    public Batch(int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId,
-        DateTime? bestBeforeDate, DateTime? expirationDate)
+    public Batch(int userId, int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId,
+        DateTime? bestBeforeDate, DateTime? expirationDate, bool isOpen, bool isConsumed, bool isDiscarded)
     {
+        CreatedBy = userId;
         HouseholdId = householdId;
         FoodId = foodId;
         StorageSpaceId = storageSpaceId;
         Quantity = quantity;
         FoodUoMId = foodUoMId;
-        StoredAt = DateTime.UtcNow;
         BestBeforeDate = bestBeforeDate;
         ExpirationDate = expirationDate;
-        IsConsumed = false;
-        IsDiscarded = false;
+        IsOpen = isOpen;
+        IsConsumed = isConsumed;
+        IsDiscarded = isDiscarded;
     }
 
-    public Batch(Batch originalBatch, double quantity)
+    public Batch(int userId, int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId,
+        DateTime? bestBeforeDate, DateTime? expirationDate, int originalBatchId, bool isOpen, bool isConsumed,
+        bool isDiscarded)
     {
-        HouseholdId = originalBatch.HouseholdId;
-        FoodId = originalBatch.FoodId;
-        StorageSpaceId = originalBatch.StorageSpaceId;
+        CreatedBy = userId;
+        HouseholdId = householdId;
+        FoodId = foodId;
+        StorageSpaceId = storageSpaceId;
         Quantity = quantity;
-        FoodUoMId = originalBatch.FoodUoMId;
-        StoredAt = DateTime.UtcNow;
-        BestBeforeDate = originalBatch.BestBeforeDate;
-        ExpirationDate = originalBatch.ExpirationDate;
-        OriginalBatch = originalBatch;
-        IsConsumed = false;
-        IsDiscarded = false;
+        FoodUoMId = foodUoMId;
+        BestBeforeDate = bestBeforeDate;
+        ExpirationDate = expirationDate;
+        OriginalBatchId = originalBatchId;
+        IsOpen = isOpen;
+        IsConsumed = isConsumed;
+        IsDiscarded = isDiscarded;
     }
 
-    [Column("household_id")] public int HouseholdId { get; set; }
+    [Column("household_id")] public int HouseholdId { get; init; }
 
-    [Column("food_id")] public int FoodId { get; set; }
+    [Column("food_id")] public int FoodId { get; init; }
 
     [Column("storage_space_id")] public int StorageSpaceId { get; set; }
 
@@ -48,13 +52,13 @@ public class Batch : BaseDeletableEntity
 
     [Column("food_uom_id")] public int FoodUoMId { get; set; }
 
-    [Column("stored_at")] public DateTime StoredAt { get; set; }
-
     [Column("best_before_date")] public DateTime? BestBeforeDate { get; set; }
 
     [Column("expiration_date")] public DateTime? ExpirationDate { get; set; }
 
-    [Column("original_batch_id")] public int? OriginalBatchId { get; set; }
+    [Column("original_batch_id")] public int? OriginalBatchId { get; init; }
+
+    [Column("is_open")] public bool IsOpen { get; set; }
 
     [Column("is_consumed")] public bool IsConsumed { get; set; }
 
@@ -73,16 +77,4 @@ public class Batch : BaseDeletableEntity
     [ForeignKey(nameof(FoodUoMId))] public FoodUoM? FoodUoM { get; set; }
 
     [ForeignKey(nameof(OriginalBatchId))] public Batch? OriginalBatch { get; set; }
-
-    public void Consume()
-    {
-        IsConsumed = true;
-        ConsumedAt = DateTime.UtcNow;
-    }
-
-    public void Discard()
-    {
-        IsDiscarded = true;
-        DiscardedAt = DateTime.UtcNow;
-    }
 }

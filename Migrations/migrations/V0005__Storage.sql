@@ -8,10 +8,11 @@ CREATE TABLE batches
     storage_space_id  INTEGER   NOT NULL,
     quantity          REAL      NOT NULL,
     food_uom_id       INTEGER   NOT NULL,
-    stored_at         TIMESTAMP NOT NULL,
     best_before_date  DATE,
     expiration_date   DATE,
     original_batch_id INTEGER,
+    is_open           BOOLEAN   NOT NULL,
+    opened_at         TIMESTAMP,
     is_consumed       BOOLEAN   NOT NULL,
     consumed_at       TIMESTAMP,
     is_discarded      BOOLEAN   NOT NULL,
@@ -57,3 +58,20 @@ SELECT *
 FROM batches
 WHERE is_consumed = FALSE
 AND is_discarded = FALSE;
+
+-- BATCH MODIFICATIONS HISTORY 
+
+CREATE TABLE batch_modifications_history
+(
+    id               SERIAL PRIMARY KEY,
+    batch_id         INTEGER   NOT NULL,
+    storage_space_id INTEGER   NOT NULL,
+    quantity         REAL      NOT NULL,
+    food_uom_id      INTEGER   NOT NULL,
+    best_before_date DATE,
+    expiration_date  DATE,
+    created_at       TIMESTAMP NOT NULL,
+    created_by       INTEGER,
+    FOREIGN KEY (batch_id) REFERENCES batches (id),
+    FOREIGN KEY (modified_by) REFERENCES users (id)
+);
