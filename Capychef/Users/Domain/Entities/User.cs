@@ -8,6 +8,11 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users")]
 public class User : BaseDeletableEntity
 {
+    protected User()
+    {
+        Username = null!;
+    }
+
     public User(SignupCmd signupCmd)
     {
         Username = signupCmd.Username;

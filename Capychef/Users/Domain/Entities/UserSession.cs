@@ -5,7 +5,7 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users_sessions")]
 public class UserSession
 {
-    public UserSession()
+    protected UserSession()
     {
     }
 

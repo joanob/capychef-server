@@ -59,14 +59,14 @@ public class Food : BaseDeletableEntity
 
     [Column("created_by")] public int? CreatedBy { get; private set; }
 
-    [InverseProperty(nameof(CategoryId))] public FoodCategory? Category { get; init; }
+    [ForeignKey(nameof(CategoryId))] public FoodCategory? Category { get; init; }
 
-    [InverseProperty(nameof(HouseholdId))] public Household? Household { get; init; }
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }
 
-    [InverseProperty(nameof(ModifiedGlobalFoodId))]
+    [ForeignKey(nameof(ModifiedGlobalFoodId))]
     public Food? ModifiedGlobalFood { get; init; }
 
-    [InverseProperty(nameof(CreatedBy))] public User? CreatedByUser { get; init; }
+    [ForeignKey(nameof(CreatedBy))] public User? CreatedByUser { get; init; }
 
     [InverseProperty(nameof(FoodUoM.Food))]
     public ICollection<FoodUoM> UoM { get; private set; } = new List<FoodUoM>();

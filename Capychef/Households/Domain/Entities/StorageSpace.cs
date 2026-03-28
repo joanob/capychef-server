@@ -9,6 +9,12 @@ namespace Capychef.Households.Domain.Entities;
 [Table("storage_spaces")]
 public class StorageSpace : BaseDeletableEntity
 {
+    protected StorageSpace()
+    {
+        Name = null!;
+        StorageCondition = null!;
+    }
+
     public StorageSpace(string name, StorageConditions storageCondition, int householdId, int userId)
     {
         Name = name;

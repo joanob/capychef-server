@@ -39,8 +39,9 @@ public class FoodModificationHistory
 
     [Column("modified_by")] public int ModifiedBy { get; init; }
 
-    [InverseProperty(nameof(FoodId))] public Food? Food { get; init; }
-    [InverseProperty(nameof(ModifiedBy))] public User? ModifiedByUser { get; init; }
+    [ForeignKey(nameof(FoodId))] public Food? Food { get; init; }
+
+    [ForeignKey(nameof(ModifiedBy))] public User? ModifiedByUser { get; init; }
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {

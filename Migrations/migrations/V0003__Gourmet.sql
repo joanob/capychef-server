@@ -10,9 +10,9 @@ CREATE TABLE subscription_discounts
     valid_until          TIMESTAMP   NOT NULL
 );
 
-CREATE INDEX idx_discounts_discount_code ON discounts(discount_code);
+CREATE INDEX idx_discounts_discount_code ON subscription_discounts(discount_code);
 
-CREATE RULE "discounts_soft_deletion" AS ON DELETE TO "discounts" DO INSTEAD NOTHING;
+CREATE RULE "discounts_soft_deletion" AS ON DELETE TO "subscription_discounts" DO INSTEAD NOTHING;
 
 -- SUBSCRIPTIONS
 
@@ -34,7 +34,7 @@ CREATE TABLE subscriptions
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (primary_subscription_id) REFERENCES subscriptions (id),
     FOREIGN KEY (household_id) REFERENCES households (id),
-    FOREIGN KEY (discount_id) REFERENCES discounts (id)
+    FOREIGN KEY (discount_id) REFERENCES subscription_discounts (id)
 );
 
 CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);

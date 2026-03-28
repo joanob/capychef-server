@@ -7,6 +7,12 @@ namespace Capychef.Gourmet.Domain.Entities;
 [Table("subscription_discounts")]
 public class SubscriptionDiscount
 {
+    protected SubscriptionDiscount()
+    {
+        Name = null!;
+        DiscountType = null!;
+    }
+
     public SubscriptionDiscount(string discountCode, DiscountType discountType, double percentageOrAmount,
         DateTime validFrom, DateTime validUntil)
     {

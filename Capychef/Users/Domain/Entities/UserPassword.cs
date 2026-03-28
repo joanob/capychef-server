@@ -8,6 +8,11 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users_passwords")]
 public class UserPassword
 {
+    protected UserPassword()
+    {
+        Password = null!;
+    }
+
     public UserPassword(User user, string password)
     {
         User = user;
@@ -31,7 +36,7 @@ public class UserPassword
 
     [Column("is_active")] public bool IsActive { get; set; }
 
-    public User User { get; private set; }
+    public User? User { get; private set; }
 
     public static ValidationError? ValidatePassword(string password)
     {
