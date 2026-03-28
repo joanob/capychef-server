@@ -1,6 +1,9 @@
-﻿namespace Capychef.Food.Domain.Cmd;
+﻿using Capychef.Common.Errors;
+using Capychef.Common.Interfaces;
 
-public class FoodUoMCmd
+namespace Capychef.Food.Domain.Cmd;
+
+public class FoodUoMCmd : ICmd
 {
     public required string UoM { get; init; }
     public bool IsBaseUoM { get; init; }
@@ -8,12 +11,12 @@ public class FoodUoMCmd
     public int? Denominator { get; init; }
     public bool? IsApproxConversion { get; init; }
 
-    public bool CheckConversion()
+    public ValidationError? Validate()
     {
-        if (Numerator == null && Denominator == null && IsApproxConversion == null) return true;
+        if (Numerator == null && Denominator == null && IsApproxConversion == null) return null;
 
-        if (Numerator != null && Denominator != null && IsApproxConversion != null) return true;
+        if (Numerator != null && Denominator != null && IsApproxConversion != null) return null;
 
-        return false;
+        return new ValidationError("Invalid conversion details");
     }
 }

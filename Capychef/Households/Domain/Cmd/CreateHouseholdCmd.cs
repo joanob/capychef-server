@@ -1,7 +1,15 @@
-﻿namespace Capychef.Households.Domain.Cmd;
+﻿using Capychef.Common.Errors;
+using Capychef.Common.Interfaces;
 
-public class CreateHouseholdCmd
+namespace Capychef.Households.Domain.Cmd;
+
+public class CreateHouseholdCmd : ICmd
 {
-    public string Name { get; set; } = string.Empty;
-    public List<int> InitialStorageSpaceIds { get; set; } = new();
+    public required string Name { get; init; }
+    public required List<int> InitialStorageSpaceIds { get; init; }
+
+    public ValidationError? Validate()
+    {
+        return null;
+    }
 }

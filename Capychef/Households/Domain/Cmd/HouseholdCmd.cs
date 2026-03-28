@@ -1,6 +1,18 @@
-﻿namespace Capychef.Households.Domain.Cmd;
+﻿using Capychef.Common.Errors;
+using Capychef.Common.Interfaces;
 
-public class HouseholdCmd
+namespace Capychef.Households.Domain.Cmd;
+
+public class HouseholdCmd : ICmd
 {
     public required string Name { get; set; }
+
+    public ValidationError? Validate()
+    {
+        if (string.IsNullOrWhiteSpace(Name)) return new ValidationError("Name is required");
+
+        if (Name.Length > 50) return new ValidationError("Name is too long");
+
+        return null;
+    }
 }

@@ -233,7 +233,9 @@ public class FoodService(
 
         foreach (var uomCmd in cmd)
         {
-            if (!uomCmd.CheckConversion()) return new FoodUoMConversionError(food.Id, uomCmd.UoM);
+            var validationError = uomCmd.Validate();
+
+            if (validationError != null) return new FoodUoMConversionError(food.Id, uomCmd.UoM);
 
             var foodUoM =
                 foodUoMs.FirstOrDefault(x => x.UoM == uomCmd.UoM && x.HouseholdId == userDetails.GetHouseholdId());

@@ -40,7 +40,7 @@ public class FoodUoM : BaseDeletableEntity
 
     [Column("is_base")] public bool IsBaseUoM { get; set; }
 
-    [Column("base_uom")] public string? BaseUoM { get; init; }
+    [Column("base_uom")] [MaxLength(4)] public string? BaseUoM { get; init; }
 
     [Column("numerator")] public int? Numerator { get; private set; }
 

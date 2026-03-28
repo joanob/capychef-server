@@ -27,6 +27,10 @@ public class HouseholdService(
 
         if (error != null) return new Result<HouseholdDto>(error);
 
+        var validationError = cmd.Validate();
+
+        if (validationError != null) return new Result<HouseholdDto>(validationError);
+
         var household = new Household(userDetails.UserId, cmd.Name);
 
         await householdRepository.AddHouseholdAsync(household);
@@ -98,6 +102,9 @@ public class HouseholdService(
     public async Task<Result<HouseholdDto>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
         HouseholdCmd cmd)
     {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<HouseholdDto>(validationError);
+
         var household = await householdRepository.GetTrackedHouseholdById(householdId);
 
         if (household == null) return new Result<HouseholdDto>(new NotFoundError(EntityType.Household, householdId));

@@ -24,6 +24,9 @@ public class HouseholdInvitationService(
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
     {
+        var validationError = cmd.Validate();
+        if (validationError != null) return validationError;
+
         var household = await householdRepository.GetTrackedHouseholdById(userDetails.GetHouseholdId());
         if (household == null) return new NotFoundError(EntityType.Household, userDetails.GetHouseholdId());
 
