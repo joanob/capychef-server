@@ -12,8 +12,10 @@ public class BatchDto
         StorageSpaceId = batch.StorageSpaceId;
         Quantity = batch.Quantity;
         FoodUoMId = batch.FoodUoMId;
-        StoredAt = batch.StoredAt;
+        BestBeforeDate = batch.BestBeforeDate;
+        ExpirationDate = batch.ExpirationDate;
         OriginalBatchId = batch.OriginalBatchId;
+        IsOpen = batch.IsOpen;
         IsConsumed = batch.IsConsumed;
         ConsumedAt = batch.ConsumedAt;
         IsDiscarded = batch.IsDiscarded;
@@ -27,8 +29,10 @@ public class BatchDto
     public int StorageSpaceId { get; set; }
     public double Quantity { get; set; }
     public int FoodUoMId { get; set; }
-    public DateTime StoredAt { get; set; }
+    public DateTime? BestBeforeDate { get; set; }
+    public DateTime? ExpirationDate { get; set; }
     public int? OriginalBatchId { get; set; }
+    public bool IsOpen { get; set; }
     public bool IsConsumed { get; set; }
     public DateTime? ConsumedAt { get; set; }
     public bool IsDiscarded { get; set; }

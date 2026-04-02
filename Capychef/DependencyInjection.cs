@@ -77,6 +77,7 @@ public static class DependencyInjection
 
         // STORAGE
         services.AddScoped<IBatchRepository, BatchRepository>();
+        services.AddScoped<IBatchModificationHistoryRepository, BatchModificationHistoryRepository>();
         services.AddScoped<IBatchService, BatchService>();
 
         // Gourmet

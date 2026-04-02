@@ -12,25 +12,30 @@ namespace Capychef.Persistence;
 
 public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : DbContext(options)
 {
+    // Users
     public DbSet<User> Users => Set<User>();
     public DbSet<UserPassword> UsersPasswords => Set<UserPassword>();
     public DbSet<UserSession> UsersSessions => Set<UserSession>();
     public DbSet<UserToken> UsersTokens => Set<UserToken>();
 
+    // Households
     public DbSet<Household> Households => Set<Household>();
     public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
     public DbSet<HouseholdInvitation> HouseholdInvitations => Set<HouseholdInvitation>();
     public DbSet<HouseholdJoinRequest> HouseholdJoinRequests => Set<HouseholdJoinRequest>();
 
+    // Gourmet
     public DbSet<SubscriptionDiscount> SubscriptionDiscounts => Set<SubscriptionDiscount>();
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
+    // Storage spaces
     public DbSet<InitialStorageSpace> InitialStorageSpaces => Set<InitialStorageSpace>();
     public DbSet<StorageSpace> StorageSpaces => Set<StorageSpace>();
 
     public DbSet<StorageSpacesModificationHistory> StorageSpacesModificationsHistory =>
         Set<StorageSpacesModificationHistory>();
 
+    // Food
     public DbSet<FoodCategory> FoodCategories => Set<FoodCategory>();
     public DbSet<UoMDimension> UoMDimensions => Set<UoMDimension>();
     public DbSet<UoM> UoM => Set<UoM>();
@@ -39,7 +44,10 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<FoodUoM> FoodUoM => Set<FoodUoM>();
     public DbSet<FoodModificationHistory> FoodModificationsHistory => Set<FoodModificationHistory>();
 
+    // Storage
     public DbSet<Batch> Batches => Set<Batch>();
+    public DbSet<BatchModificationHistory> BatchesModificationHistory => Set<BatchModificationHistory>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,6 +61,9 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
 
         StorageSpacesModificationHistory.OnModelCreating(modelBuilder);
         FoodModificationHistory.OnModelCreating(modelBuilder);
+        BatchModificationHistory.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyOwnedInfos();
 
         // Save all dates as UTC
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())

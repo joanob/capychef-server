@@ -63,15 +63,24 @@ AND is_discarded = FALSE;
 
 CREATE TABLE batch_modifications_history
 (
-    id               SERIAL PRIMARY KEY,
-    batch_id         INTEGER   NOT NULL,
-    storage_space_id INTEGER   NOT NULL,
-    quantity         REAL      NOT NULL,
-    food_uom_id      INTEGER   NOT NULL,
-    best_before_date DATE,
-    expiration_date  DATE,
-    created_at       TIMESTAMP NOT NULL,
-    created_by       INTEGER,
+    id                   SERIAL PRIMARY KEY,
+    batch_id             INTEGER    NOT NULL,
+    modification_type    VARCHAR(1) NOT NULL,
+    storage_space_id     INTEGER    NOT NULL,
+    previous_quantity    REAL       NOT NULL,
+    previous_food_uom_id INTEGER    NOT NULL,
+    delta_quantity       REAL       NOT NULL,
+    delta_food_uom_id    INTEGER    NOT NULL,
+    new_quantity         REAL       NOT NULL,
+    new_food_uom_id      INTEGER    NOT NULL,
+    best_before_date     DATE,
+    expiration_date      DATE,
+    created_at           TIMESTAMP  NOT NULL,
+    created_by           INTEGER,
     FOREIGN KEY (batch_id) REFERENCES batches (id),
-    FOREIGN KEY (modified_by) REFERENCES users (id)
+    FOREIGN KEY (storage_space_id) REFERENCES storage_spaces (id),
+    FOREIGN KEY (previous_food_uom_id) REFERENCES food_uom (id),
+    FOREIGN KEY (delta_food_uom_id) REFERENCES food_uom (id),
+    FOREIGN KEY (new_food_uom_id) REFERENCES food_uom (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
 );

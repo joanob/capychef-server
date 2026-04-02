@@ -6,12 +6,20 @@ using Capychef.Households.Domain.Entities;
 namespace Capychef.Storage.Domain.Entities;
 
 [Table("batches")]
-public class Batch : BaseDeletableEntity
+public class Batch
 {
+    protected Batch() { }
+
+    [Column("id")] public int Id { get; init; }
+
+    public CreationInfo Creation { get; set; } = new();
+    public DeletionInfo? Deletion { get; set; }
+    public ModifiableInfo? Modifiable { get; set; }
+    
     public Batch(int userId, int householdId, int foodId, int storageSpaceId, double quantity, int foodUoMId,
         DateTime? bestBeforeDate, DateTime? expirationDate, bool isOpen, bool isConsumed, bool isDiscarded)
     {
-        CreatedBy = userId;
+        Creation = new CreationInfo { CreatedBy = userId };
         HouseholdId = householdId;
         FoodId = foodId;
         StorageSpaceId = storageSpaceId;
@@ -28,7 +36,7 @@ public class Batch : BaseDeletableEntity
         DateTime? bestBeforeDate, DateTime? expirationDate, int originalBatchId, bool isOpen, bool isConsumed,
         bool isDiscarded)
     {
-        CreatedBy = userId;
+        Creation = new CreationInfo { CreatedBy = userId };
         HouseholdId = householdId;
         FoodId = foodId;
         StorageSpaceId = storageSpaceId;
