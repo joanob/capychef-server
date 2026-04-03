@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Food.Domain.Entities;
 
-[Table("food_modifications_history")]
-public class FoodModificationHistory
+[Table("food_uom_modifications_history")]
+public class FoodUoMModificationHistory
 {
-    protected  FoodModificationHistory() {}
+    protected  FoodUoMModificationHistory() {}
     
-    public FoodModificationHistory(int foodId, int householdId, FoodModifiableColumn columnName, string previousValue,
+    public FoodUoMModificationHistory(int foodId, int householdId, FoodModifiableColumn columnName, string previousValue,
         string newValue,
         int modifiedBy)
     {
@@ -25,10 +25,8 @@ public class FoodModificationHistory
 
     [Column("id")] public int Id { get; init; }
 
-    [Column("food_id")] public int FoodId { get; init; }
-
-    [Column("household_id")] public int HouseholdId { get; init; }
-
+    [Column("food_uom_id")] public int FoodUoMId { get; init; }
+    
     [Column("column_name")] public FoodModifiableColumn ColumnName { get; init; }
 
     [Column("previous_value")]
@@ -41,12 +39,12 @@ public class FoodModificationHistory
 
     [Column("modified_by")] public int ModifiedBy { get; init; }
 
-    [ForeignKey(nameof(FoodId))] public Food? Food { get; init; }
+    [ForeignKey(nameof(FoodUoMId))] public FoodUoM? Food { get; init; }
     
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<FoodModificationHistory>()
+        modelBuilder.Entity<FoodUoMModificationHistory>()
             .Property(f => f.ColumnName)
-            .HasConversion(new FoodModifiableColumnConverter());
+            .HasConversion(new FoodUoMModifiableColumnConverter());
     }
 }

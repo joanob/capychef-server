@@ -23,7 +23,7 @@ public class SubscriptionDiscount
         ValidUntil = validUntil;
     }
 
-    [Column("id")] public int Id { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
     [Column("discount_code")]
     [MaxLength(50)]

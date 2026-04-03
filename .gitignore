@@ -21,3 +21,6 @@ packages/
 
 # Dotnet tools
 .tools/
+
+# Flyway
+flyway.user.toml

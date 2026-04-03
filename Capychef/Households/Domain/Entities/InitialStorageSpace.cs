@@ -7,6 +7,8 @@ namespace Capychef.Households.Domain.Entities;
 [Table("initial_storage_spaces")]
 public class InitialStorageSpace
 {
+    protected InitialStorageSpace() {}
+    
     public InitialStorageSpace(int id, string name, StorageConditions storageCondition)
     {
         Id = id;

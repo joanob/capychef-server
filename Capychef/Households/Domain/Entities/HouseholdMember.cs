@@ -5,9 +5,9 @@ using Capychef.Users.Domain.Entities;
 namespace Capychef.Households.Domain.Entities;
 
 [Table("household_members")]
-public class HouseholdMember : BaseDeletableEntity
+public class HouseholdMember
 {
-    public HouseholdMember()
+    protected HouseholdMember()
     {
     }
 
@@ -31,20 +31,33 @@ public class HouseholdMember : BaseDeletableEntity
         UserId = userId;
         DidLeave = false;
     }
+    
+    [Column("id")] public int Id { get; init; }
 
     [Column("household_id")]
-    [ForeignKey(nameof(Household))]
-    public int HouseholdId { get; private set; }
+    public int HouseholdId { get; init; }
 
     [Column("user_id")]
-    [ForeignKey(nameof(User))]
-    public int UserId { get; private set; }
+    public int UserId { get; init; }
 
     [Column("did_leave")] public bool DidLeave { get; private set; }
+    
+    [Column("created_at")] public DateTime CreatedAt { get; init; } =  DateTime.UtcNow;
 
-    public Household Household { get; private set; } = null!;
+    [Column("row_version")] public int RowVersion { get; init; }
+    
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+    
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    public User User { get; private set; } = null!;
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
+
+    [ForeignKey(nameof(UserId))] public User? User { get; private set; }
+    
+    public void Delete() {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
+    }
 
     public void Leave()
     {

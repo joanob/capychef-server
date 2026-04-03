@@ -6,6 +6,8 @@ namespace Capychef.Food.Domain.Entities;
 [Table("uom")]
 public class UoM
 {
+    protected UoM() {}
+    
     public UoM(string code, string name, string dimensionCode, string? baseUoM, int? numerator, int? denominator)
     {
         Code = code;
@@ -16,14 +18,13 @@ public class UoM
         Denominator = denominator;
     }
 
-    [Key] [Column("code")] [MaxLength(4)] public string Code { get; private set; }
+    [Key] [Column("code")] [MaxLength(4)] public string Code { get; init; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; private set; }
 
     [Column("dimension")]
     [MaxLength(10)]
-    [ForeignKey(nameof(Dimension))]
-    public string DimensionCode { get; set; }
+    public string DimensionCode { get; private set; }
 
     [Column("base_uom")] [MaxLength(4)] public string? BaseUoM { get; private set; }
 
@@ -31,7 +32,7 @@ public class UoM
 
     [Column("denominator")] public int? Denominator { get; private set; }
 
-    public UoMDimension? Dimension { get; private set; }
+    [ForeignKey(nameof(DimensionCode))] public UoMDimension? Dimension { get; private set; }
 
     public void Set(UoM uoM)
     {

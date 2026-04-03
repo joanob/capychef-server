@@ -6,8 +6,10 @@ using Capychef.Households.Domain.Entities;
 namespace Capychef.Food.Domain.Entities;
 
 [Table("food_uom")]
-public class FoodUoM : BaseDeletableEntity
+public class FoodUoM
 {
+    protected FoodUoM() { }
+    
     public FoodUoM(int foodId, int? householdId, string uoM, bool isBaseUoM, int? numerator, int? denominator,
         bool? isApproxConversion)
     {
@@ -31,22 +33,35 @@ public class FoodUoM : BaseDeletableEntity
         Denominator = denominator;
         IsApproxConversion = isApproxConversion;
     }
+    
+    [Column("id")] public int Id { get; init; }
 
     [Column("food_id")] public int FoodId { get; init; }
 
-    [Column("uom")] [MaxLength(4)] public string UoM { get; }
+    [Column("uom")] [MaxLength(4)] public string UoM { get; init; }
 
-    [Column("household_id")] public int? HouseholdId { get; }
+    [Column("household_id")] public int? HouseholdId { get; init; }
 
     [Column("is_base")] public bool IsBaseUoM { get; set; }
 
-    [Column("base_uom")] [MaxLength(4)] public string? BaseUoM { get; init; }
+    [Column("base_uom")] [MaxLength(4)] public string? BaseUoM { get; set; }
 
     [Column("numerator")] public int? Numerator { get; private set; }
 
     [Column("denominator")] public int? Denominator { get; private set; }
 
     [Column("is_approx_conversion")] public bool? IsApproxConversion { get; set; }
+    
+    [Column("created_at")] public DateTime CreatedAt { get; init; } =  DateTime.UtcNow;
+    
+    [Column("created_by")] public int CreatedBy { get; init; }
+
+    [Column("row_version")] public int RowVersion { get; init; }
+    
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+    
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
+    
     [ForeignKey(nameof(FoodId))] public Food? Food { get; private set; }
 
     [ForeignKey(nameof(UoM))] public UoM? UoMInstance { get; init; }
@@ -54,6 +69,12 @@ public class FoodUoM : BaseDeletableEntity
     [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }
 
     [ForeignKey(nameof(BaseUoM))] public UoM? BaseUoMInstance { get; init; }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
+    }
 
     public void Set(bool isBaseUoM, int? numerator, int? denominator, bool? isApproxConversion)
     {

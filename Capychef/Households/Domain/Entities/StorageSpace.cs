@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Capychef.Households.Domain.Entities;
 
 [Table("storage_spaces")]
-public class StorageSpace : BaseDeletableEntity
+public class StorageSpace
 {
     protected StorageSpace()
     {
@@ -17,9 +17,9 @@ public class StorageSpace : BaseDeletableEntity
 
     public StorageSpace(string name, StorageConditions storageCondition, int householdId, int userId)
     {
+        HouseholdId = householdId;
         Name = name;
         StorageCondition = storageCondition;
-        HouseholdId = householdId;
         CreatedBy = userId;
     }
 
@@ -30,18 +30,32 @@ public class StorageSpace : BaseDeletableEntity
         Household = household;
         CreatedBy = userId;
     }
+    
+    [Column("id")] public int Id { get; init; }
+
+    [Column("household_id")] public int HouseholdId { get; init; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
 
-    [Column("household_id")] public int HouseholdId { get; private set; }
+    [Column("created_at")] public DateTime? CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Column("created_by")] public int CreatedBy { get; private set; }
+    [Column("created_by")] public int CreatedBy { get; init; }
+    
+    [Column("row_version")] public int RowVersion { get; init; }
+    
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+    
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }
 
-    [ForeignKey(nameof(CreatedBy))] public User? User { get; private set; }
+    public void Delete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
+    }
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {

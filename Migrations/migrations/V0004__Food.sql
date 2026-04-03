@@ -6,8 +6,6 @@ CREATE TABLE uom_dimensions
     name VARCHAR(50) NOT NULL
 );
 
-CREATE RULE "uom_dimensions_soft_delete" AS ON DELETE TO "uom_dimensions" DO INSTEAD NOTHING;
-                                                      
 CREATE TABLE uom
 (
     code        VARCHAR(4) PRIMARY KEY,
@@ -24,8 +22,6 @@ CREATE TABLE uom
         )
 );
 
-CREATE RULE "uom_soft_delete" AS ON DELETE TO "uom" DO INSTEAD NOTHING;                                               
-
 -- FOOD CATEGORIES
 
 CREATE TABLE food_categories
@@ -37,8 +33,6 @@ CREATE TABLE food_categories
     FOREIGN KEY (parent_category_id) REFERENCES food_categories (id)
 );
 
-CREATE RULE "food_categories_soft_deletion" AS ON DELETE TO "food_categories" DO INSTEAD NOTHING;
-          
 -- FOOD
                                                     
 CREATE TABLE food
@@ -46,12 +40,12 @@ CREATE TABLE food
     id                      SERIAL PRIMARY KEY,
     name                    VARCHAR(50) NOT NULL,
     category_id             INTEGER     NOT NULL,
-    days_until_expiration   INTEGER,
-    days_until_best_before  INTEGER,
     is_global               BOOLEAN     NOT NULL,
     global_id               VARCHAR,
     household_id            INTEGER,
     modified_global_food_id INTEGER,
+    days_until_expiration   INTEGER,
+    days_until_best_before  INTEGER,
     created_at              TIMESTAMP   NOT NULL,
     created_by              INTEGER,
     row_version             INTEGER     NOT NULL,
@@ -70,18 +64,6 @@ CREATE TABLE food
 );
 
 CREATE INDEX idx_food_household_id ON food(household_id);
-
-CREATE RULE "food_soft_deletion" AS ON DELETE TO "food" DO INSTEAD (
-    UPDATE food
-    SET is_deleted = true
-    WHERE id = old.id
-      AND NOT is_deleted
-    );
-
-CREATE VIEW active_food AS
-SELECT *
-FROM food
-WHERE is_deleted = FALSE;
 
 -- FOOD HOUSEHOLD DETAILS
 
@@ -120,8 +102,6 @@ CREATE TABLE food_modifications_history
 
 CREATE INDEX idx_food_modifications_history_food_id ON food_modifications_history(food_id);
 
-CREATE RULE "food_modifications_history_soft_deletion" AS ON DELETE TO "food_modifications_history" DO INSTEAD NOTHING;
-                                                                    
 -- FOOD UOM
 
 CREATE TABLE food_uom
@@ -136,11 +116,13 @@ CREATE TABLE food_uom
     denominator          INTEGER,
     is_approx_conversion BOOLEAN,
     created_at           TIMESTAMP  NOT NULL,
+    created_by INTEGER,
     row_version          INTEGER    NOT NULL,
     is_deleted           BOOLEAN    NOT NULL,
     deleted_at           TIMESTAMP,
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (base_uom) REFERENCES uom (code),
+    FOREIGN KEY (created_at) REFERENCES users(id),
     CHECK (
         (
             base_uom IS NULL AND
@@ -154,4 +136,21 @@ CREATE TABLE food_uom
             is_approx_conversion IS NOT NULL
             )
         )
-);                                                                 
+);
+
+-- FOOD UOM MODIFICATIONS HISTORY
+
+CREATE TABLE food_uom_modifications_history
+(
+    id             SERIAL PRIMARY KEY,
+    food_uom_id        INTEGER   NOT NULL,
+    column_name    VARCHAR(50) NOT NULL,
+    previous_value VARCHAR(100),
+    new_value      VARCHAR(100),
+    modified_at    TIMESTAMP NOT NULL,
+    modified_by    INTEGER   NOT NULL,
+    FOREIGN KEY (food_uom_id) REFERENCES food_uom (id),
+    FOREIGN KEY (modified_by) REFERENCES users (id)
+);
+
+CREATE INDEX idx_food_uom_modifications_history_food_id ON food_uom_modifications_history(food_uom_id);
