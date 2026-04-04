@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
 
 namespace Capychef.Food.Domain.Entities;
@@ -8,8 +7,11 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food_uom")]
 public class FoodUoM
 {
-    protected FoodUoM() { }
-    
+    protected FoodUoM()
+    {
+        UoM = "";
+    }
+
     public FoodUoM(int foodId, int? householdId, string uoM, bool isBaseUoM, int? numerator, int? denominator,
         bool? isApproxConversion)
     {
@@ -33,7 +35,7 @@ public class FoodUoM
         Denominator = denominator;
         IsApproxConversion = isApproxConversion;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
     [Column("food_id")] public int FoodId { get; init; }
@@ -51,17 +53,17 @@ public class FoodUoM
     [Column("denominator")] public int? Denominator { get; private set; }
 
     [Column("is_approx_conversion")] public bool? IsApproxConversion { get; set; }
-    
-    [Column("created_at")] public DateTime CreatedAt { get; init; } =  DateTime.UtcNow;
-    
+
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
     [Column("created_by")] public int CreatedBy { get; init; }
 
     [Column("row_version")] public int RowVersion { get; init; }
-    
+
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
-    
+
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
-    
+
     [ForeignKey(nameof(FoodId))] public Food? Food { get; private set; }
 
     [ForeignKey(nameof(UoM))] public UoM? UoMInstance { get; init; }

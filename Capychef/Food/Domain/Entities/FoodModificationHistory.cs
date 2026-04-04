@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Food.Domain.Entities;
@@ -8,8 +7,13 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food_modifications_history")]
 public class FoodModificationHistory
 {
-    protected  FoodModificationHistory() {}
-    
+    protected FoodModificationHistory()
+    {
+        ColumnName = FoodModifiableColumn.From("");
+        PreviousValue = "";
+        NewValue = "";
+    }
+
     public FoodModificationHistory(int foodId, int householdId, FoodModifiableColumn columnName, string previousValue,
         string newValue,
         int modifiedBy)
@@ -42,7 +46,7 @@ public class FoodModificationHistory
     [Column("modified_by")] public int ModifiedBy { get; init; }
 
     [ForeignKey(nameof(FoodId))] public Food? Food { get; init; }
-    
+
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<FoodModificationHistory>()

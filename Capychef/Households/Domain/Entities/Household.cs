@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Common.Utils;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +9,12 @@ namespace Capychef.Households.Domain.Entities;
 [Table("households")]
 public class Household
 {
-    protected Household() {}
-    
+    protected Household()
+    {
+        Name = "";
+        PublicId = "";
+    }
+
     public Household(User user, string name)
     {
         User = user;
@@ -27,24 +30,23 @@ public class Household
         PublicId = RandomGenerator.GenerateRandomCapsString(6);
         CreatedBy = ownerId;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
-    [Column("owner_id")]
-    public int OwnerId { get; set; }
+    [Column("owner_id")] public int OwnerId { get; set; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
     [Column("public_id")] [MaxLength(20)] public string PublicId { get; init; }
-    
-    [Column("created_at")] public DateTime CreatedAt { get; init; } =  DateTime.UtcNow;
-    
+
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
     [Column("created_by")] public int CreatedBy { get; init; }
 
     [Column("row_version")] public int RowVersion { get; init; }
-    
+
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
-    
+
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
     [InverseProperty(nameof(StorageSpace.Household))]
@@ -64,6 +66,11 @@ public static class HouseholdExtensions
     public static IQueryable<Household> Active(this IQueryable<Household> households)
     {
         return households.Where(x => !x.IsDeleted);
+    }
+
+    public static IQueryable<Household?> ActiveNullable(this IQueryable<Household?> households)
+    {
+        return households.Where(x => x != null && !x.IsDeleted);
     }
 
     public static IQueryable<Household> IncludeStorageSpaces(this IQueryable<Household> household)

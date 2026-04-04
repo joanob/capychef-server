@@ -19,14 +19,13 @@ public class UserSession
 
     [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    public int UserId { get; init; }
+    [Column("user_id")] public int UserId { get; init; }
 
     [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     [Column("last_refresh_at")] public DateTime LastRefreshAt { get; set; }
 
     [Column("is_revoked")] public bool IsRevoked { get; set; }
-    
+
     [ForeignKey(nameof(UserId))] public User? User { get; init; }
 }

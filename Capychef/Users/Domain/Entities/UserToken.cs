@@ -7,7 +7,10 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users_tokens")]
 public class UserToken
 {
-    protected UserToken(){}
+    protected UserToken()
+    {
+        Token = "";
+    }
 
     private UserToken(int userId, string token, UserTokenType tokenType, DateTime expiresAt)
     {
@@ -18,7 +21,7 @@ public class UserToken
         IsActive = true;
         IsUsed = false;
     }
-    
+
     private UserToken(User user, string token, UserTokenType tokenType, DateTime expiresAt)
     {
         User = user;
@@ -28,11 +31,10 @@ public class UserToken
         IsActive = true;
         IsUsed = false;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    public int UserId { get; init; }
+    [Column("user_id")] public int UserId { get; init; }
 
     [Column("token")] [MaxLength(20)] public string Token { get; init; }
 
@@ -53,7 +55,7 @@ public class UserToken
     public static UserToken CreatePasswordRecoveryUserToken(int userId)
     {
         var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(10);
-        
+
         var userToken = new UserToken(userId, token, UserTokenType.PasswordRecovery, DateTime.Now.AddDays(1));
 
         return userToken;
@@ -62,16 +64,16 @@ public class UserToken
     public static UserToken CreateEmailValidationUserToken(User user)
     {
         var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(6);
-        
+
         var userToken = new UserToken(user, token, UserTokenType.EmailValidation, DateTime.Now.AddDays(30));
-        
+
         return userToken;
     }
 
     public static UserToken CreateGuestAccountTransferUserToken(int userId)
     {
         var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(8);
-        
+
         var userToken = new UserToken(userId, token, UserTokenType.GuestAccountTransfer, DateTime.Now.AddDays(1));
 
         return userToken;

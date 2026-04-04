@@ -7,8 +7,12 @@ namespace Capychef.Households.Domain.Entities;
 [Table("initial_storage_spaces")]
 public class InitialStorageSpace
 {
-    protected InitialStorageSpace() {}
-    
+    protected InitialStorageSpace()
+    {
+        Name = "";
+        StorageCondition = StorageConditions.From("");
+    }
+
     public InitialStorageSpace(int id, string name, StorageConditions storageCondition)
     {
         Id = id;
@@ -22,7 +26,7 @@ public class InitialStorageSpace
         StorageCondition = storageCondition;
     }
 
-    [Column("id")] public int Id { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 

@@ -47,7 +47,7 @@ public class BatchService(
         else if (food.HouseholdFoodDetails != null && food.HouseholdFoodDetails.DaysUntilExpiration.HasValue)
             expirationDate = DateTime.UtcNow.AddDays(food.HouseholdFoodDetails.DaysUntilExpiration.Value);
 
-        var batch = new Batch(userDetails.GetHouseholdId(), cmd.FoodId, cmd.StorageSpaceId, cmd.Quantity,
+        var batch = Batch.New(userDetails.GetHouseholdId(), cmd.FoodId, cmd.StorageSpaceId, cmd.Quantity,
             cmd.FoodUoMId, bestBeforeDate, expirationDate);
 
         await batchRepository.AddAsync(batch);
@@ -94,7 +94,7 @@ public class BatchService(
         else
         {
             // Create new batch from original batch with new quantity and set new batch as consumed
-            var consumedBatch = new Batch(batch, cmd.Quantity);
+            var consumedBatch = Batch.FromOriginal(batch, cmd.Quantity);
             consumedBatch.Consume();
 
             await batchRepository.AddAsync(consumedBatch);
@@ -123,7 +123,7 @@ public class BatchService(
         else
         {
             // Create new batch from original batch with new quantity and set new batch as discarded
-            var consumedBatch = new Batch(batch, cmd.Quantity);
+            var consumedBatch = Batch.FromOriginal(batch, cmd.Quantity);
             consumedBatch.Discard();
 
             await batchRepository.AddAsync(consumedBatch);
@@ -160,7 +160,7 @@ public class BatchService(
         }
 
         // Create new batch from original batch with new quantity and new storage space
-        var movedBatch = new Batch(batch, cmd.Quantity);
+        var movedBatch = Batch.FromOriginal(batch, cmd.Quantity);
         movedBatch.StorageSpaceId = cmd.StorageSpaceId;
 
         await batchRepository.AddAsync(movedBatch);

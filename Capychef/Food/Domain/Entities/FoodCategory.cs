@@ -6,8 +6,11 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food_categories")]
 public class FoodCategory
 {
-    protected FoodCategory() {}
-    
+    protected FoodCategory()
+    {
+        Name = "";
+    }
+
     public FoodCategory(int id, string name, bool isLeaf, int? parentCategoryId)
     {
         Id = id;
@@ -24,11 +27,9 @@ public class FoodCategory
     // Food always belongs to leaf categories
     [Column("is_leaf")] public bool IsLeaf { get; private set; }
 
-    [Column("parent_category_id")]
-    public int? ParentCategoryId { get; set; }
+    [Column("parent_category_id")] public int? ParentCategoryId { get; set; }
 
-    [ForeignKey(nameof(ParentCategoryId))]
-    public FoodCategory? ParentCategory { get; init; }
+    [ForeignKey(nameof(ParentCategoryId))] public FoodCategory? ParentCategory { get; init; }
 
     public void Set(FoodCategory foodCategoryLevel1)
     {

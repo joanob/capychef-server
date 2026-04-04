@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Households.Domain.Entities;
@@ -31,30 +30,29 @@ public class HouseholdMember
         UserId = userId;
         DidLeave = false;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
-    [Column("household_id")]
-    public int HouseholdId { get; init; }
+    [Column("household_id")] public int HouseholdId { get; init; }
 
-    [Column("user_id")]
-    public int UserId { get; init; }
+    [Column("user_id")] public int UserId { get; init; }
 
     [Column("did_leave")] public bool DidLeave { get; private set; }
-    
-    [Column("created_at")] public DateTime CreatedAt { get; init; } =  DateTime.UtcNow;
+
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     [Column("row_version")] public int RowVersion { get; init; }
-    
+
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
-    
+
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
     [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
 
     [ForeignKey(nameof(UserId))] public User? User { get; private set; }
-    
-    public void Delete() {
+
+    public void Delete()
+    {
         IsDeleted = true;
         DeletedAt = DateTime.UtcNow;
     }

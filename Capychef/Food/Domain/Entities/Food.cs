@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
-using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Food.Domain.Entities;
@@ -10,8 +8,11 @@ namespace Capychef.Food.Domain.Entities;
 [Table("food")]
 public class Food
 {
-    protected Food() {}
-    
+    protected Food()
+    {
+        Name = "";
+    }
+
     public Food(string globalId, string name, int categoryId, int? daysUntilExpiration,
         int? daysUntilBestBefore)
     {
@@ -42,7 +43,7 @@ public class Food
         ModifiedGlobalFoodId = modifiedGlobalFoodId;
         CreatedBy = createdBy;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
@@ -61,14 +62,14 @@ public class Food
 
     [Column("days_until_best_before")] private int? DaysUntilBestBefore { get; set; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; init; } =  DateTime.UtcNow;
-    
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
     [Column("created_by")] public int CreatedBy { get; init; }
 
     [Column("row_version")] public int RowVersion { get; init; }
-    
+
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
-    
+
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
     [ForeignKey(nameof(CategoryId))] public FoodCategory? Category { get; init; }
@@ -85,23 +86,17 @@ public class Food
     public ICollection<HouseholdFoodDetails> HouseholdDetailsCollection { get; private set; } =
         new List<HouseholdFoodDetails>();
 
+    public HouseholdFoodDetails? HouseholdFoodDetails => HouseholdDetailsCollection.FirstOrDefault();
+
     public void SetGlobalDaysUntilExpiration(int? daysUntilExpiration)
     {
-        if (!HouseholdId.HasValue)
-        {
-            DaysUntilExpiration = daysUntilExpiration;
-        }
-    }
-    
-    public void SetGlobalDaysUntilBestBefore(int? daysUntilBestBefore)
-    {
-        if (!HouseholdId.HasValue)
-        {
-            DaysUntilBestBefore = daysUntilBestBefore;
-        }
+        if (!HouseholdId.HasValue) DaysUntilExpiration = daysUntilExpiration;
     }
 
-    public HouseholdFoodDetails? HouseholdFoodDetails => HouseholdDetailsCollection.FirstOrDefault();
+    public void SetGlobalDaysUntilBestBefore(int? daysUntilBestBefore)
+    {
+        if (!HouseholdId.HasValue) DaysUntilBestBefore = daysUntilBestBefore;
+    }
 
     public int? GetDaysUntilBestBefore()
     {

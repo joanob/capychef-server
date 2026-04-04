@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
-using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Domain.Entities;
@@ -11,8 +9,8 @@ public class StorageSpace
 {
     protected StorageSpace()
     {
-        Name = null!;
-        StorageCondition = null!;
+        Name = "";
+        StorageCondition = StorageConditions.From("");
     }
 
     public StorageSpace(string name, StorageConditions storageCondition, int householdId, int userId)
@@ -30,7 +28,7 @@ public class StorageSpace
         Household = household;
         CreatedBy = userId;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
     [Column("household_id")] public int HouseholdId { get; init; }
@@ -42,11 +40,11 @@ public class StorageSpace
     [Column("created_at")] public DateTime? CreatedAt { get; init; } = DateTime.UtcNow;
 
     [Column("created_by")] public int CreatedBy { get; init; }
-    
+
     [Column("row_version")] public int RowVersion { get; init; }
-    
+
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
-    
+
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
     [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }

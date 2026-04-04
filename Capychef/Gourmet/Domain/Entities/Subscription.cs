@@ -8,7 +8,10 @@ namespace Capychef.Gourmet.Domain.Entities;
 [Table("subscriptions")]
 public class Subscription
 {
-    protected Subscription() { }
+    protected Subscription()
+    {
+        SubscriptionType = SubscriptionType.From("");
+    }
 
     [Column("id")] public int Id { get; init; }
 
@@ -36,7 +39,7 @@ public class Subscription
 
     [Column("amount_saved")] public double AmountSaved { get; init; }
 
-    [ForeignKey(nameof(UserId))] public User User { get; init; } = null!;
+    [ForeignKey(nameof(UserId))] public User? User { get; init; }
 
     [ForeignKey(nameof(PrimarySubscriptionId))]
     public Subscription? PrimarySubscription { get; init; }

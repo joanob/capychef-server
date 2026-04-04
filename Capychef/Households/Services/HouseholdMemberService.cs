@@ -5,6 +5,7 @@ using Capychef.Common.Result;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.DTO;
+using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Households.Services;
 
@@ -17,7 +18,13 @@ public class HouseholdMemberService(
     {
         var members = await householdMemberRepository.GetHouseholdMembers(userDetails.GetHouseholdId());
 
-        return new Result<List<UserDto>>(UserDto.ToDtoList(members.Select(m => m.User).ToList()));
+        var users = new List<User>();
+
+        foreach (var member in members)
+            if (member.User != null)
+                users.Add(member.User);
+
+        return new Result<List<UserDto>>(UserDto.ToDtoList(users));
     }
 
     public async Task<AppError?> LeaveHousehold(AuthUserDetails userDetails)

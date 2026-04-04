@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Domain.Entities;
@@ -8,8 +7,13 @@ namespace Capychef.Households.Domain.Entities;
 [Table("storage_spaces_modifications_history")]
 public class StorageSpacesModificationHistory
 {
-    protected StorageSpacesModificationHistory() { }
-    
+    protected StorageSpacesModificationHistory()
+    {
+        ColumnName = StorageSpaceModifiableColumn.From("");
+        PreviousValue = "";
+        NewValue = "";
+    }
+
     public StorageSpacesModificationHistory(int storageSpaceId, StorageSpaceModifiableColumn columnName,
         string previousValue,
         string newValue,

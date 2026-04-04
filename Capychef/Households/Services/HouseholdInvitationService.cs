@@ -18,7 +18,6 @@ public class HouseholdInvitationService(
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
     IUserRepository userRepository,
-    IHouseholdJoinRequestRepository joinRequestRepository,
     ISubscriptionService subscriptionService,
     IHouseholdInvitationRealtimeService householdInvitationRealtimeService) : IHouseholdInvitationService
 {
@@ -71,16 +70,11 @@ public class HouseholdInvitationService(
         var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(invitation.UserId);
         if (error != null) return error;
 
-        invitation.IsAnswered = true;
-        invitation.AnsweredAt = DateTime.Now;
-        invitation.IsAccepted = true;
+        invitation.Accept();
 
         var member = new HouseholdMember(invitation.HouseholdId, invitation.UserId);
 
         await householdMemberRepository.AddHouseholdMemberAsync(member);
-
-        if (await subscriptionService.WillReachMembershipLimit(invitation.UserId, 1))
-            await joinRequestRepository.HidePendingJoinRequestsForUser(invitation.UserId);
 
         await dbContext.SaveChangesAsync();
 
@@ -94,9 +88,7 @@ public class HouseholdInvitationService(
         if (invitation == null || invitation.IsAnswered)
             return new NotFoundError(EntityType.HouseholdInvitation, userDetails.UserId);
 
-        invitation.IsAnswered = true;
-        invitation.AnsweredAt = DateTime.Now;
-        invitation.IsAccepted = false;
+        invitation.Reject();
 
         await dbContext.SaveChangesAsync();
 

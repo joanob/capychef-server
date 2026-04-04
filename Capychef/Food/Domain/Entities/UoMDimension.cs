@@ -6,8 +6,12 @@ namespace Capychef.Food.Domain.Entities;
 [Table("uom_dimensions")]
 public class UoMDimension
 {
-    protected UoMDimension() { }
-    
+    protected UoMDimension()
+    {
+        Code = "";
+        Name = "";
+    }
+
     public UoMDimension(string code, string name)
     {
         Code = code;

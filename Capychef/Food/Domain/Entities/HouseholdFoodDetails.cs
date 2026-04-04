@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
 
 namespace Capychef.Food.Domain.Entities;
@@ -8,8 +7,10 @@ namespace Capychef.Food.Domain.Entities;
 [Table("household_food_details")]
 public class HouseholdFoodDetails
 {
-    protected HouseholdFoodDetails() { }
-    
+    protected HouseholdFoodDetails()
+    {
+    }
+
     public HouseholdFoodDetails(int householdId, Food food, double? minQuantity, string? minQuantityUoM,
         int? daysUntilExpiration, int? daysUntilBestBefore)
     {
@@ -31,7 +32,7 @@ public class HouseholdFoodDetails
         DaysUntilExpiration = daysUntilExpiration;
         DaysUntilBestBefore = daysUntilBestBefore;
     }
-    
+
     [Column("id")] public int Id { get; init; }
 
     [Column("household_id")] public int HouseholdId { get; init; }

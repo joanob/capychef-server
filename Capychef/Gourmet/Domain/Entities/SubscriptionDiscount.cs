@@ -9,8 +9,8 @@ public class SubscriptionDiscount
 {
     protected SubscriptionDiscount()
     {
-        Name = null!;
-        DiscountType = null!;
+        Name = "";
+        DiscountType = DiscountType.From("");
     }
 
     public SubscriptionDiscount(string discountCode, DiscountType discountType, double percentageOrAmount,
