@@ -9,12 +9,13 @@ public class HouseholdInvitationDto
     {
         Id = invitation.Id;
         HouseholdId = invitation.HouseholdId;
+        if (invitation.User == null) throw new Exception("User can't be null in HouseholdInvitationDto.");
         User = new UserDto(invitation.User);
     }
 
-    public int Id { get; set; }
-    public int HouseholdId { get; set; }
-    public UserDto User { get; set; }
+    public int Id { get; }
+    public int HouseholdId { get; }
+    public UserDto User { get; }
 
     public static List<HouseholdInvitationDto> ToList(List<HouseholdInvitation> invitations)
     {

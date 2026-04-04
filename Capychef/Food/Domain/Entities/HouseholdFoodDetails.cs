@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
 
 namespace Capychef.Food.Domain.Entities;
 
 [Table("household_food_details")]
-public class HouseholdFoodDetails : BaseEntity
+public class HouseholdFoodDetails
 {
+    protected HouseholdFoodDetails()
+    {
+    }
+
     public HouseholdFoodDetails(int householdId, Food food, double? minQuantity, string? minQuantityUoM,
         int? daysUntilExpiration, int? daysUntilBestBefore)
     {
@@ -30,9 +33,11 @@ public class HouseholdFoodDetails : BaseEntity
         DaysUntilBestBefore = daysUntilBestBefore;
     }
 
-    [Column("household_id")] public int HouseholdId { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
-    [Column("food_id")] public int FoodId { get; private set; }
+    [Column("household_id")] public int HouseholdId { get; init; }
+
+    [Column("food_id")] public int FoodId { get; init; }
 
     [Column("min_quantity")] public double? MinQuantity { get; set; }
 
@@ -46,5 +51,5 @@ public class HouseholdFoodDetails : BaseEntity
 
     [ForeignKey(nameof(HouseholdId))] public Household? Household { get; init; }
 
-    [ForeignKey(nameof(FoodId))] public Food? Food { get; private set; }
+    [ForeignKey(nameof(FoodId))] public Food? Food { get; init; }
 }

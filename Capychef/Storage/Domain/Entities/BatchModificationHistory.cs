@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Food.Domain.Entities;
 using Capychef.Households.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +14,6 @@ public class BatchModificationHistory
     }
 
     [Column("id")] public int Id { get; init; }
-
-    public CreationInfo Creation { get; set; } = new();
 
     [Column("batch_id")] public int BatchId { get; init; }
 

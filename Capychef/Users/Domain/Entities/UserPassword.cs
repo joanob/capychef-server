@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Common.Errors;
-using JetBrains.Annotations;
 
 namespace Capychef.Users.Domain.Entities;
 
@@ -10,7 +9,15 @@ public class UserPassword
 {
     protected UserPassword()
     {
-        Password = null!;
+        Password = "";
+    }
+
+    public UserPassword(int userId, string password)
+    {
+        Id = userId;
+        CreatedAt = DateTime.UtcNow;
+        IsActive = true;
+        Password = BCrypt.Net.BCrypt.HashPassword(password);
     }
 
     public UserPassword(User user, string password)
@@ -23,20 +30,15 @@ public class UserPassword
 
     [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    [ForeignKey(nameof(User))]
-    public int UserId { get; init; }
+    [Column("user_id")] public int UserId { get; init; }
 
-    [UsedImplicitly]
-    [Column("password")]
-    [MaxLength(255)]
-    public string Password { get; private set; }
+    [Column("password")] [MaxLength(255)] protected string Password { get; init; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; private set; }
+    [Column("created_at")] public DateTime CreatedAt { get; init; }
 
     [Column("is_active")] public bool IsActive { get; set; }
 
-    public User? User { get; private set; }
+    [ForeignKey(nameof(UserId))] public User? User { get; init; }
 
     public static ValidationError? ValidatePassword(string password)
     {

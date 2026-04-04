@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Households.Domain.Entities;
 
 [Table("household_invitations")]
-public class HouseholdInvitation : BaseDeletableEntity
+public class HouseholdInvitation
 {
-    public HouseholdInvitation()
+    protected HouseholdInvitation()
     {
     }
 
@@ -19,23 +18,49 @@ public class HouseholdInvitation : BaseDeletableEntity
         IsAccepted = false;
     }
 
-    [Column("household_id")]
-    [ForeignKey(nameof(Household))]
-    public int HouseholdId { get; init; }
+    [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    [ForeignKey(nameof(User))]
-    public int UserId { get; init; }
+    [Column("household_id")] public int HouseholdId { get; init; }
 
-    [Column("is_answered")] public bool IsAnswered { get; set; }
+    [Column("user_id")] public int UserId { get; init; }
 
-    [Column("answered_at")] public DateTime? AnsweredAt { get; set; }
+    [Column("is_answered")] public bool IsAnswered { get; private set; }
 
-    [Column("is_accepted")] public bool IsAccepted { get; set; }
+    [Column("answered_at")] public DateTime? AnsweredAt { get; private set; }
 
-    public Household Household { get; private set; } = null!;
+    [Column("is_accepted")] public bool IsAccepted { get; private set; }
 
-    public User User { get; private set; } = null!;
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
+    [Column("row_version")] public int RowVersion { get; init; }
+
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
+
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
+
+    [ForeignKey(nameof(UserId))] public User? User { get; private set; }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
+    }
+
+    public void Accept()
+    {
+        IsAnswered = true;
+        AnsweredAt = DateTime.UtcNow;
+        IsAccepted = true;
+    }
+
+    public void Reject()
+    {
+        IsAnswered = true;
+        AnsweredAt = DateTime.UtcNow;
+        IsAccepted = false;
+    }
 }
 
 public static class HouseholdInvitationExtensions
@@ -43,10 +68,5 @@ public static class HouseholdInvitationExtensions
     public static IQueryable<HouseholdInvitation> Active(this IQueryable<HouseholdInvitation> invitations)
     {
         return invitations.Where(x => !x.IsDeleted);
-    }
-
-    public static IQueryable<HouseholdInvitation> Pending(this IQueryable<HouseholdInvitation> invitations)
-    {
-        return invitations.Where(x => !x.IsDeleted && !x.IsAnswered);
     }
 }

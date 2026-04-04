@@ -15,7 +15,7 @@ namespace Capychef.Storage.Services;
 public class BatchService(
     CapychefDbContext dbContext,
     IBatchRepository batchRepository,
-    IBatchModificationHistoryRepository batchModificationHistoryRepository,
+    // IBatchModificationHistoryRepository batchModificationHistoryRepository,
     IFoodRepository foodRepository,
     IStorageSpaceRepository storageSpaceRepository) : IBatchService
 {
@@ -35,15 +35,27 @@ public class BatchService(
             return new Result<BatchDto>(new NotFoundError(EntityType.FoodUoM,
                 $"{cmd.FoodUoMId} for food {cmd.FoodId}"));
 
-        var batch = new Batch(userDetails.UserId, userDetails.GetHouseholdId(), cmd.FoodId, cmd.StorageSpaceId,
-            cmd.Quantity,
-            cmd.FoodUoMId, cmd.BestBeforeDate, cmd.ExpirationDate, false, false, false);
+        DateTime? bestBeforeDate = null;
 
-        var batchModification = BatchModificationHistory.FromInitial(batch);
+        if (cmd.BestBeforeDate.HasValue)
+            bestBeforeDate = cmd.BestBeforeDate.Value;
+        else if (food.HouseholdFoodDetails != null && food.HouseholdFoodDetails.DaysUntilBestBefore.HasValue)
+            bestBeforeDate = DateTime.UtcNow.AddDays(food.HouseholdFoodDetails.DaysUntilBestBefore.Value);
+
+        DateTime? expirationDate = null;
+
+        if (cmd.ExpirationDate.HasValue)
+            expirationDate = cmd.ExpirationDate.Value;
+        else if (food.HouseholdFoodDetails != null && food.HouseholdFoodDetails.DaysUntilExpiration.HasValue)
+            expirationDate = DateTime.UtcNow.AddDays(food.HouseholdFoodDetails.DaysUntilExpiration.Value);
+
+        var batch = Batch.New(userDetails.UserId, userDetails.GetHouseholdId(), cmd.FoodId, cmd.StorageSpaceId,
+            cmd.Quantity,
+            cmd.FoodUoMId, bestBeforeDate, expirationDate);
 
         await batchRepository.AddAsync(batch);
 
-        await batchModificationHistoryRepository.AddAsync(batchModification);
+        // await batchModificationHistoryRepository.AddAsync(batchModification);
 
         await dbContext.SaveChangesAsync();
 

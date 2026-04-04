@@ -33,16 +33,25 @@ public class AuthService(
 
         if (usernameInUse) return new Result<(UserDto, AuthUserDetails)>(new UsernameInUseError(cmd.Username));
 
-        var user = new User(cmd);
-
-        await userRepository.AddUserAsync(user);
+        User user;
 
         if (cmd.Password != null)
         {
+            if (cmd.Email != null)
+                user = User.NewEmailUser(cmd.Username, cmd.Email);
+            else
+                user = User.NewPasswordUser(cmd.Username);
+
             var password = new UserPassword(user, cmd.Password);
 
             await userPasswordRepository.AddUserPasswordAsync(password);
         }
+        else
+        {
+            user = User.NewGuestUser(cmd.Username);
+        }
+
+        await userRepository.AddUserAsync(user);
 
         var session = new UserSession(user);
 
@@ -105,7 +114,7 @@ public class AuthService(
 
         if (!user.IsEmailValid) return new NotFoundError(EntityType.User, user.Id + "email is not verified");
 
-        var userToken = UserToken.CreatePasswordRecoveryUserToken(user);
+        var userToken = UserToken.CreatePasswordRecoveryUserToken(user.Id);
 
         await userTokenRepository.AddUserTokenAsync(userToken);
 
@@ -170,7 +179,7 @@ public class AuthService(
 
         if (!user.IsGuest) return new Result<string>(new NotFoundError(EntityType.User, userDetails.UserId));
 
-        var userToken = UserToken.CreateGuestAccountTransferUserToken(user);
+        var userToken = UserToken.CreateGuestAccountTransferUserToken(user.Id);
 
         await userTokenRepository.AddUserTokenAsync(userToken);
 

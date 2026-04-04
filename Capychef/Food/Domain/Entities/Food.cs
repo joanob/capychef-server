@@ -1,15 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Households.Domain.Entities;
-using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Food.Domain.Entities;
 
 [Table("food")]
-public class Food : BaseDeletableEntity
+public class Food
 {
+    protected Food()
+    {
+        Name = "";
+    }
+
     public Food(string globalId, string name, int categoryId, int? daysUntilExpiration,
         int? daysUntilBestBefore)
     {
@@ -41,23 +44,33 @@ public class Food : BaseDeletableEntity
         CreatedBy = createdBy;
     }
 
+    [Column("id")] public int Id { get; init; }
+
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
     [Column("category_id")] public int CategoryId { get; set; }
 
-    [Column("days_until_expiration")] public int? DaysUntilExpiration { get; set; }
+    [Column("is_global")] public bool IsGlobal { get; init; }
 
-    [Column("days_until_best_before")] public int? DaysUntilBestBefore { get; set; }
-
-    [Column("is_global")] public bool IsGlobal { get; private set; }
-
-    [Column("global_id")] [MaxLength(50)] public string? GlobalId { get; private set; }
+    [Column("global_id")] [MaxLength(50)] public string? GlobalId { get; init; }
 
     [Column("household_id")] public int? HouseholdId { get; init; }
 
-    [Column("modified_global_food_id")] public int? ModifiedGlobalFoodId { get; private set; }
+    [Column("modified_global_food_id")] public int? ModifiedGlobalFoodId { get; init; }
 
-    [Column("created_by")] public int? CreatedBy { get; private set; }
+    [Column("days_until_expiration")] private int? DaysUntilExpiration { get; set; }
+
+    [Column("days_until_best_before")] private int? DaysUntilBestBefore { get; set; }
+
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
+    [Column("created_by")] public int CreatedBy { get; init; }
+
+    [Column("row_version")] public int RowVersion { get; init; }
+
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
     [ForeignKey(nameof(CategoryId))] public FoodCategory? Category { get; init; }
 
@@ -65,8 +78,6 @@ public class Food : BaseDeletableEntity
 
     [ForeignKey(nameof(ModifiedGlobalFoodId))]
     public Food? ModifiedGlobalFood { get; init; }
-
-    [ForeignKey(nameof(CreatedBy))] public User? CreatedByUser { get; init; }
 
     [InverseProperty(nameof(FoodUoM.Food))]
     public ICollection<FoodUoM> UoM { get; private set; } = new List<FoodUoM>();
@@ -76,6 +87,16 @@ public class Food : BaseDeletableEntity
         new List<HouseholdFoodDetails>();
 
     public HouseholdFoodDetails? HouseholdFoodDetails => HouseholdDetailsCollection.FirstOrDefault();
+
+    public void SetGlobalDaysUntilExpiration(int? daysUntilExpiration)
+    {
+        if (!HouseholdId.HasValue) DaysUntilExpiration = daysUntilExpiration;
+    }
+
+    public void SetGlobalDaysUntilBestBefore(int? daysUntilBestBefore)
+    {
+        if (!HouseholdId.HasValue) DaysUntilBestBefore = daysUntilBestBefore;
+    }
 
     public int? GetDaysUntilBestBefore()
     {
@@ -136,6 +157,12 @@ public class Food : BaseDeletableEntity
     public void SetHouseholdFoodDetails(HouseholdFoodDetails details)
     {
         HouseholdDetailsCollection = new List<HouseholdFoodDetails> { details };
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
     }
 }
 

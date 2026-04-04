@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Common.Utils;
 using Capychef.Users.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +7,20 @@ using Microsoft.EntityFrameworkCore;
 namespace Capychef.Households.Domain.Entities;
 
 [Table("households")]
-public class Household : BaseDeletableEntity
+public class Household
 {
+    protected Household()
+    {
+        Name = "";
+        PublicId = "";
+    }
+
     public Household(User user, string name)
     {
         User = user;
         Name = name;
         PublicId = RandomGenerator.GenerateRandomCapsString(6);
+        CreatedBy = user.Id;
     }
 
     public Household(int ownerId, string name)
@@ -22,24 +28,36 @@ public class Household : BaseDeletableEntity
         OwnerId = ownerId;
         Name = name;
         PublicId = RandomGenerator.GenerateRandomCapsString(6);
+        CreatedBy = ownerId;
     }
 
-    [Column("owner_id")]
-    [ForeignKey(nameof(User))]
-    public int OwnerId { get; private set; }
+    [Column("id")] public int Id { get; init; }
+
+    [Column("owner_id")] public int OwnerId { get; set; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
-    [Column("public_id")] [MaxLength(20)] public string PublicId { get; set; }
+    [Column("public_id")] [MaxLength(20)] public string PublicId { get; init; }
+
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
+    [Column("created_by")] public int CreatedBy { get; init; }
+
+    [Column("row_version")] public int RowVersion { get; init; }
+
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
     [InverseProperty(nameof(StorageSpace.Household))]
     public ICollection<StorageSpace> StorageSpaces { get; } = new List<StorageSpace>();
 
-    public User User { get; private set; } = null!;
+    [ForeignKey(nameof(OwnerId))] public User? User { get; private set; }
 
-    public void AddStorageSpace(StorageSpace storageSpace)
+    public void Delete()
     {
-        StorageSpaces.Add(storageSpace);
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
     }
 }
 
@@ -48,6 +66,11 @@ public static class HouseholdExtensions
     public static IQueryable<Household> Active(this IQueryable<Household> households)
     {
         return households.Where(x => !x.IsDeleted);
+    }
+
+    public static IQueryable<Household?> ActiveNullable(this IQueryable<Household?> households)
+    {
+        return households.Where(x => x != null && !x.IsDeleted);
     }
 
     public static IQueryable<Household> IncludeStorageSpaces(this IQueryable<Household> household)

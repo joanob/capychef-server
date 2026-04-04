@@ -4,22 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Food.Domain.Entities;
 
-[Table("food_modifications_history")]
-public class FoodModificationHistory
+[Table("food_uom_modifications_history")]
+public class FoodUoMModificationHistory
 {
-    protected FoodModificationHistory()
+    protected FoodUoMModificationHistory()
     {
-        ColumnName = FoodModifiableColumn.From("");
+        ColumnName = FoodUoMModifiableColumn.From("");
         PreviousValue = "";
         NewValue = "";
     }
 
-    public FoodModificationHistory(int foodId, int householdId, FoodModifiableColumn columnName, string previousValue,
+    public FoodUoMModificationHistory(int foodUoMId, int householdId, FoodUoMModifiableColumn columnName,
+        string previousValue,
         string newValue,
         int modifiedBy)
     {
-        FoodId = foodId;
-        HouseholdId = householdId;
+        FoodUoMId = foodUoMId;
         ColumnName = columnName;
         PreviousValue = previousValue;
         NewValue = newValue;
@@ -29,11 +29,9 @@ public class FoodModificationHistory
 
     [Column("id")] public int Id { get; init; }
 
-    [Column("food_id")] public int FoodId { get; init; }
+    [Column("food_uom_id")] public int FoodUoMId { get; init; }
 
-    [Column("household_id")] public int HouseholdId { get; init; }
-
-    [Column("column_name")] public FoodModifiableColumn ColumnName { get; init; }
+    [Column("column_name")] public FoodUoMModifiableColumn ColumnName { get; init; }
 
     [Column("previous_value")]
     [MaxLength(100)]
@@ -45,12 +43,12 @@ public class FoodModificationHistory
 
     [Column("modified_by")] public int ModifiedBy { get; init; }
 
-    [ForeignKey(nameof(FoodId))] public Food? Food { get; init; }
+    [ForeignKey(nameof(FoodUoMId))] public FoodUoM? Food { get; init; }
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<FoodModificationHistory>()
+        modelBuilder.Entity<FoodUoMModificationHistory>()
             .Property(f => f.ColumnName)
-            .HasConversion(new FoodModifiableColumnConverter());
+            .HasConversion(new FoodUoMModifiableColumnConverter());
     }
 }

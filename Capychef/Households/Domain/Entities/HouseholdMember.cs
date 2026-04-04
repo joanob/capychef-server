@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Capychef.Common.Entities;
 using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Households.Domain.Entities;
 
 [Table("household_members")]
-public class HouseholdMember : BaseDeletableEntity
+public class HouseholdMember
 {
-    public HouseholdMember()
+    protected HouseholdMember()
     {
     }
 
@@ -32,19 +31,31 @@ public class HouseholdMember : BaseDeletableEntity
         DidLeave = false;
     }
 
-    [Column("household_id")]
-    [ForeignKey(nameof(Household))]
-    public int HouseholdId { get; private set; }
+    [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    [ForeignKey(nameof(User))]
-    public int UserId { get; private set; }
+    [Column("household_id")] public int HouseholdId { get; init; }
+
+    [Column("user_id")] public int UserId { get; init; }
 
     [Column("did_leave")] public bool DidLeave { get; private set; }
 
-    public Household Household { get; private set; } = null!;
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    public User User { get; private set; } = null!;
+    [Column("row_version")] public int RowVersion { get; init; }
+
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
+
+    [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
+
+    [ForeignKey(nameof(UserId))] public User? User { get; private set; }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
+    }
 
     public void Leave()
     {

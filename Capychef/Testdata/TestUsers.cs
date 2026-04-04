@@ -1,6 +1,5 @@
 ﻿using Capychef.Common.Utils;
 using Capychef.Persistence;
-using Capychef.Users.Domain.Cmd;
 using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Testdata;
@@ -48,10 +47,7 @@ public class TestUsers(CapychefDbContext dbContext)
             var username = _usernames.ElementAt(0);
             _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd
-                { Username = username, Password = username, Email = $"{username}@capychef.com" };
-
-            var user = new User(signupCmd);
+            var user = User.NewEmailUser(username, $"{username}@capychef.com");
             user.IsEmailValid = true;
             dbContext.Add(user);
 
@@ -59,9 +55,7 @@ public class TestUsers(CapychefDbContext dbContext)
             dbContext.Add(userPassword);
 
             var userTokens = UserToken.CreateEmailValidationUserToken(user);
-            userTokens.IsUsed = true;
-            userTokens.IsActive = false;
-            userTokens.UsedAt = DateTime.UtcNow;
+            userTokens.MarkUsed();
             dbContext.Add(userTokens);
         }
 
@@ -76,10 +70,7 @@ public class TestUsers(CapychefDbContext dbContext)
             var username = _usernames.ElementAt(0);
             _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd
-                { Username = username, Password = username, Email = $"{username}@capychef.com" };
-
-            var user = new User(signupCmd);
+            var user = User.NewEmailUser(username, $"{username}@capychef.com");
             dbContext.Add(user);
 
             var userPassword = new UserPassword(user, username);
@@ -100,9 +91,7 @@ public class TestUsers(CapychefDbContext dbContext)
             var username = _usernames.ElementAt(0);
             _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd { Username = username, Password = username };
-
-            var user = new User(signupCmd);
+            var user = User.NewPasswordUser(username);
             dbContext.Add(user);
 
             var userPassword = new UserPassword(user, username);
@@ -120,12 +109,10 @@ public class TestUsers(CapychefDbContext dbContext)
             var username = _usernames.ElementAt(0);
             _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd { Username = username };
-
-            var user = new User(signupCmd);
+            var user = User.NewGuestUser(username);
             dbContext.Add(user);
 
-            var userTokens = UserToken.CreateGuestAccountTransferUserToken(user);
+            var userTokens = UserToken.CreateGuestAccountTransferUserToken(user.Id);
             dbContext.Add(userTokens);
         }
 
@@ -140,9 +127,7 @@ public class TestUsers(CapychefDbContext dbContext)
             var username = _usernames.ElementAt(0);
             _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd { Username = username, Password = username };
-
-            var user = new User(signupCmd);
+            var user = User.NewPasswordUser(username);
             user.IsBlocked = true;
             user.BlockReason = "block test";
             dbContext.Add(user);
@@ -162,9 +147,7 @@ public class TestUsers(CapychefDbContext dbContext)
             var username = _usernames.ElementAt(0);
             _usernames.Remove(username);
 
-            var signupCmd = new SignupCmd { Username = username, Password = username };
-
-            var user = new User(signupCmd);
+            var user = User.NewPasswordUser(username);
             user.Delete();
             dbContext.Add(user);
 

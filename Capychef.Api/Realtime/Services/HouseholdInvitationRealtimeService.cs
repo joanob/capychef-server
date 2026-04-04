@@ -19,8 +19,8 @@ public class HouseholdInvitationRealtimeService : IHouseholdInvitationRealtimeSe
     {
         var payload = new
         {
-            HouseholdId = householdInvitation.Household.Id,
-            HouseholdName = householdInvitation.Household.Name
+            HouseholdId = householdInvitation.Household?.Id,
+            HouseholdName = householdInvitation.Household?.Name
         };
 
         var connections = await _connections.GetByUserAsync(householdInvitation.UserId);

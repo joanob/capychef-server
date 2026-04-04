@@ -1,6 +1,5 @@
 ﻿using Capychef.Common.Auth;
 using Capychef.Persistence;
-using Capychef.Users.Domain.Entities;
 using Capychef.Users.Domain.Interfaces;
 
 namespace Capychef.Users.Services;
@@ -16,16 +15,9 @@ public class UserSessionService(CapychefDbContext dbContext, IUserSessionReposit
         if (userSession.UserId != userDetails.UserId) return false;
         if (userSession.IsRevoked) return false;
 
-        userSession.LastConnectionAt = DateTime.Now;
+        userSession.LastRefreshAt = DateTime.Now;
         await dbContext.SaveChangesAsync();
 
         return true;
-    }
-
-    public async Task<UserSession> CreateUserSession(User user)
-    {
-        var userSession = new UserSession(user);
-        await userSessionRepository.AddUserSessionAsync(userSession);
-        return userSession;
     }
 }

@@ -7,72 +7,74 @@ namespace Capychef.Users.Domain.Entities;
 [Table("users_tokens")]
 public class UserToken
 {
+    protected UserToken()
+    {
+        Token = "";
+    }
+
+    private UserToken(int userId, string token, UserTokenType tokenType, DateTime expiresAt)
+    {
+        UserId = userId;
+        Token = token;
+        TokenType = tokenType;
+        ExpiresAt = expiresAt;
+        IsActive = true;
+        IsUsed = false;
+    }
+
+    private UserToken(User user, string token, UserTokenType tokenType, DateTime expiresAt)
+    {
+        User = user;
+        Token = token;
+        TokenType = tokenType;
+        ExpiresAt = expiresAt;
+        IsActive = true;
+        IsUsed = false;
+    }
+
     [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    [ForeignKey(nameof(User))]
-    public int UserId { get; init; }
+    [Column("user_id")] public int UserId { get; init; }
 
-    [Column("token")] [MaxLength(20)] public string Token { get; private set; } = "";
+    [Column("token")] [MaxLength(20)] public string Token { get; init; }
 
-    [Column("token_type")] public UserTokenType TokenType { get; private set; }
+    [Column("token_type")] public UserTokenType TokenType { get; init; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Column("expires_at")] public DateTime? ExpiresAt { get; private set; }
+    [Column("expires_at")] public DateTime? ExpiresAt { get; init; }
 
-    [Column("used_at")] public DateTime? UsedAt { get; set; }
-
-    [Column("is_active")] public bool IsActive { get; set; }
+    [Column("is_active")] public bool IsActive { get; private set; }
 
     [Column("is_used")] public bool IsUsed { get; set; }
 
-    public User User { get; private set; } = null!;
+    [Column("used_at")] public DateTime? UsedAt { get; private set; }
 
-    public static UserToken CreatePasswordRecoveryUserToken(User user)
+    [ForeignKey(nameof(UserId))] public User? User { get; init; }
+
+    public static UserToken CreatePasswordRecoveryUserToken(int userId)
     {
-        var userToken = new UserToken();
+        var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(10);
 
-        userToken.User = user;
-        userToken.Token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(10);
-        userToken.TokenType = UserTokenType.PasswordRecovery;
-        userToken.CreatedAt = DateTime.Now;
-        userToken.ExpiresAt = user.CreatedAt.AddHours(24);
-        userToken.UsedAt = null;
-        userToken.IsActive = true;
-        userToken.IsUsed = false;
+        var userToken = new UserToken(userId, token, UserTokenType.PasswordRecovery, DateTime.Now.AddDays(1));
 
         return userToken;
     }
 
     public static UserToken CreateEmailValidationUserToken(User user)
     {
-        var userToken = new UserToken();
+        var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(6);
 
-        userToken.User = user;
-        userToken.Token = RandomGenerator.GenerateRandomCapsAndNumbersString(6);
-        userToken.TokenType = UserTokenType.EmailValidation;
-        userToken.CreatedAt = DateTime.Now;
-        userToken.ExpiresAt = user.CreatedAt.AddDays(30);
-        userToken.UsedAt = null;
-        userToken.IsActive = true;
-        userToken.IsUsed = false;
+        var userToken = new UserToken(user, token, UserTokenType.EmailValidation, DateTime.Now.AddDays(30));
 
         return userToken;
     }
 
-    public static UserToken CreateGuestAccountTransferUserToken(User user)
+    public static UserToken CreateGuestAccountTransferUserToken(int userId)
     {
-        var userToken = new UserToken();
+        var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(8);
 
-        userToken.User = user;
-        userToken.Token = RandomGenerator.GenerateRandomCapsString(8);
-        userToken.TokenType = UserTokenType.GuestAccountTransfer;
-        userToken.CreatedAt = DateTime.Now;
-        userToken.ExpiresAt = user.CreatedAt.AddHours(24);
-        userToken.UsedAt = null;
-        userToken.IsActive = true;
-        userToken.IsUsed = false;
+        var userToken = new UserToken(userId, token, UserTokenType.GuestAccountTransfer, DateTime.Now.AddDays(1));
 
         return userToken;
     }

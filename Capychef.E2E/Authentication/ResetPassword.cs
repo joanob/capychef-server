@@ -61,7 +61,7 @@ public class ResetPassword
             }
 
             Assert.IsNotNull(token, "Setup: failed to retrieve password recovery token from DB");
-            return token!;
+            return token;
         }
 
         // 1) Reset password with valid token and new password

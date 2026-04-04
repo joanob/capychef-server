@@ -13,21 +13,19 @@ public class UserSession
     {
         User = user;
         CreatedAt = DateTime.UtcNow;
-        LastConnectionAt = DateTime.UtcNow;
+        LastRefreshAt = DateTime.UtcNow;
         IsRevoked = false;
     }
 
     [Column("id")] public int Id { get; init; }
 
-    [Column("user_id")]
-    [ForeignKey(nameof(User))]
-    public int UserId { get; init; }
+    [Column("user_id")] public int UserId { get; init; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Column("last_connection_at")] public DateTime LastConnectionAt { get; set; }
+    [Column("last_refresh_at")] public DateTime LastRefreshAt { get; set; }
 
     [Column("is_revoked")] public bool IsRevoked { get; set; }
 
-    public User User { get; private set; } = null!;
+    [ForeignKey(nameof(UserId))] public User? User { get; init; }
 }
