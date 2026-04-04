@@ -122,7 +122,7 @@ CREATE TABLE food_uom
     deleted_at           TIMESTAMP,
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (base_uom) REFERENCES uom (code),
-    FOREIGN KEY (created_at) REFERENCES users(id),
+    FOREIGN KEY (created_by) REFERENCES users(id),
     CHECK (
         (
             base_uom IS NULL AND

@@ -12,7 +12,7 @@ CREATE TABLE households
     is_deleted  BOOLEAN            NOT NULL,
     deleted_at  TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES users (id),
-    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
 );
 
 -- HOUSEHOLD MEMBERS
