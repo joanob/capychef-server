@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Common.Result;
+using Capychef.Food.Domain.Errors;
 using Capychef.Households.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -157,6 +159,63 @@ public class Food
     public void SetHouseholdFoodDetails(HouseholdFoodDetails details)
     {
         HouseholdDetailsCollection = new List<HouseholdFoodDetails> { details };
+    }
+
+    /// <summary>
+    ///     Converts <paramref name="quantity" /> from <paramref name="fromFoodUoMId" /> to <paramref name="toFoodUoMId" />
+    ///     using the base UoM as intermediate.
+    ///     Returns:
+    ///     <list type="bullet">
+    ///         <item><see cref="FoodUoMNotFound" /> — if either UoM id is not in this food's UoM list.</item>
+    ///         <item><see cref="FoodUoMConversionNotFoundError" /> — if a non-base UoM is missing numerator/denominator.</item>
+    ///         <item><see cref="FoodUoMConversionError" /> — if conversion data is present but invalid (e.g. denominator = 0).</item>
+    ///     </list>
+    ///     <see cref="ConversionResult.IsApproximate" /> is <c>true</c> when either UoM is flagged as an approximate
+    ///     conversion (e.g. "1 apple ≈ 200 g").
+    /// </summary>
+    public Result<ConversionResult> Convert(double quantity, int fromFoodUoMId, int toFoodUoMId)
+    {
+        if (fromFoodUoMId == toFoodUoMId)
+            return new Result<ConversionResult>(new ConversionResult(quantity, false));
+
+        var fromUoM = UoM.FirstOrDefault(x => x.Id == fromFoodUoMId);
+        if (fromUoM == null) return new Result<ConversionResult>(new FoodUoMNotFound(Id, fromFoodUoMId));
+
+        var toUoM = UoM.FirstOrDefault(x => x.Id == toFoodUoMId);
+        if (toUoM == null) return new Result<ConversionResult>(new FoodUoMNotFound(Id, toFoodUoMId));
+
+        double baseQuantity;
+        if (fromUoM.IsBaseUoM)
+        {
+            baseQuantity = quantity;
+        }
+        else
+        {
+            if (!fromUoM.Numerator.HasValue || !fromUoM.Denominator.HasValue)
+                return new Result<ConversionResult>(new FoodUoMConversionNotFoundError(Id, fromUoM.UoM));
+            if (fromUoM.Denominator == 0)
+                return new Result<ConversionResult>(new FoodUoMConversionError(Id, fromUoM.UoM));
+
+            baseQuantity = quantity * fromUoM.Numerator.Value / fromUoM.Denominator.Value;
+        }
+
+        double targetQuantity;
+        if (toUoM.IsBaseUoM)
+        {
+            targetQuantity = baseQuantity;
+        }
+        else
+        {
+            if (!toUoM.Numerator.HasValue || !toUoM.Denominator.HasValue)
+                return new Result<ConversionResult>(new FoodUoMConversionNotFoundError(Id, toUoM.UoM));
+            if (toUoM.Numerator == 0)
+                return new Result<ConversionResult>(new FoodUoMConversionError(Id, toUoM.UoM));
+
+            targetQuantity = baseQuantity * toUoM.Denominator.Value / toUoM.Numerator.Value;
+        }
+
+        var isApprox = (fromUoM.IsApproxConversion ?? false) || (toUoM.IsApproxConversion ?? false);
+        return new Result<ConversionResult>(new ConversionResult(targetQuantity, isApprox));
     }
 
     public void Delete()

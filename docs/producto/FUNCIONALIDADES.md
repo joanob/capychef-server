@@ -35,7 +35,7 @@
 - [ ] Modificar impacto ambiental de un alimento del hogar
 
 ## Inventario
-- [ ] Añadir lote al inventario
+- [x] Añadir lote al inventario
 - [ ] Desplazar lote totalmente
 - [ ] Desplazar lote parcialmente
 - [ ] Consumir lote totalmente

@@ -5,6 +5,8 @@ namespace Capychef.Households.Domain.Entities;
 public class BatchModificationType
 {
     private const string InitialConst = "C";
+    private const string FullMoveConst = "F";
+    private const string PartialMoveConst = "P";
 
     private readonly string _value;
 
@@ -14,12 +16,16 @@ public class BatchModificationType
     }
 
     public static BatchModificationType Initial => new(InitialConst);
+    public static BatchModificationType FullMove => new(FullMoveConst);
+    public static BatchModificationType PartialMove => new(PartialMoveConst);
 
     public static BatchModificationType From(string value)
     {
         return value switch
         {
             InitialConst => Initial,
+            FullMoveConst => FullMove,
+            PartialMoveConst => PartialMove,
             _ => new BatchModificationType("")
         };
     }

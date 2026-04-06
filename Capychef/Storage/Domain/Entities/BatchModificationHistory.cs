@@ -21,21 +21,28 @@ public class BatchModificationHistory
 
     [Column("storage_space_id")] public int StorageSpaceId { get; init; }
 
-    [Column("previous_quantity")] public double PreviousQuantity { get; init; }
+    [Column("previous_quantity")] public double? PreviousQuantity { get; init; }
 
-    [Column("delta_quantity")] public double DeltaQuantity { get; init; }
+    [Column("previous_food_uom_id")] public int? PreviousFoodUoMId { get; init; }
+    [Column("delta_quantity")] public double? DeltaQuantity { get; init; }
+
+    [Column("delta_food_uom_id")] public int? DeltaFoodUoMId { get; init; }
 
     [Column("new_quantity")] public double NewQuantity { get; init; }
-
-    [Column("previous_food_uom_id")] public int PreviousFoodUoMId { get; init; }
-
-    [Column("delta_food_uom_id")] public int DeltaFoodUoMId { get; init; }
 
     [Column("new_food_uom_id")] public int NewFoodUoMId { get; init; }
 
     [Column("best_before_date")] public DateTime? BestBeforeDate { get; init; }
 
     [Column("expiration_date")] public DateTime? ExpirationDate { get; init; }
+
+    [Column("created_from_batch_id")] public int? CreatedFromBatchId { get; init; }
+
+    [Column("created_new_batch_id")] public int? CreatedNewBatchId { get; init; }
+
+    [Column("created_at")] public DateTime CreatedAt { get; init; }
+
+    [Column("created_by")] public int CreatedBy { get; init; }
 
     [ForeignKey(nameof(BatchId))] public Batch? Batch { get; init; }
 
@@ -48,21 +55,80 @@ public class BatchModificationHistory
 
     [ForeignKey(nameof(NewFoodUoMId))] public FoodUoM? NewFoodUoM { get; init; }
 
-    public static BatchModificationHistory FromInitial(Batch batch)
+    [ForeignKey(nameof(CreatedFromBatchId))]
+    public Batch? CreatedFromBatch { get; init; }
+
+    [ForeignKey(nameof(CreatedNewBatchId))]
+    public Batch? CreatedNewBatch { get; init; }
+
+    public static BatchModificationHistory Initial(Batch batch, int userId)
+    {
+        return new BatchModificationHistory
+        {
+            Batch = batch,
+            ModificationType = BatchModificationType.Initial,
+            StorageSpaceId = batch.StorageSpaceId,
+            NewQuantity = batch.Quantity,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory FullMove(Batch batch, int userId, int newStorageSpaceId)
     {
         return new BatchModificationHistory
         {
             BatchId = batch.Id,
-            ModificationType = BatchModificationType.Initial,
-            StorageSpaceId = batch.StorageSpaceId,
-            PreviousQuantity = batch.Quantity,
-            DeltaQuantity = 0, // initial history entry
+            ModificationType = BatchModificationType.FullMove,
+            StorageSpaceId = newStorageSpaceId,
             NewQuantity = batch.Quantity,
-            PreviousFoodUoMId = batch.FoodUoMId,
-            DeltaFoodUoMId = batch.FoodUoMId,
             NewFoodUoMId = batch.FoodUoMId,
             BestBeforeDate = batch.BestBeforeDate,
-            ExpirationDate = batch.ExpirationDate
+            ExpirationDate = batch.ExpirationDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory OriginalBatchPartialMove(Batch batch, Batch newBatch, int userId,
+        double previousQuantity, int previousFoodUoMId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.PartialMove,
+            StorageSpaceId = batch.StorageSpaceId,
+            PreviousQuantity = previousQuantity,
+            DeltaQuantity = newBatch.Quantity,
+            NewQuantity = batch.Quantity,
+            PreviousFoodUoMId = previousFoodUoMId,
+            DeltaFoodUoMId = newBatch.FoodUoMId,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedNewBatch = newBatch,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory NewBatchPartialMove(Batch newBatch, Batch originalBatch, int userId)
+    {
+        return new BatchModificationHistory
+        {
+            Batch = newBatch,
+            ModificationType = BatchModificationType.PartialMove,
+            StorageSpaceId = newBatch.StorageSpaceId,
+            NewQuantity = newBatch.Quantity,
+            NewFoodUoMId = newBatch.FoodUoMId,
+            BestBeforeDate = newBatch.BestBeforeDate,
+            ExpirationDate = newBatch.ExpirationDate,
+            CreatedFromBatch = originalBatch,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
         };
     }
 

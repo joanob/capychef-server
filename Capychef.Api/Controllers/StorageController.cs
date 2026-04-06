@@ -29,6 +29,21 @@ public class StorageController(
         return Ok(batch.Get());
     }
 
+    [CheckMembership]
+    [HttpPut("{id}/move")]
+    public async Task<ActionResult<BatchDto>> MoveBatch(int id, MoveBatchCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batch = await batchService.MoveBatch(id, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("BatchService.MoveBatch");
+
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
+
+        return Ok(batch.Get());
+    }
+
     // [CheckMembership]
     // [HttpGet]
     // public async Task<ActionResult<List<BatchDto>>> GetAllBatches()
@@ -85,18 +100,4 @@ public class StorageController(
     //     return Ok(batch.Get());
     // }
     //
-    // [CheckMembership]
-    // [HttpPut("{id}/move")]
-    // public async Task<ActionResult<BatchDto>> MoveBatch(int id, MoveBatchCmd cmd)
-    // {
-    //     var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
-    //
-    //     var batch = await batchService.MoveBatch(id, cmd, userDetails);
-    //
-    //     var logger = loggerFactory.CreateLogger("BatchService.MoveBatch");
-    //
-    //     if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
-    //
-    //     return Ok(batch.Get());
-    // }
 }
