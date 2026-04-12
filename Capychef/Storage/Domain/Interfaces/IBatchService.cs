@@ -15,6 +15,7 @@ public interface IBatchService
 
     Task<Result<BatchModificationDto>> DiscardBatch(int batchId, ModifyBatchCmd cmd, AuthUserDetails userDetails);
 
-    // Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails);
-    // Task<Result<BatchDto>> UpdateBatch(int batchId, UpdateBatchCmd cmd, AuthUserDetails userDetails);
+    Task<Result<BatchDto>> UpdateBatch(int batchId, UpdateBatchCmd cmd, AuthUserDetails userDetails);
+
+    Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails);
 }

@@ -250,13 +250,60 @@ public class BatchService(
             batchModifications.NewBatch));
     }
 
-    // public async Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails)
-    // {
-    //     var batches = await batchRepository.GetAllByHouseholdId(userDetails.GetHouseholdId());
-    //
-    //     return BatchDto.ToBatchDtoList(batches);
-    // }
-    //
+    public async Task<Result<BatchDto>> UpdateBatch(int batchId, UpdateBatchCmd cmd, AuthUserDetails userDetails)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<BatchDto>(validationError);
+
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
+        if (batch == null) return new Result<BatchDto>(new NotFoundError(EntityType.Batch, batchId));
+
+        var food = await foodRepository.GetFoodById(batch.FoodId, userDetails.GetHouseholdId());
+        if (food == null) return new Result<BatchDto>(new NotFoundError(EntityType.Food, batch.FoodId));
+
+        if (food.UoM.All(x => x.Id != cmd.FoodUoMId))
+            return new Result<BatchDto>(new FoodUoMNotFound(batch.FoodId, cmd.FoodUoMId));
+
+        if (batch.Quantity - cmd.Quantity > -1e-6 || batch.FoodUoMId != cmd.FoodUoMId)
+        {
+            var previousQuantity = batch.Quantity;
+            var previousFoodUoMId = batch.FoodUoMId;
+
+            batch.Quantity = cmd.Quantity;
+            batch.FoodUoMId = cmd.FoodUoMId;
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.UpdateQuantity(batch, userDetails.UserId, previousQuantity,
+                    previousFoodUoMId));
+        }
+
+        if (batch.BestBeforeDate != cmd.BestBeforeDate)
+        {
+            batch.BestBeforeDate = cmd.BestBeforeDate;
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.UpdateBestBeforeDate(batch, userDetails.UserId));
+        }
+
+        if (batch.ExpirationDate != cmd.ExpirationDate)
+        {
+            batch.ExpirationDate = cmd.ExpirationDate;
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.UpdateExpirationDate(batch, userDetails.UserId));
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchDto>(new BatchDto(batch));
+    }
+
+    public async Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails)
+    {
+        var batches = await batchRepository.GetAllByHouseholdId(userDetails.GetHouseholdId());
+
+        return BatchDto.ToBatchDtoList(batches);
+    }
 
     /// <summary>
     ///     Generic batch modification method that handles conversion, quantity checks, and batch creation/modification.

@@ -74,29 +74,29 @@ public class StorageController(
         return Ok(batch.Get());
     }
 
-    // [CheckMembership]
-    // [HttpGet]
-    // public async Task<ActionResult<List<BatchDto>>> GetAllBatches()
-    // {
-    //     var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
-    //
-    //     var batches = await batchService.GetAllBatches(userDetails);
-    //
-    //     return Ok(batches);
-    // }
-    //
-    // [CheckMembership]
-    // [HttpPut("{id}")]
-    // public async Task<ActionResult<BatchDto>> UpdateBatch(int id, UpdateBatchCmd cmd)
-    // {
-    //     var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
-    //
-    //     var batch = await batchService.UpdateBatch(id, cmd, userDetails);
-    //
-    //     var logger = loggerFactory.CreateLogger("BatchService.UpdateBatch");
-    //
-    //     if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
-    //
-    //     return Ok(batch.Get());
-    // }
+    [CheckMembership]
+    [HttpGet]
+    public async Task<ActionResult<List<BatchDto>>> GetAllBatches()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batches = await batchService.GetAllBatches(userDetails);
+
+        return Ok(batches);
+    }
+
+    [CheckMembership]
+    [HttpPut("{id}")]
+    public async Task<ActionResult<BatchDto>> UpdateBatch(int id, UpdateBatchCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var batch = await batchService.UpdateBatch(id, cmd, userDetails);
+
+        var logger = loggerFactory.CreateLogger("BatchService.UpdateBatch");
+
+        if (batch.Failed()) return GlobalErrorHandler.HandleError(batch.Error(), logger);
+
+        return Ok(batch.Get());
+    }
 }

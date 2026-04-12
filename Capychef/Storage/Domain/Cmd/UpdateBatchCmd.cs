@@ -1,7 +1,18 @@
-﻿namespace Capychef.Storage.Domain.Cmd;
+﻿using Capychef.Common.Errors;
+using Capychef.Common.Interfaces;
 
-public class UpdateBatchCmd
+namespace Capychef.Storage.Domain.Cmd;
+
+public class UpdateBatchCmd : ICmd
 {
-    public DateTime? BestBeforeDate { get; set; }
-    public DateTime? ExpirationDate { get; set; }
+    public double Quantity { get; init; }
+    public int FoodUoMId { get; init; }
+    public DateTime? BestBeforeDate { get; init; }
+    public DateTime? ExpirationDate { get; init; }
+    public bool IsOpen { get; init; }
+
+    public ValidationError? Validate()
+    {
+        return Quantity < 0 ? new ValidationError("Quantity cannot be negative") : null;
+    }
 }

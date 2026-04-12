@@ -77,6 +77,51 @@ public class BatchModificationHistory
         };
     }
 
+    public static BatchModificationHistory UpdateQuantity(Batch batch, int userId, double previousQuantity,
+        int previousFoodUoMId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.UpdateQuantity,
+            StorageSpaceId = batch.StorageSpaceId,
+            PreviousQuantity = previousQuantity,
+            NewQuantity = batch.Quantity,
+            PreviousFoodUoMId = previousFoodUoMId,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory UpdateBestBeforeDate(Batch batch, int userId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.UpdateBestBeforeDate,
+            StorageSpaceId = batch.StorageSpaceId,
+            BestBeforeDate = batch.BestBeforeDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory UpdateExpirationDate(Batch batch, int userId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.UpdateExpirationDate,
+            StorageSpaceId = batch.StorageSpaceId,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
     public static BatchModificationHistory FullMove(Batch batch, int userId, int newStorageSpaceId)
     {
         return new BatchModificationHistory
