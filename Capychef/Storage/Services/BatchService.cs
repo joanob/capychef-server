@@ -132,6 +132,124 @@ public class BatchService(
             batchModifications.NewBatch));
     }
 
+    /// <summary>
+    ///     ConsumeBatch marks some quantity of a batch as consumed.
+    ///     If the entire batch quantity is consumed, only the original batch is marked as consumed.
+    ///     If only part of the batch is consumed, a new batch is created with the consumed quantity and marked as consumed.
+    /// </summary>
+    public async Task<Result<BatchModificationDto>> ConsumeBatch(int batchId, ModifyBatchCmd cmd,
+        AuthUserDetails userDetails)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<BatchModificationDto>(validationError);
+
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
+        if (batch == null) return new Result<BatchModificationDto>(new NotFoundError(EntityType.Batch, batchId));
+
+        var food = await foodRepository.GetFoodById(batch.FoodId, userDetails.GetHouseholdId());
+        if (food == null) return new Result<BatchModificationDto>(new NotFoundError(EntityType.Food, batch.FoodId));
+
+        if (food.UoM.All(x => x.Id != cmd.FoodUoMId))
+            return new Result<BatchModificationDto>(new FoodUoMNotFound(batch.FoodId, cmd.FoodUoMId));
+
+        // Validate NewFoodUoMId if provided
+        if (cmd is { NewFoodUoMId: not null } && food.UoM.All(x => x.Id != cmd.NewFoodUoMId.Value))
+            return new Result<BatchModificationDto>(new FoodUoMNotFound(batch.FoodId, cmd.NewFoodUoMId.Value));
+
+        var modificationResult = await PerformBatchModification(batch, cmd, food, userDetails.UserId);
+        if (modificationResult.Failed()) return new Result<BatchModificationDto>(modificationResult.Error());
+
+        var batchModifications = modificationResult.Get();
+
+        if (batchModifications.NewBatch == null)
+        {
+            // Full consume: no new batch was created
+            batchModifications.OriginalBatch.Consume();
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.FullConsume(batchModifications.OriginalBatch, userDetails.UserId));
+        }
+        else
+        {
+            // Partial consume: new batch was created and marked as consumed
+            batchModifications.NewBatch.Consume();
+
+            await batchRepository.AddAsync(batchModifications.NewBatch);
+
+            await batchModificationHistoryRepository.AddAsync(BatchModificationHistory.OriginalBatchPartialConsume(
+                batchModifications.OriginalBatch, batchModifications.NewBatch, userDetails.UserId,
+                batchModifications.PreviousBatchQuantity, batchModifications.PreviousBatchFoodUoMId));
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.ConsumedBatchPartialConsume(batchModifications.NewBatch,
+                    batchModifications.OriginalBatch, userDetails.UserId));
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchModificationDto>(new BatchModificationDto(batchModifications.OriginalBatch,
+            batchModifications.NewBatch));
+    }
+
+    /// <summary>
+    ///     DiscardBatch marks some quantity of a batch as discarded.
+    ///     If the entire batch quantity is discarded, only the original batch is marked as discarded.
+    ///     If only part of the batch is discarded, a new batch is created with the discarded quantity and marked as discarded.
+    /// </summary>
+    public async Task<Result<BatchModificationDto>> DiscardBatch(int batchId, ModifyBatchCmd cmd,
+        AuthUserDetails userDetails)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<BatchModificationDto>(validationError);
+
+        var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
+        if (batch == null) return new Result<BatchModificationDto>(new NotFoundError(EntityType.Batch, batchId));
+
+        var food = await foodRepository.GetFoodById(batch.FoodId, userDetails.GetHouseholdId());
+        if (food == null) return new Result<BatchModificationDto>(new NotFoundError(EntityType.Food, batch.FoodId));
+
+        if (food.UoM.All(x => x.Id != cmd.FoodUoMId))
+            return new Result<BatchModificationDto>(new FoodUoMNotFound(batch.FoodId, cmd.FoodUoMId));
+
+        // Validate NewFoodUoMId if provided
+        if (cmd is { NewFoodUoMId: not null } && food.UoM.All(x => x.Id != cmd.NewFoodUoMId.Value))
+            return new Result<BatchModificationDto>(new FoodUoMNotFound(batch.FoodId, cmd.NewFoodUoMId.Value));
+
+        var modificationResult = await PerformBatchModification(batch, cmd, food, userDetails.UserId);
+        if (modificationResult.Failed()) return new Result<BatchModificationDto>(modificationResult.Error());
+
+        var batchModifications = modificationResult.Get();
+
+        if (batchModifications.NewBatch == null)
+        {
+            // Full discard: no new batch was created
+            batchModifications.OriginalBatch.Discard();
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.FullDiscard(batchModifications.OriginalBatch, userDetails.UserId));
+        }
+        else
+        {
+            // Partial discard: new batch was created and marked as discarded
+            batchModifications.NewBatch.Discard();
+
+            await batchRepository.AddAsync(batchModifications.NewBatch);
+
+            await batchModificationHistoryRepository.AddAsync(BatchModificationHistory.OriginalBatchPartialDiscard(
+                batchModifications.OriginalBatch, batchModifications.NewBatch, userDetails.UserId,
+                batchModifications.PreviousBatchQuantity, batchModifications.PreviousBatchFoodUoMId));
+
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.DiscardedBatchPartialDiscard(batchModifications.NewBatch,
+                    batchModifications.OriginalBatch, userDetails.UserId));
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<BatchModificationDto>(new BatchModificationDto(batchModifications.OriginalBatch,
+            batchModifications.NewBatch));
+    }
+
     // public async Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails)
     // {
     //     var batches = await batchRepository.GetAllByHouseholdId(userDetails.GetHouseholdId());

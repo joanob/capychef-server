@@ -132,6 +132,118 @@ public class BatchModificationHistory
         };
     }
 
+    public static BatchModificationHistory FullConsume(Batch batch, int userId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.FullConsume,
+            StorageSpaceId = batch.StorageSpaceId,
+            NewQuantity = batch.Quantity,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory OriginalBatchPartialConsume(Batch batch, Batch consumedBatch, int userId,
+        double previousQuantity, int previousFoodUoMId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.PartialConsume,
+            StorageSpaceId = batch.StorageSpaceId,
+            PreviousQuantity = previousQuantity,
+            DeltaQuantity = consumedBatch.Quantity,
+            NewQuantity = batch.Quantity,
+            PreviousFoodUoMId = previousFoodUoMId,
+            DeltaFoodUoMId = consumedBatch.FoodUoMId,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedNewBatch = consumedBatch,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory ConsumedBatchPartialConsume(Batch consumedBatch, Batch originalBatch,
+        int userId)
+    {
+        return new BatchModificationHistory
+        {
+            Batch = consumedBatch,
+            ModificationType = BatchModificationType.PartialConsume,
+            StorageSpaceId = consumedBatch.StorageSpaceId,
+            NewQuantity = consumedBatch.Quantity,
+            NewFoodUoMId = consumedBatch.FoodUoMId,
+            BestBeforeDate = consumedBatch.BestBeforeDate,
+            ExpirationDate = consumedBatch.ExpirationDate,
+            CreatedFromBatch = originalBatch,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory FullDiscard(Batch batch, int userId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.FullDiscard,
+            StorageSpaceId = batch.StorageSpaceId,
+            NewQuantity = batch.Quantity,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory OriginalBatchPartialDiscard(Batch batch, Batch discardedBatch, int userId,
+        double previousQuantity, int previousFoodUoMId)
+    {
+        return new BatchModificationHistory
+        {
+            BatchId = batch.Id,
+            ModificationType = BatchModificationType.PartialDiscard,
+            StorageSpaceId = batch.StorageSpaceId,
+            PreviousQuantity = previousQuantity,
+            DeltaQuantity = discardedBatch.Quantity,
+            NewQuantity = batch.Quantity,
+            PreviousFoodUoMId = previousFoodUoMId,
+            DeltaFoodUoMId = discardedBatch.FoodUoMId,
+            NewFoodUoMId = batch.FoodUoMId,
+            BestBeforeDate = batch.BestBeforeDate,
+            ExpirationDate = batch.ExpirationDate,
+            CreatedNewBatch = discardedBatch,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
+    public static BatchModificationHistory DiscardedBatchPartialDiscard(Batch discardedBatch, Batch originalBatch,
+        int userId)
+    {
+        return new BatchModificationHistory
+        {
+            Batch = discardedBatch,
+            ModificationType = BatchModificationType.PartialDiscard,
+            StorageSpaceId = discardedBatch.StorageSpaceId,
+            NewQuantity = discardedBatch.Quantity,
+            NewFoodUoMId = discardedBatch.FoodUoMId,
+            BestBeforeDate = discardedBatch.BestBeforeDate,
+            ExpirationDate = discardedBatch.ExpirationDate,
+            CreatedFromBatch = originalBatch,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+    }
+
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BatchModificationHistory>()
