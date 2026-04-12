@@ -9,7 +9,7 @@ public interface IBatchService
 {
     Task<Result<BatchDto>> CreateBatch(AuthUserDetails userDetails, CreateBatchCmd cmd);
 
-    Task<Result<List<BatchDto>>> MoveBatch(int batchId, MoveBatchCmd cmd, AuthUserDetails userDetails);
+    Task<Result<BatchModificationDto>> MoveBatch(int batchId, MoveBatchCmd cmd, AuthUserDetails userDetails);
     // Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails);
     // Task<Result<BatchDto>> UpdateBatch(int batchId, UpdateBatchCmd cmd, AuthUserDetails userDetails);
     // Task<Result<BatchDto>> ConsumeBatch(int batchId, ConsumeBatchCmd cmd, AuthUserDetails userDetails);

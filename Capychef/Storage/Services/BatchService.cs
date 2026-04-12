@@ -71,119 +71,65 @@ public class BatchService(
      * 
      * MoveBatchCmd specifies the quantity to move and the new storage space. If new batch quantity is not provided and the unit of the quantity moved and the unit of the batch differ, the quantity moved is converted to the batch unit to check if all quantity is moved. If the conversion is approximate, the moved quantity is always treated as a partial movement, leaving the original batch with quantity 0.
      */
-    public async Task<Result<List<BatchDto>>> MoveBatch(int batchId, MoveBatchCmd cmd, AuthUserDetails userDetails)
+    public async Task<Result<BatchModificationDto>> MoveBatch(int batchId, MoveBatchCmd cmd,
+        AuthUserDetails userDetails)
     {
         var validationError = cmd.Validate();
-        if (validationError != null) return new Result<List<BatchDto>>(validationError);
+        if (validationError != null) return new Result<BatchModificationDto>(validationError);
 
         var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
-        if (batch == null) return new Result<List<BatchDto>>(new NotFoundError(EntityType.Batch, batchId));
+        if (batch == null) return new Result<BatchModificationDto>(new NotFoundError(EntityType.Batch, batchId));
 
         var food = await foodRepository.GetFoodById(batch.FoodId, userDetails.GetHouseholdId());
-        if (food == null) return new Result<List<BatchDto>>(new NotFoundError(EntityType.Food, batch.FoodId));
+        if (food == null) return new Result<BatchModificationDto>(new NotFoundError(EntityType.Food, batch.FoodId));
 
         if (!await storageSpaceRepository.CheckStorageSpaceExistsById(cmd.StorageSpaceId,
                 userDetails.GetHouseholdId()))
-            return new Result<List<BatchDto>>(new NotFoundError(EntityType.StorageSpace, cmd.StorageSpaceId));
+            return new Result<BatchModificationDto>(new NotFoundError(EntityType.StorageSpace, cmd.StorageSpaceId));
 
         if (food.UoM.All(x => x.Id != cmd.FoodUoMId))
-            return new Result<List<BatchDto>>(new FoodUoMNotFound(batch.FoodId, cmd.FoodUoMId));
+            return new Result<BatchModificationDto>(new FoodUoMNotFound(batch.FoodId, cmd.FoodUoMId));
 
-        Batch? newBatch = null;
+        // Validate NewFoodUoMId if provided
+        if (cmd is { NewFoodUoMId: not null } && food.UoM.All(x => x.Id != cmd.NewFoodUoMId.Value))
+            return new Result<BatchModificationDto>(new FoodUoMNotFound(batch.FoodId, cmd.NewFoodUoMId.Value));
 
-        if (cmd is { NewQuantity: not null, NewFoodUoMId: not null })
+        var modificationResult = await PerformBatchModification(batch, cmd, food, userDetails.UserId);
+        if (modificationResult.Failed()) return new Result<BatchModificationDto>(modificationResult.Error());
+
+        var batchModifications = modificationResult.Get();
+
+        if (batchModifications.NewBatch == null)
         {
-            if (food.UoM.All(x => x.Id != cmd.NewFoodUoMId.Value))
-                return new Result<List<BatchDto>>(new FoodUoMNotFound(batch.FoodId, cmd.NewFoodUoMId.Value));
+            // Full move: no new batch was created
 
-            if (cmd.NewQuantity.Value == 0)
-            {
-                // Full quantity has been moved. Change batch storage space and log batch modifications
-                batch.StorageSpaceId = cmd.StorageSpaceId;
+            batchModifications.OriginalBatch.StorageSpaceId = cmd.StorageSpaceId;
 
-                var batchModification =
-                    BatchModificationHistory.FullMove(batch, userDetails.UserId, cmd.StorageSpaceId);
-
-                await batchModificationHistoryRepository.AddAsync(batchModification);
-            }
-            else
-            {
-                // Partial move. Change batch quantity and create new batch from this batch 
-                var previousBatchQuantity = batch.Quantity;
-                var previousBatchFoodUoMId = batch.FoodUoMId;
-
-                batch.Quantity = cmd.NewQuantity.Value;
-                batch.FoodUoMId = cmd.NewFoodUoMId.Value;
-
-                newBatch = Batch.FromOriginal(batch, userDetails.UserId, cmd.StorageSpaceId, cmd.Quantity,
-                    cmd.FoodUoMId, batch.BestBeforeDate, batch.ExpirationDate);
-
-                await batchRepository.AddAsync(newBatch);
-
-                var originalBatchModification = BatchModificationHistory.OriginalBatchPartialMove(batch, newBatch,
-                    userDetails.UserId, previousBatchQuantity, previousBatchFoodUoMId);
-
-                await batchModificationHistoryRepository.AddAsync(originalBatchModification);
-
-                var batchModification =
-                    BatchModificationHistory.NewBatchPartialMove(newBatch, batch, userDetails.UserId);
-
-                await batchModificationHistoryRepository.AddAsync(batchModification);
-            }
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.FullMove(batchModifications.OriginalBatch, userDetails.UserId,
+                    cmd.StorageSpaceId));
         }
         else
         {
-            // New batch quantity was not provided, convert quantity to check if move is full move or partial move
+            // Partial move: new batch was created
 
-            var convertResult = food.Convert(cmd.Quantity, cmd.FoodUoMId, batch.FoodUoMId);
-            if (convertResult.Failed()) return new Result<List<BatchDto>>(convertResult.Error());
+            batchModifications.NewBatch.StorageSpaceId = cmd.StorageSpaceId;
 
-            var quantityConversion = convertResult.Get();
+            await batchRepository.AddAsync(batchModifications.NewBatch);
 
-            if (!quantityConversion.IsApproximate && Math.Abs(quantityConversion.Quantity - batch.Quantity) > 1e-6)
-                return new Result<List<BatchDto>>(
-                    new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
+            await batchModificationHistoryRepository.AddAsync(BatchModificationHistory.OriginalBatchPartialMove(
+                batchModifications.OriginalBatch, batchModifications.NewBatch, userDetails.UserId,
+                batchModifications.PreviousBatchQuantity, batchModifications.PreviousBatchFoodUoMId));
 
-
-            if (!quantityConversion.IsApproximate && Math.Abs(quantityConversion.Quantity - batch.Quantity) < 1e-6)
-            {
-                // Full move on exact conversion. Change batch storage space and log batch modifications
-                batch.StorageSpaceId = cmd.StorageSpaceId;
-
-                var batchModification =
-                    BatchModificationHistory.FullMove(batch, userDetails.UserId, cmd.StorageSpaceId);
-
-                await batchModificationHistoryRepository.AddAsync(batchModification);
-            }
-
-            // Either partial move on exact conversion, or any move on approximate conversion. Create new batch and change original batch quantity, and log batch modifications
-
-            var previousBatchQuantity = batch.Quantity;
-            var previousBatchFoodUoMId = batch.FoodUoMId;
-
-            batch.Quantity -= quantityConversion.Quantity;
-
-            newBatch = Batch.FromOriginal(batch, userDetails.UserId, cmd.StorageSpaceId, cmd.Quantity, cmd.FoodUoMId,
-                batch.BestBeforeDate, batch.ExpirationDate);
-
-            await batchRepository.AddAsync(newBatch);
-
-            var originalBatchModification = BatchModificationHistory.OriginalBatchPartialMove(batch, newBatch,
-                userDetails.UserId, previousBatchQuantity, previousBatchFoodUoMId);
-
-            await batchModificationHistoryRepository.AddAsync(originalBatchModification);
-
-            var newBatchModification =
-                BatchModificationHistory.NewBatchPartialMove(newBatch, batch, userDetails.UserId);
-
-            await batchModificationHistoryRepository.AddAsync(newBatchModification);
+            await batchModificationHistoryRepository.AddAsync(
+                BatchModificationHistory.NewBatchPartialMove(batchModifications.NewBatch,
+                    batchModifications.OriginalBatch, userDetails.UserId));
         }
 
         await dbContext.SaveChangesAsync();
 
-        return newBatch == null
-            ? new Result<List<BatchDto>>([new BatchDto(batch)])
-            : new Result<List<BatchDto>>([new BatchDto(batch), new BatchDto(newBatch)]);
+        return new Result<BatchModificationDto>(new BatchModificationDto(batchModifications.OriginalBatch,
+            batchModifications.NewBatch));
     }
 
     // public async Task<List<BatchDto>> GetAllBatches(AuthUserDetails userDetails)
@@ -193,76 +139,84 @@ public class BatchService(
     //     return BatchDto.ToBatchDtoList(batches);
     // }
     //
-    // public async Task<Result<BatchDto>> UpdateBatch(int batchId, UpdateBatchCmd cmd, AuthUserDetails userDetails)
-    // {
-    //     var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
-    //     if (batch == null) return new Result<BatchDto>(new NotFoundError(EntityType.Batch, batchId));
-    //
-    //     if (batch.BestBeforeDate != cmd.BestBeforeDate) batch.BestBeforeDate = cmd.BestBeforeDate;
-    //
-    //     if (batch.ExpirationDate != cmd.ExpirationDate) batch.ExpirationDate = cmd.ExpirationDate;
-    //
-    //     await dbContext.SaveChangesAsync();
-    //
-    //     return new Result<BatchDto>(new BatchDto(batch));
-    // }
-    //
-    // public async Task<Result<BatchDto>> ConsumeBatch(int batchId, ConsumeBatchCmd cmd, AuthUserDetails userDetails)
-    // {
-    //     var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
-    //     if (batch == null) return new Result<BatchDto>(new NotFoundError(EntityType.Batch, batchId));
-    //
-    //     if (cmd.Quantity > batch.Quantity)
-    //         return new Result<BatchDto>(new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
-    //
-    //     if (Math.Abs(cmd.Quantity - batch.Quantity) < 1e-6)
-    //     {
-    //         // Set batch as fully consumed
-    //         batch.Consume();
-    //     }
-    //     else
-    //     {
-    //         // Create new batch from original batch with new quantity and set new batch as consumed
-    //         var consumedBatch = new Batch(batch, cmd.Quantity);
-    //         consumedBatch.Consume();
-    //
-    //         await batchRepository.AddAsync(consumedBatch);
-    //
-    //         batch.Quantity -= cmd.Quantity;
-    //     }
-    //
-    //     await dbContext.SaveChangesAsync();
-    //
-    //     return new Result<BatchDto>(new BatchDto(batch));
-    // }
-    //
-    // public async Task<Result<BatchDto>> DiscardBatch(int batchId, DiscardBatchCmd cmd, AuthUserDetails userDetails)
-    // {
-    //     var batch = await batchRepository.GetTrackedBatchById(batchId, userDetails.GetHouseholdId());
-    //     if (batch == null) return new Result<BatchDto>(new NotFoundError(EntityType.Batch, batchId));
-    //
-    //     if (cmd.Quantity > batch.Quantity)
-    //         return new Result<BatchDto>(new BatchDoesNotHaveEnoughQuantityError(batchId, batch.Quantity, cmd.Quantity));
-    //
-    //     if (Math.Abs(cmd.Quantity - batch.Quantity) < 1e-6)
-    //     {
-    //         // Set batch as fully discarded
-    //         batch.Discard();
-    //     }
-    //     else
-    //     {
-    //         // Create new batch from original batch with new quantity and set new batch as discarded
-    //         var consumedBatch = new Batch(batch, cmd.Quantity);
-    //         consumedBatch.Discard();
-    //
-    //         await batchRepository.AddAsync(consumedBatch);
-    //
-    //         batch.Quantity -= cmd.Quantity;
-    //     }
-    //
-    //     await dbContext.SaveChangesAsync();
-    //
-    //     return new Result<BatchDto>(new BatchDto(batch));
-    // }
-    //
+
+    /// <summary>
+    ///     Generic batch modification method that handles conversion, quantity checks, and batch creation/modification.
+    ///     This method contains the common logic for Move, Consume, and Discard operations.
+    ///     Logic:
+    ///     - If NewQuantity and NewFoodUoMId are provided: uses them directly without conversion
+    ///     - Otherwise: converts the provided quantity to the batch's unit to check if it's a full or partial move
+    ///     - If conversion is approximate but results in remainder: treats as partial move (doesn't delete original batch)
+    ///     - If conversion is exact and equals batch quantity: it's a full move
+    ///     - Otherwise: it's a partial move with a new batch created
+    /// </summary>
+    /// <param name="batch">The batch to modify (tracked by EF Core)</param>
+    /// <param name="cmd">The modification command containing quantity, units, and optional new quantity/unit</param>
+    /// <param name="food">The food entity for unit conversions</param>
+    /// <param name="userId">User ID for tracking modifications</param>
+    /// <returns>Result containing the modification details (original batch, new batch if created, previous values)</returns>
+    private async Task<Result<GenericModificationResult>> PerformBatchModification(
+        Batch batch,
+        ModifyBatchCmd cmd,
+        Food.Domain.Entities.Food food,
+        int userId)
+    {
+        Batch? newBatch = null;
+        var previousBatchQuantity = batch.Quantity;
+        var previousBatchFoodUoMId = batch.FoodUoMId;
+
+        if (cmd is { NewQuantity: not null, NewFoodUoMId: not null })
+        {
+            // New batch quantity and unit were provided explicitly
+            if (cmd.NewQuantity.Value != 0)
+            {
+                batch.Quantity = cmd.NewQuantity.Value;
+                batch.FoodUoMId = cmd.NewFoodUoMId.Value;
+
+                newBatch = Batch.FromOriginal(batch, userId, batch.StorageSpaceId, cmd.Quantity,
+                    cmd.FoodUoMId, batch.BestBeforeDate, batch.ExpirationDate);
+
+                await batchRepository.AddAsync(newBatch);
+            }
+        }
+        else
+        {
+            // New batch quantity was not provided, convert quantity to check if move is full or partial
+
+            var convertResult = food.Convert(cmd.Quantity, cmd.FoodUoMId, batch.FoodUoMId);
+            if (convertResult.Failed()) return new Result<GenericModificationResult>(convertResult.Error());
+
+            var quantityConversion = convertResult.Get();
+
+            if (!quantityConversion.IsApproximate && Math.Abs(quantityConversion.Quantity - batch.Quantity) > 1e-6)
+                return new Result<GenericModificationResult>(
+                    new BatchDoesNotHaveEnoughQuantityError(batch.Id, batch.Quantity, cmd.Quantity));
+
+            if (!quantityConversion.IsApproximate && Math.Abs(quantityConversion.Quantity - batch.Quantity) < 1e-6)
+            {
+            }
+            else
+            {
+                batch.Quantity -= quantityConversion.Quantity;
+
+                newBatch = Batch.FromOriginal(batch, userId, batch.StorageSpaceId, cmd.Quantity, cmd.FoodUoMId,
+                    batch.BestBeforeDate, batch.ExpirationDate);
+
+                await batchRepository.AddAsync(newBatch);
+            }
+        }
+
+        return new Result<GenericModificationResult>(
+            new GenericModificationResult(batch, newBatch, previousBatchQuantity, previousBatchFoodUoMId));
+    }
 }
+
+/// <summary>
+///     Represents the result of a batch modification operation during the generic phase.
+///     Contains information needed by the calling method to decide what additional modifications to apply.
+/// </summary>
+internal record GenericModificationResult(
+    Batch OriginalBatch,
+    Batch? NewBatch,
+    double PreviousBatchQuantity,
+    int PreviousBatchFoodUoMId);

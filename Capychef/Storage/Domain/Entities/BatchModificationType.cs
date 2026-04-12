@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Capychef.Households.Domain.Entities;
+namespace Capychef.Storage.Domain.Entities;
 
 public class BatchModificationType
 {
