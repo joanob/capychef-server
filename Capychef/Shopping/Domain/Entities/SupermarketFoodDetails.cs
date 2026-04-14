@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Food.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Capychef.Food.Domain.Entities;
+namespace Capychef.Shopping.Domain.Entities;
 
 [Table("supermarket_food_details")]
 public class SupermarketFoodDetails

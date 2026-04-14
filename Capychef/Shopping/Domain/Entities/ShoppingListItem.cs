@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Food.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,7 @@ public class ShoppingListItem
 
     [Column("food_id")] public int? FoodId { get; init; }
 
-    [Column("name")] public string? Name { get; set; }
+    [Column("name")] [MaxLength(50)] public string? Name { get; set; }
 
     [Column("quantity")] public double? Quantity { get; set; }
 
@@ -71,7 +72,7 @@ public class ShoppingListItem
     }
 }
 
-public static class SupermarketFoodDetailsExtensions
+public static class ShoppingListItemExtensions
 {
     public static IQueryable<SupermarketFoodDetails> Active(this IQueryable<SupermarketFoodDetails> foodDetails)
     {

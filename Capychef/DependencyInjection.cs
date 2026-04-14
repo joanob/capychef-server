@@ -11,6 +11,9 @@ using Capychef.Households.Services;
 using Capychef.Infrastructure.DevImplementations;
 using Capychef.Infrastructure.Interfaces;
 using Capychef.Persistence;
+using Capychef.Shopping.Domain.Interfaces;
+using Capychef.Shopping.Repositories;
+using Capychef.Shopping.Services;
 using Capychef.Storage.Domain.Interfaces;
 using Capychef.Storage.Repositories;
 using Capychef.Storage.Services;
@@ -79,6 +82,10 @@ public static class DependencyInjection
         services.AddScoped<IBatchRepository, BatchRepository>();
         services.AddScoped<IBatchModificationHistoryRepository, BatchModificationHistoryRepository>();
         services.AddScoped<IBatchService, BatchService>();
+
+        // SHOPPING
+        services.AddScoped<ISupermarketRepository, SupermarketRepository>();
+        services.AddScoped<ISupermarketService, SupermarketService>();
 
         // Gourmet
         services.AddScoped<IUserSubscriptionRepository, UserSubscriptionRepository>();

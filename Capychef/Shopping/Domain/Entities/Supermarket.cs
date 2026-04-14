@@ -11,6 +11,14 @@ public class Supermarket
         Name = "";
     }
 
+    public Supermarket(string name, int householdId, int userId)
+    {
+        Name = name;
+        HouseholdId = householdId;
+        CreatedAt = DateTime.UtcNow;
+        CreatedBy = userId;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
