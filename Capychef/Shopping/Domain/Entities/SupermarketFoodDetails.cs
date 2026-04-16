@@ -11,6 +11,20 @@ public class SupermarketFoodDetails
     {
     }
 
+    public SupermarketFoodDetails(int householdId, int foodId, int supermarketId, double price, double? quantity,
+        int? foodUoMId, bool isPrefferedSupermarket, int createdBy)
+    {
+        HouseholdId = householdId;
+        FoodId = foodId;
+        SupermarketId = supermarketId;
+        Price = price;
+        Quantity = quantity;
+        FoodUoMId = foodUoMId;
+        IsPrefferedSupermarket = isPrefferedSupermarket;
+        CreatedAt = DateTime.UtcNow;
+        CreatedBy = createdBy;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("household_id")] public int HouseholdId { get; init; }

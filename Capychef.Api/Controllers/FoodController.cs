@@ -4,6 +4,9 @@ using Capychef.Api.Errors;
 using Capychef.Food.Domain.Cmd;
 using Capychef.Food.Domain.DTO;
 using Capychef.Food.Domain.Interfaces;
+using Capychef.Shopping.Domain.Cmd;
+using Capychef.Shopping.Domain.DTO;
+using Capychef.Shopping.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Capychef.Api.Controllers;
@@ -12,6 +15,7 @@ namespace Capychef.Api.Controllers;
 [Route("food")]
 public class FoodController(
     IFoodService foodService,
+    ISupermarketFoodDetailsService supermarketFoodDetailsService,
     ILoggerFactory loggerFactory) : ControllerBase
 {
     [CheckMembership]
@@ -79,6 +83,53 @@ public class FoodController(
         var error = await foodService.DeleteHouseholdFood(id, userDetails);
 
         var logger = loggerFactory.CreateLogger("FoodService.DeleteHouseholdFood");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
+
+    [CheckMembership]
+    [HttpPost("{foodId}/supermarket-details")]
+    public async Task<ActionResult<ApiResponse<SupermarketFoodDetailsDto>>> CreateSupermarketFoodDetails(
+        int foodId, SupermarketFoodDetailsCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var details = await supermarketFoodDetailsService.CreateSupermarketFoodDetails(userDetails, foodId, cmd);
+
+        var logger = loggerFactory.CreateLogger("SupermarketFoodDetailsService.CreateSupermarketFoodDetails");
+
+        if (details.Failed()) return GlobalErrorHandler.HandleError(details.Error(), logger);
+
+        return Ok(new ApiResponse<SupermarketFoodDetailsDto>(details.Get()));
+    }
+
+    [CheckMembership]
+    [HttpPut("{foodId}/supermarket-details/{id}")]
+    public async Task<ActionResult> UpdateSupermarketFoodDetails(
+        int foodId, int id, SupermarketFoodDetailsCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await supermarketFoodDetailsService.UpdateSupermarketFoodDetails(userDetails, foodId, id, cmd);
+
+        var logger = loggerFactory.CreateLogger("SupermarketFoodDetailsService.UpdateSupermarketFoodDetails");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
+
+    [CheckMembership]
+    [HttpDelete("{foodId}/supermarket-details/{id}")]
+    public async Task<ActionResult> DeleteSupermarketFoodDetails(int foodId, int id)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await supermarketFoodDetailsService.DeleteSupermarketFoodDetails(userDetails, foodId, id);
+
+        var logger = loggerFactory.CreateLogger("SupermarketFoodDetailsService.DeleteSupermarketFoodDetails");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 

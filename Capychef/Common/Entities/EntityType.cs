@@ -24,6 +24,7 @@ public class EntityType
     private const string BatchType = "BATCH";
 
     private const string SupermarketType = "SUPERMARKET";
+    private const string SupermarketFoodDetailsType = "SUPERMARKET_FOOD_DETAILS";
 
     private readonly string _value;
 
@@ -48,6 +49,7 @@ public class EntityType
     public static EntityType FoodCategory => new(FoodCategoryType);
     public static EntityType Batch => new(BatchType);
     public static EntityType Supermarket => new(SupermarketType);
+    public static EntityType SupermarketFoodDetails => new(SupermarketFoodDetailsType);
 
     public static EntityType From(string value)
     {
@@ -69,6 +71,7 @@ public class EntityType
             FoodCategoryType => FoodCategory,
             BatchType => Batch,
             SupermarketType => Supermarket,
+            SupermarketFoodDetailsType => SupermarketFoodDetails,
             _ => new EntityType("")
         };
     }
