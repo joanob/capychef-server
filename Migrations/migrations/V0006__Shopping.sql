@@ -54,6 +54,25 @@ CREATE INDEX idx_supermarket_food_details_household_food ON supermarket_food_det
 
 CREATE INDEX idx_supermarket_food_details_household_supermarket ON supermarket_food_details (household_id, supermarket_id);
 
+-- SUPERMARKET FOOD DETAILS MODIFICATIONS HISTORY
+
+CREATE TABLE supermarket_food_details_modifications_history
+(
+    id                          SERIAL PRIMARY KEY,
+    supermarket_food_details_id INTEGER     NOT NULL,
+    price                       REAL,
+    quantity                    REAL,
+    food_uom_id                 INTEGER,
+    is_preferred_supermarket    BOOLEAN     NOT NULL,
+    created_at                  TIMESTAMP   NOT NULL,
+    created_by                  INTEGER     NOT NULL,
+    FOREIGN KEY (supermarket_food_details_id) REFERENCES supermarket_food_details (id),
+    FOREIGN KEY (food_uom_id) REFERENCES food_uom (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
+);
+
+CREATE INDEX idx_supermarket_food_details_modifications_history_details_id ON supermarket_food_details_modifications_history (supermarket_food_details_id);
+
 -- SHOPPING LIST
 
 CREATE TABLE shopping_list_items

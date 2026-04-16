@@ -87,6 +87,9 @@ public static class DependencyInjection
         services.AddScoped<ISupermarketRepository, SupermarketRepository>();
         services.AddScoped<ISupermarketService, SupermarketService>();
         services.AddScoped<ISupermarketFoodDetailsRepository, SupermarketFoodDetailsRepository>();
+        services
+            .AddScoped<ISupermarketFoodDetailsModificationHistoryRepository,
+                SupermarketFoodDetailsModificationHistoryRepository>();
         services.AddScoped<ISupermarketFoodDetailsService, SupermarketFoodDetailsService>();
 
         // Gourmet

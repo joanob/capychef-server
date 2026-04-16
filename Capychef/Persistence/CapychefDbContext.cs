@@ -52,6 +52,10 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     // Shopping
     public DbSet<Supermarket> Supermarkets => Set<Supermarket>();
     public DbSet<SupermarketFoodDetails> SupermarketFoodDetails => Set<SupermarketFoodDetails>();
+
+    public DbSet<SupermarketFoodDetailsModificationHistory> SupermarketFoodDetailsModificationsHistory =>
+        Set<SupermarketFoodDetailsModificationHistory>();
+
     public DbSet<ShoppingListItem> ShoppingListItems => Set<ShoppingListItem>();
 
 

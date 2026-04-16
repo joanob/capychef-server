@@ -14,6 +14,7 @@ namespace Capychef.Shopping.Services;
 public class SupermarketFoodDetailsService(
     CapychefDbContext dbContext,
     ISupermarketFoodDetailsRepository repository,
+    ISupermarketFoodDetailsModificationHistoryRepository modificationHistoryRepository,
     IFoodRepository foodRepository) : ISupermarketFoodDetailsService
 {
     public async Task<Result<SupermarketFoodDetailsDto>> CreateSupermarketFoodDetails(
@@ -40,6 +41,18 @@ public class SupermarketFoodDetailsService(
             userDetails.UserId);
 
         await repository.AddAsync(details);
+        await dbContext.SaveChangesAsync();
+
+        // Record initial state in modification history
+        var initialHistory = new SupermarketFoodDetailsModificationHistory(
+            details.Id,
+            cmd.Price,
+            cmd.Quantity,
+            cmd.FoodUoMId,
+            cmd.IsPrefferedSupermarket,
+            userDetails.UserId);
+
+        await modificationHistoryRepository.AddAsync(initialHistory);
         await dbContext.SaveChangesAsync();
 
         return new Result<SupermarketFoodDetailsDto>(new SupermarketFoodDetailsDto(details));
@@ -71,6 +84,18 @@ public class SupermarketFoodDetailsService(
         details.FoodUoMId = cmd.FoodUoMId;
         details.IsPrefferedSupermarket = cmd.IsPrefferedSupermarket;
 
+        await dbContext.SaveChangesAsync();
+
+        // Record state change in modification history
+        var historyEntry = new SupermarketFoodDetailsModificationHistory(
+            details.Id,
+            cmd.Price,
+            cmd.Quantity,
+            cmd.FoodUoMId,
+            cmd.IsPrefferedSupermarket,
+            userDetails.UserId);
+
+        await modificationHistoryRepository.AddAsync(historyEntry);
         await dbContext.SaveChangesAsync();
 
         return null;
