@@ -12,11 +12,28 @@ public class ShoppingListItem
     {
     }
 
+    public ShoppingListItem(int? foodId, string? name, double? quantity, int? foodUoMId, int? preferredSupermarketId,
+        int householdId, int createdBy)
+    {
+        FoodId = foodId;
+        Name = name;
+        Quantity = quantity;
+        FoodUoMId = foodUoMId;
+        PreferredSupermarketId = preferredSupermarketId;
+        HouseholdId = householdId;
+        CreatedBy = createdBy;
+        IsPurchased = false;
+        IsStored = false;
+        CreatedAt = DateTime.UtcNow;
+        RowVersion = 1;
+        IsDeleted = false;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("household_id")] public int HouseholdId { get; init; }
 
-    [Column("food_id")] public int? FoodId { get; init; }
+    [Column("food_id")] public int? FoodId { get; set; }
 
     [Column("name")] [MaxLength(50)] public string? Name { get; set; }
 
@@ -24,7 +41,7 @@ public class ShoppingListItem
 
     [Column("food_uom_id")] public int? FoodUoMId { get; set; }
 
-    [Column("preferred_supermarket_id")] public int? PreferredSupermarketId { get; init; }
+    [Column("preferred_supermarket_id")] public int? PreferredSupermarketId { get; set; }
 
     [Column("is_purchased")] public bool IsPurchased { get; private set; }
 
@@ -32,17 +49,17 @@ public class ShoppingListItem
 
     [Column("purchased_by")] public int? PurchasedBy { get; private set; }
 
-    [Column("is_purchased")] public bool IsStored { get; private set; }
+    [Column("is_stored")] public bool IsStored { get; private set; }
 
-    [Column("purchased_at")] public DateTime? StoredAt { get; private set; }
+    [Column("stored_at")] public DateTime? StoredAt { get; private set; }
 
-    [Column("purchased_by")] public int? StoredBy { get; private set; }
+    [Column("stored_by")] public int? StoredBy { get; private set; }
 
-    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+    [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("created_by")] public int CreatedBy { get; init; }
 
-    [Column("row_version")] public int RowVersion { get; init; }
+    [Column("row_version")] public int RowVersion { get; set; }
 
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
 
@@ -63,6 +80,15 @@ public class ShoppingListItem
         IsStored = true;
         StoredAt = DateTime.UtcNow;
         StoredBy = userId;
+    }
+
+    public void Update(int? foodId, string? name, double? quantity, int? foodUoMId, int? preferredSupermarketId)
+    {
+        FoodId = foodId;
+        Name = name;
+        Quantity = quantity;
+        FoodUoMId = foodUoMId;
+        PreferredSupermarketId = preferredSupermarketId;
     }
 
     public void Delete()
