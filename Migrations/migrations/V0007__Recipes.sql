@@ -32,6 +32,7 @@ CREATE TABLE recipes_tags
 (
     id          SERIAL PRIMARY KEY,
     recipe_id   INTEGER NOT NULL,
+    order_num INTEGER NOT NULL,
     tag      VARCHAR(50) NOT NULL,
     created_at   TIMESTAMP NOT NULL,
     created_by   INTEGER NOT NULL,
@@ -47,6 +48,7 @@ CREATE TABLE recipes_ingredients
 (
     id                   SERIAL PRIMARY KEY,
     recipe_id            INTEGER NOT NULL,
+    order_num            INTEGER NOT NULL,
     food_id              INTEGER NOT NULL,
     quantity             REAL,
     food_uom_id          INTEGER,

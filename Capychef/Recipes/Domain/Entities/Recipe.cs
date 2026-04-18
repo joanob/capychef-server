@@ -1,0 +1,62 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Capychef.Recipes.Domain.Entities;
+
+[Table("recipes")]
+public class Recipe
+{
+    protected Recipe()
+    {
+    }
+
+    public Recipe(string name, string? description, int difficulty, int cookingTimeMinutes, int servings,
+        int householdId, int createdBy)
+    {
+        Name = name;
+        Description = description;
+        Difficulty = difficulty;
+        CookingTimeMinutes = cookingTimeMinutes;
+        Servings = servings;
+        HouseholdId = householdId;
+        CreatedBy = createdBy;
+        IsGlobal = false;
+        CreatedAt = DateTime.UtcNow;
+        RowVersion = 1;
+        IsDeleted = false;
+    }
+
+    [Column("id")] public int Id { get; init; }
+
+    [Column("name")] [MaxLength(50)] public string Name { get; set; }
+
+    [Column("description")] public string? Description { get; set; }
+
+    [Column("difficulty")] public int Difficulty { get; set; }
+
+    [Column("cooking_time_minutes")] public int CookingTimeMinutes { get; set; }
+
+    [Column("servings")] public int Servings { get; set; }
+
+    [Column("is_global")] public bool IsGlobal { get; init; }
+
+    [Column("global_id")] public string? GlobalId { get; init; }
+
+    [Column("household_id")] public int? HouseholdId { get; init; }
+
+    [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [Column("created_by")] public int? CreatedBy { get; init; }
+
+    [Column("row_version")] public int RowVersion { get; set; }
+
+    [Column("is_deleted")] public bool IsDeleted { get; private set; }
+
+    [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
+    }
+}
