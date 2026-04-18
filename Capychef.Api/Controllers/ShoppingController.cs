@@ -135,4 +135,19 @@ public class ShoppingController(
 
         return Ok();
     }
+
+    [CheckMembership]
+    [HttpPut("list/{id}/store")]
+    public async Task<ActionResult> StoreShoppingListItem(int id, StoreShoppingListItemCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await shoppingListItemService.StoreShoppingListItem(userDetails, id, cmd);
+
+        var logger = loggerFactory.CreateLogger("ShoppingListItemService.StoreShoppingListItem");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
 }

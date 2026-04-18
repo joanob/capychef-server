@@ -18,4 +18,6 @@ public interface IShoppingListItemService
     Task<AppError?> MarkAsPurchased(AuthUserDetails userDetails, int id);
 
     Task<AppError?> MarkAsNotPurchased(AuthUserDetails userDetails, int id);
+
+    Task<AppError?> StoreShoppingListItem(AuthUserDetails userDetails, int id, StoreShoppingListItemCmd cmd);
 }
