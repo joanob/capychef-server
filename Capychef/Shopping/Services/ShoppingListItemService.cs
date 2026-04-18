@@ -86,4 +86,28 @@ public class ShoppingListItemService(
 
         return null;
     }
+
+    public async Task<AppError?> MarkAsPurchased(AuthUserDetails userDetails, int id)
+    {
+        var item = await shoppingListItemRepository.FindTrackedById(id, userDetails.GetHouseholdId());
+        if (item == null)
+            return new NotFoundError(EntityType.ShoppingListItem, id);
+
+        item.Purchase(userDetails.UserId);
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
+    public async Task<AppError?> MarkAsNotPurchased(AuthUserDetails userDetails, int id)
+    {
+        var item = await shoppingListItemRepository.FindTrackedById(id, userDetails.GetHouseholdId());
+        if (item == null)
+            return new NotFoundError(EntityType.ShoppingListItem, id);
+
+        item.Unpurchase();
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
 }

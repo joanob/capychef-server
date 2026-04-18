@@ -14,4 +14,8 @@ public interface IShoppingListItemService
         ShoppingListItemCmd cmd);
 
     Task<AppError?> DeleteShoppingListItem(AuthUserDetails userDetails, int id);
+
+    Task<AppError?> MarkAsPurchased(AuthUserDetails userDetails, int id);
+
+    Task<AppError?> MarkAsNotPurchased(AuthUserDetails userDetails, int id);
 }

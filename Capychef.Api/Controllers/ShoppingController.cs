@@ -105,4 +105,34 @@ public class ShoppingController(
 
         return Ok();
     }
+
+    [CheckMembership]
+    [HttpPut("list/{id}/purchase")]
+    public async Task<ActionResult> MarkAsPurchased(int id)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await shoppingListItemService.MarkAsPurchased(userDetails, id);
+
+        var logger = loggerFactory.CreateLogger("ShoppingListItemService.MarkAsPurchased");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
+
+    [CheckMembership]
+    [HttpDelete("list/{id}/purchase")]
+    public async Task<ActionResult> MarkAsNotPurchased(int id)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await shoppingListItemService.MarkAsNotPurchased(userDetails, id);
+
+        var logger = loggerFactory.CreateLogger("ShoppingListItemService.MarkAsNotPurchased");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
 }

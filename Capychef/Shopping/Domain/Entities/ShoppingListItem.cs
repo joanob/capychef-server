@@ -75,6 +75,13 @@ public class ShoppingListItem
         PurchasedBy = userId;
     }
 
+    public void Unpurchase()
+    {
+        IsPurchased = false;
+        PurchasedAt = null;
+        PurchasedBy = null;
+    }
+
     public void Store(int userId)
     {
         IsStored = true;
