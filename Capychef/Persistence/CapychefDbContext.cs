@@ -1,6 +1,7 @@
 ﻿using Capychef.Food.Domain.Entities;
 using Capychef.Gourmet.Domain.Entities;
 using Capychef.Households.Domain.Entities;
+using Capychef.Recipes.Domain.Entities;
 using Capychef.Shopping.Domain.Entities;
 using Capychef.Storage.Domain.Entities;
 using Capychef.Users.Domain.Entities;
@@ -57,6 +58,12 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
         Set<SupermarketFoodDetailsModificationHistory>();
 
     public DbSet<ShoppingListItem> ShoppingListItems => Set<ShoppingListItem>();
+
+    // Recipes
+    public DbSet<Recipe> Recipes => Set<Recipe>();
+    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
+    public DbSet<RecipeTag> RecipeTags => Set<RecipeTag>();
+    public DbSet<RecipeStep> RecipeSteps => Set<RecipeStep>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

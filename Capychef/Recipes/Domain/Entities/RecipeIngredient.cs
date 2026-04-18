@@ -26,7 +26,7 @@ public class RecipeIngredient
 
     [Column("order_num")] public int OrderNum { get; set; }
 
-    [Column("food_id")] public int FoodId { get; init; }
+    [Column("food_id")] public int FoodId { get; set; }
 
     [Column("quantity")] public double? Quantity { get; set; }
 

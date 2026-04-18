@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Capychef.Recipes.Domain.Entities;
 
@@ -7,6 +8,7 @@ public class RecipeTag
 {
     protected RecipeTag()
     {
+        Tag = "";
     }
 
     public RecipeTag(int recipeId, int orderNum, string tag, int createdBy)
@@ -24,7 +26,7 @@ public class RecipeTag
 
     [Column("order_num")] public int OrderNum { get; set; }
 
-    [Column("tag")] public string Tag { get; set; }
+    [Column("tag")] [MaxLength(50)] public string Tag { get; set; }
 
     [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

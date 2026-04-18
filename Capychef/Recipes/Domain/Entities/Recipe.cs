@@ -8,6 +8,7 @@ public class Recipe
 {
     protected Recipe()
     {
+        Name = "";
     }
 
     public Recipe(string name, string? description, int difficulty, int cookingTimeMinutes, int servings,
@@ -30,7 +31,9 @@ public class Recipe
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
-    [Column("description")] public string? Description { get; set; }
+    [Column("description")]
+    [MaxLength(5000)]
+    public string? Description { get; set; }
 
     [Column("difficulty")] public int Difficulty { get; set; }
 
@@ -39,8 +42,6 @@ public class Recipe
     [Column("servings")] public int Servings { get; set; }
 
     [Column("is_global")] public bool IsGlobal { get; init; }
-
-    [Column("global_id")] public string? GlobalId { get; init; }
 
     [Column("household_id")] public int? HouseholdId { get; init; }
 

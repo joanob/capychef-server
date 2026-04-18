@@ -27,6 +27,11 @@ public class EntityType
     private const string SupermarketFoodDetailsType = "SUPERMARKET_FOOD_DETAILS";
     private const string ShoppingListItemType = "SHOPPING_LIST_ITEM";
 
+    private const string RecipeType = "RECIPE";
+    private const string RecipeIngredientType = "RECIPE_INGREDIENT";
+    private const string RecipeTagType = "RECIPE_TAG";
+    private const string RecipeStepType = "RECIPE_STEP";
+
     private readonly string _value;
 
     private EntityType(string value)
@@ -52,6 +57,10 @@ public class EntityType
     public static EntityType Supermarket => new(SupermarketType);
     public static EntityType SupermarketFoodDetails => new(SupermarketFoodDetailsType);
     public static EntityType ShoppingListItem => new(ShoppingListItemType);
+    public static EntityType Recipe => new(RecipeType);
+    public static EntityType RecipeIngredient => new(RecipeIngredientType);
+    public static EntityType RecipeTag => new(RecipeTagType);
+    public static EntityType RecipeStep => new(RecipeStepType);
 
     public static EntityType From(string value)
     {

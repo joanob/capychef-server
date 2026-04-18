@@ -9,7 +9,6 @@ CREATE TABLE recipes
     cooking_time_minutes INTEGER     NOT NULL,
     servings             INTEGER     NOT NULL,
     is_global            BOOLEAN     NOT NULL,
-    global_id            VARCHAR,
     household_id         INTEGER,
     created_at           TIMESTAMP   NOT NULL,
     created_by           INTEGER,
