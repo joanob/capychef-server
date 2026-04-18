@@ -39,6 +39,13 @@ public class RecipeRepository(CapychefDbContext dbContext) : IRecipeRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<List<RecipeIngredient>> GetAlternativesTrackedByIngredientId(int ingredientId)
+    {
+        return await dbContext.RecipeIngredients
+            .Where(x => x.AlternativeTo == ingredientId)
+            .ToListAsync();
+    }
+
     public async Task DeleteIngredientAsync(RecipeIngredient ingredient)
     {
         dbContext.RecipeIngredients.Remove(ingredient);

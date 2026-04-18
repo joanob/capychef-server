@@ -32,6 +32,8 @@ public interface IRecipeRepository
 
     Task DeleteStepAsync(RecipeStep step);
 
+    Task<List<RecipeIngredient>> GetAlternativesTrackedByIngredientId(int ingredientId);
+
     Task<int> GetNextIngredientOrderNum(int recipeId);
 
     Task<int> GetNextTagOrderNum(int recipeId);

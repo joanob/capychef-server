@@ -51,11 +51,13 @@ CREATE TABLE recipes_ingredients
     food_id              INTEGER NOT NULL,
     quantity             REAL,
     food_uom_id          INTEGER,
+    alternative_to       INTEGER,
     created_at           TIMESTAMP NOT NULL,
     created_by           INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES recipes (id),
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (food_uom_id) REFERENCES food_uom (id),
+    FOREIGN KEY (alternative_to) REFERENCES recipes_ingredients (id),
     FOREIGN KEY (created_by) REFERENCES users (id)
 );
 

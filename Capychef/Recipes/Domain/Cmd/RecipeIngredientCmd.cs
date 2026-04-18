@@ -13,6 +13,8 @@ public class RecipeIngredientCmd : ICmd
 
     public int OrderNum { get; init; }
 
+    public int? AlternativeTo { get; init; }
+
     public ValidationError? Validate()
     {
         if (Quantity.HasValue && !FoodUoMId.HasValue)

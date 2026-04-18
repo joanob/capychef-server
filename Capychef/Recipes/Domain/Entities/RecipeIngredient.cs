@@ -9,13 +9,15 @@ public class RecipeIngredient
     {
     }
 
-    public RecipeIngredient(int recipeId, int orderNum, int foodId, double? quantity, int? foodUoMId, int createdBy)
+    public RecipeIngredient(int recipeId, int orderNum, int foodId, double? quantity, int? foodUoMId,
+        int? alternativeTo, int createdBy)
     {
         RecipeId = recipeId;
         OrderNum = orderNum;
         FoodId = foodId;
         Quantity = quantity;
         FoodUoMId = foodUoMId;
+        AlternativeTo = alternativeTo;
         CreatedBy = createdBy;
         CreatedAt = DateTime.UtcNow;
     }
@@ -31,6 +33,8 @@ public class RecipeIngredient
     [Column("quantity")] public double? Quantity { get; set; }
 
     [Column("food_uom_id")] public int? FoodUoMId { get; set; }
+
+    [Column("alternative_to")] public int? AlternativeTo { get; set; }
 
     [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

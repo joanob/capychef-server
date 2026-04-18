@@ -65,10 +65,19 @@ public class RecipeService(CapychefDbContext dbContext, IRecipeRepository recipe
         var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
         if (recipe == null) return new Result<RecipeIngredientDto>(new NotFoundError(EntityType.Recipe, recipeId));
 
+        if (cmd.AlternativeTo.HasValue)
+        {
+            var alternativeIngredient =
+                await recipeRepository.FindTrackedIngredientById(cmd.AlternativeTo.Value, recipeId);
+            if (alternativeIngredient == null)
+                return new Result<RecipeIngredientDto>(new NotFoundError(EntityType.RecipeIngredient,
+                    cmd.AlternativeTo.Value));
+        }
+
         await recipeRepository.ShiftIngredientOrderNumFrom(recipeId, cmd.OrderNum);
 
         var ingredient = new RecipeIngredient(recipeId, cmd.OrderNum, cmd.FoodId, cmd.Quantity, cmd.FoodUoMId,
-            userDetails.UserId);
+            cmd.AlternativeTo, userDetails.UserId);
         await recipeRepository.AddIngredientAsync(ingredient);
 
         await dbContext.SaveChangesAsync();
@@ -89,9 +98,19 @@ public class RecipeService(CapychefDbContext dbContext, IRecipeRepository recipe
         if (ingredient == null)
             return new Result<RecipeIngredientDto>(new NotFoundError(EntityType.RecipeIngredient, ingredientId));
 
+        if (cmd.AlternativeTo.HasValue)
+        {
+            var alternativeIngredient =
+                await recipeRepository.FindTrackedIngredientById(cmd.AlternativeTo.Value, recipeId);
+            if (alternativeIngredient == null)
+                return new Result<RecipeIngredientDto>(new NotFoundError(EntityType.RecipeIngredient,
+                    cmd.AlternativeTo.Value));
+        }
+
         ingredient.FoodId = cmd.FoodId;
         ingredient.Quantity = cmd.Quantity;
         ingredient.FoodUoMId = cmd.FoodUoMId;
+        ingredient.AlternativeTo = cmd.AlternativeTo;
 
         if (cmd.OrderNum != ingredient.OrderNum)
         {
@@ -111,6 +130,9 @@ public class RecipeService(CapychefDbContext dbContext, IRecipeRepository recipe
 
         var ingredient = await recipeRepository.FindTrackedIngredientById(ingredientId, recipeId);
         if (ingredient == null) return new NotFoundError(EntityType.RecipeIngredient, ingredientId);
+
+        var alternatives = await recipeRepository.GetAlternativesTrackedByIngredientId(ingredientId);
+        foreach (var alternative in alternatives) await recipeRepository.DeleteIngredientAsync(alternative);
 
         await recipeRepository.DeleteIngredientAsync(ingredient);
         await dbContext.SaveChangesAsync();
