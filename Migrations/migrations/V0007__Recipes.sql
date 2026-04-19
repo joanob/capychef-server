@@ -2,26 +2,34 @@
                                                     
 CREATE TABLE recipes
 (
-    id                   SERIAL PRIMARY KEY,
-    name                 VARCHAR(50) NOT NULL,
-    description          TEXT,
-    difficulty           INTEGER     NOT NULL,
-    cooking_time_minutes INTEGER     NOT NULL,
-    servings             INTEGER     NOT NULL,
-    is_global            BOOLEAN     NOT NULL,
-    household_id         INTEGER,
-    created_at           TIMESTAMP   NOT NULL,
-    created_by           INTEGER,
-    row_version          INTEGER     NOT NULL,
-    is_deleted           BOOLEAN     NOT NULL,
-    deleted_at           TIMESTAMP,
+    id                      SERIAL PRIMARY KEY,
+    name                    VARCHAR(50) NOT NULL,
+    description             TEXT,
+    difficulty              INTEGER     NOT NULL,
+    cooking_time_minutes    INTEGER     NOT NULL,
+    servings                INTEGER     NOT NULL,
+    is_global               BOOLEAN     NOT NULL,
+    household_id            INTEGER,
+    publication_status      VARCHAR(20),
+    private_recipe_id       INTEGER,
+    public_recipe_id        INTEGER,
+    reviewed_by             INTEGER,
+    reviewed_at             TIMESTAMP,
+    review_message          TEXT,
+    created_at              TIMESTAMP   NOT NULL,
+    created_by              INTEGER,
+    row_version             INTEGER     NOT NULL,
+    is_deleted              BOOLEAN     NOT NULL,
+    deleted_at              TIMESTAMP,
     FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (created_by) REFERENCES users (id),
-    UNIQUE (household_id, modified_global_supermarket_id),
+    FOREIGN KEY (private_recipe_id) REFERENCES recipes (id),
+    FOREIGN KEY (public_recipe_id) REFERENCES recipes (id),
+    FOREIGN KEY (reviewed_by) REFERENCES users (id),
     CHECK (
-        (is_global IS TRUE AND global_id IS NOT NULL AND household_id IS NULL AND created_by IS NULL)
+        (is_global IS TRUE AND household_id IS NULL AND created_by IS NULL)
             OR
-        (is_global IS FALSE AND global_id IS NULL AND household_id IS NOT NULL AND created_by IS NOT NULL)
+        (is_global IS FALSE AND household_id IS NOT NULL AND created_by IS NOT NULL)
         )
 );
 
@@ -31,10 +39,10 @@ CREATE TABLE recipes_tags
 (
     id          SERIAL PRIMARY KEY,
     recipe_id   INTEGER NOT NULL,
-    order_num INTEGER NOT NULL,
-    tag      VARCHAR(50) NOT NULL,
-    created_at   TIMESTAMP NOT NULL,
-    created_by   INTEGER NOT NULL,
+    order_num   INTEGER NOT NULL,
+    tag         VARCHAR(50) NOT NULL,
+    created_at  TIMESTAMP NOT NULL,
+    created_by  INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES recipes (id),
     FOREIGN KEY (created_by) REFERENCES users (id)
 );
@@ -45,15 +53,15 @@ CREATE INDEX idx_recipes_tags_recipe_id ON recipes_tags (recipe_id);
   
 CREATE TABLE recipes_ingredients
 (
-    id                   SERIAL PRIMARY KEY,
-    recipe_id            INTEGER NOT NULL,
-    order_num            INTEGER NOT NULL,
-    food_id              INTEGER NOT NULL,
-    quantity             REAL,
-    food_uom_id          INTEGER,
-    alternative_to       INTEGER,
-    created_at           TIMESTAMP NOT NULL,
-    created_by           INTEGER NOT NULL,
+    id             SERIAL PRIMARY KEY,
+    recipe_id      INTEGER NOT NULL,
+    order_num      INTEGER NOT NULL,
+    food_id        INTEGER NOT NULL,
+    quantity       REAL,
+    food_uom_id    INTEGER,
+    alternative_to INTEGER,
+    created_at     TIMESTAMP NOT NULL,
+    created_by     INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES recipes (id),
     FOREIGN KEY (food_id) REFERENCES food (id),
     FOREIGN KEY (food_uom_id) REFERENCES food_uom (id),
@@ -67,14 +75,15 @@ CREATE INDEX idx_recipes_ingredients_recipe_id ON recipes_ingredients (recipe_id
 
 CREATE TABLE recipes_steps
 (
-    id                   SERIAL PRIMARY KEY,
-    recipe_id            INTEGER NOT NULL,
-    step_number          INTEGER NOT NULL,
-    description          TEXT NOT NULL,
-    created_at           TIMESTAMP NOT NULL,
-    created_by           INTEGER NOT NULL,
+    id          SERIAL PRIMARY KEY,
+    recipe_id   INTEGER NOT NULL,
+    step_number INTEGER NOT NULL,
+    description TEXT    NOT NULL,
+    created_at  TIMESTAMP NOT NULL,
+    created_by  INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES recipes (id),
     FOREIGN KEY (created_by) REFERENCES users (id)
 );
 
 CREATE INDEX idx_recipes_steps_recipe_id ON recipes_steps (recipe_id);
+

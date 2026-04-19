@@ -19,6 +19,22 @@ public class RecipeRepository(CapychefDbContext dbContext) : IRecipeRepository
             .FirstOrDefaultAsync();
     }
 
+    public async Task<Recipe?> FindTrackedPublicByPrivateRecipeId(int privateRecipeId)
+    {
+        return await dbContext.Recipes
+            .Where(x => !x.IsDeleted && x.PrivateRecipeId == privateRecipeId &&
+                        x.PublicationStatus == RecipePublicationStatus.Active)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Recipe?> FindTrackedPendingDraftByPrivateRecipeId(int privateRecipeId)
+    {
+        return await dbContext.Recipes
+            .Where(x => !x.IsDeleted && x.PrivateRecipeId == privateRecipeId &&
+                        x.PublicationStatus == RecipePublicationStatus.Pending)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<List<RecipeIngredient>> GetIngredientsTrackedByRecipeId(int recipeId)
     {
         return await dbContext.RecipeIngredients

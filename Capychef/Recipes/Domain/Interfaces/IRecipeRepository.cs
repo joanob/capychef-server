@@ -8,6 +8,10 @@ public interface IRecipeRepository
 
     Task<Recipe?> FindTrackedById(int id, int householdId);
 
+    Task<Recipe?> FindTrackedPublicByPrivateRecipeId(int privateRecipeId);
+
+    Task<Recipe?> FindTrackedPendingDraftByPrivateRecipeId(int privateRecipeId);
+
     Task<List<RecipeIngredient>> GetIngredientsTrackedByRecipeId(int recipeId);
 
     Task AddIngredientAsync(RecipeIngredient ingredient);
