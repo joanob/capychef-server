@@ -20,6 +20,15 @@ public class RecipeStep
         CreatedAt = DateTime.UtcNow;
     }
 
+    public RecipeStep(Recipe recipe, int stepNumber, string description, int createdBy)
+    {
+        Recipe = recipe;
+        StepNumber = stepNumber;
+        Description = description;
+        CreatedBy = createdBy;
+        CreatedAt = DateTime.UtcNow;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("recipe_id")] public int RecipeId { get; init; }
@@ -33,4 +42,6 @@ public class RecipeStep
     [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("created_by")] public int CreatedBy { get; init; }
+
+    [ForeignKey(nameof(RecipeId))] public Recipe? Recipe { get; init; }
 }

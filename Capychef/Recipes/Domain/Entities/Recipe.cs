@@ -45,15 +45,17 @@ public class Recipe
 
     [Column("household_id")] public int? HouseholdId { get; init; }
 
-    [Column("publication_status")] public RecipePublicationStatus? PublicationStatus { get; set; }
+    [Column("is_public")] public bool IsPublic { get; set; }
 
-    [Column("private_recipe_id")] public int? PrivateRecipeId { get; init; }
+    [Column("published_at")] public DateTime? PublishedAt { get; set; }
 
-    [Column("public_recipe_id")] public int? PublicRecipeId { get; init; }
+    [Column("published_by")] public int? PublishedBy { get; set; }
 
-    [Column("reviewed_by")] public int? ReviewedBy { get; set; }
+    [Column("household_recipe_id")] public int? HouseholdRecipeId { get; init; }
 
     [Column("reviewed_at")] public DateTime? ReviewedAt { get; set; }
+
+    [Column("reviewed_by")] public int? ReviewedBy { get; set; }
 
     [Column("review_message")]
     [MaxLength(5000)]
@@ -69,49 +71,27 @@ public class Recipe
 
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    public static Recipe CreateDraft(Recipe privateRecipe, int? publicRecipeId, int createdBy)
-    {
-        return new Recipe
-        {
-            Name = privateRecipe.Name,
-            Description = privateRecipe.Description,
-            Difficulty = privateRecipe.Difficulty,
-            CookingTimeMinutes = privateRecipe.CookingTimeMinutes,
-            Servings = privateRecipe.Servings,
-            IsGlobal = false,
-            HouseholdId = privateRecipe.HouseholdId,
-            PublicationStatus = RecipePublicationStatus.Pending,
-            PrivateRecipeId = privateRecipe.Id,
-            PublicRecipeId = publicRecipeId,
-            CreatedAt = DateTime.UtcNow,
-            CreatedBy = createdBy,
-            RowVersion = 1,
-            IsDeleted = false
-        };
-    }
-
-    public static Recipe CreatePublic(Recipe draft, int createdBy)
-    {
-        return new Recipe
-        {
-            Name = draft.Name,
-            Description = draft.Description,
-            Difficulty = draft.Difficulty,
-            CookingTimeMinutes = draft.CookingTimeMinutes,
-            Servings = draft.Servings,
-            IsGlobal = true,
-            PublicationStatus = RecipePublicationStatus.Active,
-            PrivateRecipeId = draft.PrivateRecipeId,
-            CreatedAt = DateTime.UtcNow,
-            CreatedBy = createdBy,
-            RowVersion = 1,
-            IsDeleted = false
-        };
-    }
-
     public void Delete()
     {
         IsDeleted = true;
         DeletedAt = DateTime.UtcNow;
+    }
+
+    public static Recipe CreatePublicationDraft(Recipe recipe, int userId)
+    {
+        return new Recipe
+        {
+            Name = recipe.Name,
+            Description = recipe.Description,
+            Difficulty = recipe.Difficulty,
+            CookingTimeMinutes = recipe.CookingTimeMinutes,
+            Servings = recipe.Servings,
+            IsGlobal = false,
+            HouseholdId = recipe.HouseholdId,
+            IsPublic = false,
+            HouseholdRecipeId = recipe.Id,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
     }
 }

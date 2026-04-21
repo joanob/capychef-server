@@ -22,6 +22,19 @@ public class RecipeIngredient
         CreatedAt = DateTime.UtcNow;
     }
 
+    public RecipeIngredient(Recipe recipe, int orderNum, int foodId, double? quantity, int? foodUoMId,
+        int? alternativeTo, int createdBy)
+    {
+        Recipe = recipe;
+        OrderNum = orderNum;
+        FoodId = foodId;
+        Quantity = quantity;
+        FoodUoMId = foodUoMId;
+        AlternativeTo = alternativeTo;
+        CreatedBy = createdBy;
+        CreatedAt = DateTime.UtcNow;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("recipe_id")] public int RecipeId { get; init; }
@@ -39,4 +52,7 @@ public class RecipeIngredient
     [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("created_by")] public int CreatedBy { get; init; }
+
+    [ForeignKey(nameof(RecipeId))] public Recipe? Recipe { get; init; }
+    [ForeignKey(nameof(FoodId))] public Food.Domain.Entities.Food? Food { get; init; }
 }

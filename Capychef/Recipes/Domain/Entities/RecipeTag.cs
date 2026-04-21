@@ -20,6 +20,15 @@ public class RecipeTag
         CreatedAt = DateTime.UtcNow;
     }
 
+    public RecipeTag(Recipe recipe, int orderNum, string tag, int createdBy)
+    {
+        Recipe = recipe;
+        OrderNum = orderNum;
+        Tag = tag;
+        CreatedBy = createdBy;
+        CreatedAt = DateTime.UtcNow;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("recipe_id")] public int RecipeId { get; init; }
@@ -31,4 +40,6 @@ public class RecipeTag
     [Column("created_at")] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("created_by")] public int CreatedBy { get; init; }
+
+    [ForeignKey(nameof(RecipeId))] public Recipe? Recipe { get; init; }
 }

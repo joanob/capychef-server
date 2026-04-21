@@ -34,6 +34,4 @@ public interface IRecipeService
     Task<AppError?> DeleteStep(AuthUserDetails userDetails, int recipeId, int stepId);
 
     Task<AppError?> PublishRecipe(AuthUserDetails userDetails, int recipeId);
-
-    Task<AppError?> RequestPublicationUpdate(AuthUserDetails userDetails, int recipeId);
 }
