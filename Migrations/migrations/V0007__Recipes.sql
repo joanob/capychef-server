@@ -1,24 +1,15 @@
 -- RECIPES
--- Global recipes are created by Capychef and made available to all households. They cannot be edited or deleted by users.
--- Global recipes have is_global = true, is_public = true, household_recipe_id = null
--- Household recipes are created by users and are only visible within their household. They can be edited and deleted by household members.
--- Household recipes have is_global = false, is_public = false, household_recipe_id = null
--- Public recipes are household recipes that have been approved by Capychef and made available to all households. They can be edited and deleted by their creators, but not by other users.
--- Public recipes have is_global = false, is_public = true, household_recipe_id = id of the original household recipe
--- Draft recipes are household recipes that are pending validation
--- Draft recipes have is_global = false, is_public = false, household_recipe_id = id of the original household recipe. Reviewed or not depends on reviewed_at and reviewed_by fields.
                                                     
 CREATE TABLE recipes
 (
     id                   SERIAL PRIMARY KEY,
+    recipe_type VARCHAR(1) NOT NULL,
+    household_id         INTEGER,
     name                 VARCHAR(50) NOT NULL,
     description          TEXT,
     difficulty           INTEGER     NOT NULL,
     cooking_time_minutes INTEGER     NOT NULL,
     servings             INTEGER     NOT NULL,
-    is_global            BOOLEAN     NOT NULL,
-    household_id         INTEGER,
-    is_public            BOOLEAN     NOT NULL,
     published_at         TIMESTAMP,
     published_by         INTEGER,
     household_recipe_id  INTEGER,
@@ -33,16 +24,7 @@ CREATE TABLE recipes
     FOREIGN KEY (household_id) REFERENCES households (id),
     FOREIGN KEY (created_by) REFERENCES users (id),
     FOREIGN KEY (household_recipe_id) REFERENCES recipes (id),
-    FOREIGN KEY (reviewed_by) REFERENCES users (id),
-    CHECK (
-        (is_global IS TRUE AND is_public IS TRUE AND household_id IS NULL)              -- Global recipes
-            OR
-        (is_global IS FALSE AND is_public IS FALSE AND household_recipe_id IS NULL)     -- Household recipes
-            OR
-        (is_global IS FALSE AND is_public IS TRUE AND household_recipe_id IS NOT NULL)  -- Public recipes
-            OR
-        (is_global IS FALSE AND is_public IS FALSE AND household_recipe_id IS NOT NULL) -- Draft recipes
-        )
+    FOREIGN KEY (reviewed_by) REFERENCES users (id)
 );
 
 -- RECIPES TAGS
@@ -99,16 +81,25 @@ CREATE TABLE recipes_steps
 
 CREATE INDEX idx_recipes_steps_recipe_id ON recipes_steps (recipe_id);
 
--- SAVED RECIPES
+-- RECIPES HOUSEHOLD DETAILS 
 
-CREATE TABLE saved_recipes
+CREATE TABLE recipes_household_details
 (
     id          SERIAL PRIMARY KEY,
-    user_id     INTEGER NOT NULL,
-    household_id INTEGER NOT NULL,
     recipe_id   INTEGER NOT NULL,
+    household_id INTEGER NOT NULL,
+    user_id      INTEGER,
+    is_favourite BOOLEAN NOT NULL,
+    score    INTEGER NOT NULL,
+    min_days_between_consumptions INTEGER,
+    max_days_between_consumptions INTEGER,
     created_at  TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    created_by  INTEGER NOT NULL,
+    row_version          INTEGER     NOT NULL,
+    is_deleted           BOOLEAN     NOT NULL,
+    deleted_at           TIMESTAMP,
+    FOREIGN KEY (recipe_id) REFERENCES recipes (id),
     FOREIGN KEY (household_id) REFERENCES households (id),
-    FOREIGN KEY (recipe_id) REFERENCES recipes (id)
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
 );
