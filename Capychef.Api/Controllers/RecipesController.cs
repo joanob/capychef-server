@@ -144,15 +144,4 @@ public class RecipesController(IRecipeService recipeService, ILoggerFactory logg
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
         return Ok();
     }
-
-    [CheckMembership]
-    [HttpPost("{id}/publish")]
-    public async Task<ActionResult> PublishRecipe(int id)
-    {
-        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
-        var error = await recipeService.PublishRecipe(userDetails, id);
-        var logger = loggerFactory.CreateLogger("RecipeService.PublishRecipe");
-        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
-        return Ok();
-    }
 }

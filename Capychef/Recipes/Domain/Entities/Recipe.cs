@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Capychef.Common.Auth;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Recipes.Domain.Entities;
 
@@ -11,23 +13,11 @@ public class Recipe
         Name = "";
     }
 
-    public Recipe(string name, string? description, int difficulty, int cookingTimeMinutes, int servings,
-        int householdId, int createdBy)
-    {
-        Name = name;
-        Description = description;
-        Difficulty = difficulty;
-        CookingTimeMinutes = cookingTimeMinutes;
-        Servings = servings;
-        HouseholdId = householdId;
-        CreatedBy = createdBy;
-        IsGlobal = false;
-        CreatedAt = DateTime.UtcNow;
-        RowVersion = 1;
-        IsDeleted = false;
-    }
-
     [Column("id")] public int Id { get; init; }
+
+    [Column("recipe_type")] public RecipeType Type { get; set; } = RecipeType.Draft;
+
+    [Column("household_id")] public int? HouseholdId { get; init; }
 
     [Column("name")] [MaxLength(50)] public string Name { get; set; }
 
@@ -41,11 +31,6 @@ public class Recipe
 
     [Column("servings")] public int Servings { get; set; }
 
-    [Column("is_global")] public bool IsGlobal { get; init; }
-
-    [Column("household_id")] public int? HouseholdId { get; init; }
-
-    [Column("is_public")] public bool IsPublic { get; set; }
 
     [Column("published_at")] public DateTime? PublishedAt { get; set; }
 
@@ -77,21 +62,76 @@ public class Recipe
         DeletedAt = DateTime.UtcNow;
     }
 
-    public static Recipe CreatePublicationDraft(Recipe recipe, int userId)
+    public static Recipe NewGlobalRecipe(string name, string? description, int difficulty, int cookingTimeMinutes,
+        int servings)
     {
         return new Recipe
         {
+            Type = RecipeType.Global,
+            Name = name,
+            Description = description,
+            Difficulty = difficulty,
+            CookingTimeMinutes = cookingTimeMinutes,
+            Servings = servings,
+            HouseholdId = null,
+            CreatedAt = DateTime.UtcNow
+        };
+    }
+
+    public static Recipe NewHouseholdRecipe(AuthUserDetails userDetails, string name, string? description,
+        int difficulty, int cookingTimeMinutes,
+        int servings)
+    {
+        return new Recipe
+        {
+            Type = RecipeType.Household,
+            HouseholdId = userDetails.GetHouseholdId(),
+            Name = name,
+            Description = description,
+            Difficulty = difficulty,
+            CookingTimeMinutes = cookingTimeMinutes,
+            Servings = servings,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userDetails.UserId
+        };
+    }
+
+    public static Recipe NewPublicRecipeDraft(Recipe recipe, AuthUserDetails userDetails)
+    {
+        return new Recipe
+        {
+            Type = RecipeType.Draft,
+            HouseholdId = userDetails.GetHouseholdId(),
             Name = recipe.Name,
             Description = recipe.Description,
             Difficulty = recipe.Difficulty,
             CookingTimeMinutes = recipe.CookingTimeMinutes,
             Servings = recipe.Servings,
-            IsGlobal = false,
-            HouseholdId = recipe.HouseholdId,
-            IsPublic = false,
             HouseholdRecipeId = recipe.Id,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = userId
+            CreatedBy = userDetails.UserId
         };
+    }
+
+    public static Recipe NewPublicRecipe(Recipe recipe)
+    {
+        return new Recipe
+        {
+            Type = RecipeType.Public,
+            Name = recipe.Name,
+            Description = recipe.Description,
+            Difficulty = recipe.Difficulty,
+            CookingTimeMinutes = recipe.CookingTimeMinutes,
+            Servings = recipe.Servings,
+            HouseholdRecipeId = recipe.Id,
+            CreatedAt = DateTime.UtcNow
+        };
+    }
+
+    public static void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Recipe>()
+            .Property(f => f.Type)
+            .HasConversion(new RecipeTypeConverter());
     }
 }

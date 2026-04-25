@@ -22,14 +22,15 @@ public class RecipeRepository(CapychefDbContext dbContext) : IRecipeRepository
     public async Task<Recipe?> FindTrackedPublicByPrivateRecipeId(int privateRecipeId)
     {
         return await dbContext.Recipes
-            .Where(x => !x.IsDeleted && x.IsPublic && x.HouseholdRecipeId == privateRecipeId)
+            .Where(x => !x.IsDeleted && x.Type == RecipeType.Public && x.HouseholdRecipeId == privateRecipeId)
             .FirstOrDefaultAsync();
     }
 
     public async Task<Recipe?> FindTrackedPendingDraftByPrivateRecipeId(int privateRecipeId)
     {
         return await dbContext.Recipes
-            .Where(x => !x.IsDeleted && !x.IsPublic && x.ReviewedAt == null && x.HouseholdRecipeId == privateRecipeId)
+            .Where(x => !x.IsDeleted && x.Type != RecipeType.Public && x.ReviewedAt == null &&
+                        x.HouseholdRecipeId == privateRecipeId)
             .FirstOrDefaultAsync();
     }
 

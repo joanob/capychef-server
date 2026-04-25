@@ -79,6 +79,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
         StorageSpacesModificationHistory.OnModelCreating(modelBuilder);
         FoodModificationHistory.OnModelCreating(modelBuilder);
         BatchModificationHistory.OnModelCreating(modelBuilder);
+        Recipe.OnModelCreating(modelBuilder);
 
         // Save all dates as UTC
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())

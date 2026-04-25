@@ -6,7 +6,6 @@ using Capychef.Persistence;
 using Capychef.Recipes.Domain.Cmd;
 using Capychef.Recipes.Domain.DTO;
 using Capychef.Recipes.Domain.Entities;
-using Capychef.Recipes.Domain.Errors;
 using Capychef.Recipes.Domain.Interfaces;
 
 namespace Capychef.Recipes.Services;
@@ -18,8 +17,8 @@ public class RecipeService(CapychefDbContext dbContext, IRecipeRepository recipe
         var validationError = cmd.Validate();
         if (validationError != null) return new Result<RecipeDto>(validationError);
 
-        var recipe = new Recipe(cmd.Name, cmd.Description, cmd.Difficulty, cmd.CookingTimeMinutes, cmd.Servings,
-            userDetails.GetHouseholdId(), userDetails.UserId);
+        var recipe = Recipe.NewHouseholdRecipe(userDetails, cmd.Name, cmd.Description, cmd.Difficulty,
+            cmd.CookingTimeMinutes, cmd.Servings);
 
         await recipeRepository.AddAsync(recipe);
         await dbContext.SaveChangesAsync();
@@ -248,38 +247,6 @@ public class RecipeService(CapychefDbContext dbContext, IRecipeRepository recipe
         if (step == null) return new NotFoundError(EntityType.RecipeStep, stepId);
 
         await recipeRepository.DeleteStepAsync(step);
-        await dbContext.SaveChangesAsync();
-
-        return null;
-    }
-
-    public async Task<AppError?> PublishRecipe(AuthUserDetails userDetails, int recipeId)
-    {
-        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
-        if (recipe == null) return new NotFoundError(EntityType.Recipe, recipeId);
-
-        var draft = Recipe.CreatePublicationDraft(recipe, userDetails.UserId);
-
-        await recipeRepository.AddAsync(draft);
-
-        var ingredients = await recipeRepository.GetIngredientsTrackedByRecipeId(recipeId);
-
-        if (!ingredients.All(x => x.Food is { IsGlobal: true })) return new RecipeHasNonPublicIngredients();
-
-        foreach (var ingredient in ingredients)
-            await recipeRepository.AddIngredientAsync(
-                new RecipeIngredient(draft, ingredient.OrderNum, ingredient.FoodId,
-                    ingredient.Quantity, ingredient.FoodUoMId, null, userDetails.UserId));
-
-        var tags = await recipeRepository.GetTagsTrackedByRecipeId(recipeId);
-        foreach (var tag in tags)
-            await recipeRepository.AddTagAsync(new RecipeTag(draft, tag.OrderNum, tag.Tag, userDetails.UserId));
-
-        var steps = await recipeRepository.GetStepsTrackedByRecipeId(recipeId);
-        foreach (var step in steps)
-            await recipeRepository.AddStepAsync(new RecipeStep(draft, step.StepNumber, step.Description,
-                userDetails.UserId));
-
         await dbContext.SaveChangesAsync();
 
         return null;

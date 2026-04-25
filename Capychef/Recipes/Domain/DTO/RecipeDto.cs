@@ -12,7 +12,7 @@ public class RecipeDto
         Difficulty = recipe.Difficulty;
         CookingTimeMinutes = recipe.CookingTimeMinutes;
         Servings = recipe.Servings;
-        IsGlobal = recipe.IsGlobal;
+        Type = recipe.Type;
         HouseholdId = recipe.HouseholdId;
         CreatedAt = recipe.CreatedAt;
         CreatedBy = recipe.CreatedBy;
@@ -25,7 +25,7 @@ public class RecipeDto
     public int Difficulty { get; init; }
     public int CookingTimeMinutes { get; init; }
     public int Servings { get; init; }
-    public bool IsGlobal { get; init; }
+    public RecipeType Type { get; init; }
     public int? HouseholdId { get; init; }
     public DateTime CreatedAt { get; init; }
     public int? CreatedBy { get; init; }

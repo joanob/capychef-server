@@ -32,6 +32,4 @@ public interface IRecipeService
     Task<Result<RecipeStepDto>> UpdateStep(AuthUserDetails userDetails, int recipeId, int stepId, RecipeStepCmd cmd);
 
     Task<AppError?> DeleteStep(AuthUserDetails userDetails, int recipeId, int stepId);
-
-    Task<AppError?> PublishRecipe(AuthUserDetails userDetails, int recipeId);
 }
