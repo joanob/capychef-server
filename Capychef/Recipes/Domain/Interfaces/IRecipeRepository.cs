@@ -49,4 +49,13 @@ public interface IRecipeRepository
     Task ShiftTagOrderNumFrom(int recipeId, int fromOrderNum);
 
     Task ShiftStepNumberFrom(int recipeId, int fromStepNumber);
+
+    Task<RecipeHouseholdDetails?> FindTrackedRecipeHouseholdDetailsById(int id);
+
+    Task<RecipeHouseholdDetails?> FindTrackedRecipeHouseholdDetailsByRecipeAndHousehold(int recipeId, int householdId,
+        int? userId = null);
+
+    Task AddRecipeHouseholdDetailsAsync(RecipeHouseholdDetails details);
+
+    Task DeleteRecipeHouseholdDetailsAsync(RecipeHouseholdDetails details);
 }

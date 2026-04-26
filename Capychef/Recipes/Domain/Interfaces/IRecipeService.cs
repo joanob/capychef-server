@@ -32,4 +32,21 @@ public interface IRecipeService
     Task<Result<RecipeStepDto>> UpdateStep(AuthUserDetails userDetails, int recipeId, int stepId, RecipeStepCmd cmd);
 
     Task<AppError?> DeleteStep(AuthUserDetails userDetails, int recipeId, int stepId);
+
+    Task<Result<RecipeHouseholdDetailsDto>> CreateRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId,
+        RecipeHouseholdDetailsCmd cmd);
+
+    Task<Result<RecipeHouseholdDetailsDto>> CreateUserRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId,
+        int userId, RecipeHouseholdDetailsCmd cmd);
+
+    Task<Result<RecipeHouseholdDetailsDto>> UpdateRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId,
+        int detailsId, RecipeHouseholdDetailsCmd cmd);
+
+    Task<Result<RecipeHouseholdDetailsDto>> UpdateUserRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId,
+        int userId, int detailsId, RecipeHouseholdDetailsCmd cmd);
+
+    Task<AppError?> DeleteRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId, int detailsId);
+
+    Task<AppError?> DeleteUserRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId, int userId,
+        int detailsId);
 }

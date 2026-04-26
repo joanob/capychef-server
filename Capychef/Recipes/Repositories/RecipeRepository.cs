@@ -175,4 +175,36 @@ public class RecipeRepository(CapychefDbContext dbContext) : IRecipeRepository
         foreach (var step in steps)
             step.StepNumber++;
     }
+
+    public async Task<RecipeHouseholdDetails?> FindTrackedRecipeHouseholdDetailsById(int id)
+    {
+        return await dbContext.RecipeHouseholdDetails
+            .Where(x => !x.IsDeleted && x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<RecipeHouseholdDetails?> FindTrackedRecipeHouseholdDetailsByRecipeAndHousehold(int recipeId,
+        int householdId, int? userId = null)
+    {
+        var query = dbContext.RecipeHouseholdDetails
+            .Where(x => !x.IsDeleted && x.RecipeId == recipeId && x.HouseholdId == householdId);
+
+        if (userId.HasValue)
+            query = query.Where(x => x.UserId == userId);
+        else
+            query = query.Where(x => x.UserId == null);
+
+        return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task AddRecipeHouseholdDetailsAsync(RecipeHouseholdDetails details)
+    {
+        await dbContext.RecipeHouseholdDetails.AddAsync(details);
+    }
+
+    public async Task DeleteRecipeHouseholdDetailsAsync(RecipeHouseholdDetails details)
+    {
+        dbContext.RecipeHouseholdDetails.Remove(details);
+        await Task.CompletedTask;
+    }
 }

@@ -31,6 +31,7 @@ public class EntityType
     private const string RecipeIngredientType = "RECIPE_INGREDIENT";
     private const string RecipeTagType = "RECIPE_TAG";
     private const string RecipeStepType = "RECIPE_STEP";
+    private const string RecipeHouseholdDetailsType = "RECIPE_HOUSEHOLD_DETAILS";
 
     private readonly string _value;
 
@@ -61,6 +62,7 @@ public class EntityType
     public static EntityType RecipeIngredient => new(RecipeIngredientType);
     public static EntityType RecipeTag => new(RecipeTagType);
     public static EntityType RecipeStep => new(RecipeStepType);
+    public static EntityType RecipeHouseholdDetails => new(RecipeHouseholdDetailsType);
 
     public static EntityType From(string value)
     {
@@ -84,6 +86,11 @@ public class EntityType
             SupermarketType => Supermarket,
             SupermarketFoodDetailsType => SupermarketFoodDetails,
             ShoppingListItemType => ShoppingListItem,
+            RecipeType => Recipe,
+            RecipeIngredientType => RecipeIngredient,
+            RecipeTagType => RecipeTag,
+            RecipeStepType => RecipeStep,
+            RecipeHouseholdDetailsType => RecipeHouseholdDetails,
             _ => new EntityType("")
         };
     }

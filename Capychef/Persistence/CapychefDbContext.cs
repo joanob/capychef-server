@@ -64,6 +64,7 @@ public class CapychefDbContext(DbContextOptions<CapychefDbContext> options) : Db
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
     public DbSet<RecipeTag> RecipeTags => Set<RecipeTag>();
     public DbSet<RecipeStep> RecipeSteps => Set<RecipeStep>();
+    public DbSet<RecipeHouseholdDetails> RecipeHouseholdDetails => Set<RecipeHouseholdDetails>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -251,4 +251,139 @@ public class RecipeService(CapychefDbContext dbContext, IRecipeRepository recipe
 
         return null;
     }
+
+    public async Task<Result<RecipeHouseholdDetailsDto>> CreateRecipeHouseholdDetails(AuthUserDetails userDetails,
+        int recipeId, RecipeHouseholdDetailsCmd cmd)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<RecipeHouseholdDetailsDto>(validationError);
+
+        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
+        if (recipe == null)
+            return new Result<RecipeHouseholdDetailsDto>(new NotFoundError(EntityType.Recipe, recipeId));
+
+        var existingDetails = await recipeRepository.FindTrackedRecipeHouseholdDetailsByRecipeAndHousehold(recipeId,
+            userDetails.GetHouseholdId());
+        if (existingDetails != null)
+            return new Result<RecipeHouseholdDetailsDto>(
+                new ValidationError("Household details for this recipe already exist."));
+
+        var details = new RecipeHouseholdDetails(recipeId, userDetails.GetHouseholdId(), userDetails.UserId);
+        await recipeRepository.AddRecipeHouseholdDetailsAsync(details);
+        await dbContext.SaveChangesAsync();
+
+        return new Result<RecipeHouseholdDetailsDto>(new RecipeHouseholdDetailsDto(details));
+    }
+
+    public async Task<Result<RecipeHouseholdDetailsDto>> CreateUserRecipeHouseholdDetails(AuthUserDetails userDetails,
+        int recipeId, int userId, RecipeHouseholdDetailsCmd cmd)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<RecipeHouseholdDetailsDto>(validationError);
+
+        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
+        if (recipe == null)
+            return new Result<RecipeHouseholdDetailsDto>(new NotFoundError(EntityType.Recipe, recipeId));
+
+        var existingDetails = await recipeRepository.FindTrackedRecipeHouseholdDetailsByRecipeAndHousehold(recipeId,
+            userDetails.GetHouseholdId(), userId);
+        if (existingDetails != null)
+            return new Result<RecipeHouseholdDetailsDto>(
+                new ValidationError("User details for this recipe already exist."));
+
+        var details = new RecipeHouseholdDetails(recipeId, userDetails.GetHouseholdId(), userId, userDetails.UserId);
+        await recipeRepository.AddRecipeHouseholdDetailsAsync(details);
+        await dbContext.SaveChangesAsync();
+
+        return new Result<RecipeHouseholdDetailsDto>(new RecipeHouseholdDetailsDto(details));
+    }
+
+    public async Task<Result<RecipeHouseholdDetailsDto>> UpdateRecipeHouseholdDetails(AuthUserDetails userDetails,
+        int recipeId, int detailsId, RecipeHouseholdDetailsCmd cmd)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<RecipeHouseholdDetailsDto>(validationError);
+
+        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
+        if (recipe == null)
+            return new Result<RecipeHouseholdDetailsDto>(new NotFoundError(EntityType.Recipe, recipeId));
+
+        var details = await recipeRepository.FindTrackedRecipeHouseholdDetailsById(detailsId);
+        if (details == null || details.RecipeId != recipeId || details.HouseholdId != userDetails.GetHouseholdId() ||
+            details.UserId != null)
+            return new Result<RecipeHouseholdDetailsDto>(
+                new NotFoundError(EntityType.RecipeHouseholdDetails, detailsId));
+
+        if (cmd.IsFavourite.HasValue) details.IsFavourite = cmd.IsFavourite.Value;
+        if (cmd.Score.HasValue) details.Score = cmd.Score.Value;
+        if (cmd.MinDaysBetweenConsumptions.HasValue)
+            details.MinDaysBetweenConsumptions = cmd.MinDaysBetweenConsumptions.Value;
+        if (cmd.MaxDaysBetweenConsumptions.HasValue)
+            details.MaxDaysBetweenConsumptions = cmd.MaxDaysBetweenConsumptions.Value;
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<RecipeHouseholdDetailsDto>(new RecipeHouseholdDetailsDto(details));
+    }
+
+    public async Task<Result<RecipeHouseholdDetailsDto>> UpdateUserRecipeHouseholdDetails(AuthUserDetails userDetails,
+        int recipeId, int userId, int detailsId, RecipeHouseholdDetailsCmd cmd)
+    {
+        var validationError = cmd.Validate();
+        if (validationError != null) return new Result<RecipeHouseholdDetailsDto>(validationError);
+
+        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
+        if (recipe == null)
+            return new Result<RecipeHouseholdDetailsDto>(new NotFoundError(EntityType.Recipe, recipeId));
+
+        var details = await recipeRepository.FindTrackedRecipeHouseholdDetailsById(detailsId);
+        if (details == null || details.RecipeId != recipeId || details.HouseholdId != userDetails.GetHouseholdId() ||
+            details.UserId != userId)
+            return new Result<RecipeHouseholdDetailsDto>(
+                new NotFoundError(EntityType.RecipeHouseholdDetails, detailsId));
+
+        if (cmd.IsFavourite.HasValue) details.IsFavourite = cmd.IsFavourite.Value;
+        if (cmd.Score.HasValue) details.Score = cmd.Score.Value;
+        if (cmd.MinDaysBetweenConsumptions.HasValue)
+            details.MinDaysBetweenConsumptions = cmd.MinDaysBetweenConsumptions.Value;
+        if (cmd.MaxDaysBetweenConsumptions.HasValue)
+            details.MaxDaysBetweenConsumptions = cmd.MaxDaysBetweenConsumptions.Value;
+
+        await dbContext.SaveChangesAsync();
+
+        return new Result<RecipeHouseholdDetailsDto>(new RecipeHouseholdDetailsDto(details));
+    }
+
+    public async Task<AppError?> DeleteRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId, int detailsId)
+    {
+        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
+        if (recipe == null) return new NotFoundError(EntityType.Recipe, recipeId);
+
+        var details = await recipeRepository.FindTrackedRecipeHouseholdDetailsById(detailsId);
+        if (details == null || details.RecipeId != recipeId || details.HouseholdId != userDetails.GetHouseholdId() ||
+            details.UserId != null)
+            return new NotFoundError(EntityType.RecipeHouseholdDetails, detailsId);
+
+        details.Delete();
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
+
+    public async Task<AppError?> DeleteUserRecipeHouseholdDetails(AuthUserDetails userDetails, int recipeId, int userId,
+        int detailsId)
+    {
+        var recipe = await recipeRepository.FindTrackedById(recipeId, userDetails.GetHouseholdId());
+        if (recipe == null) return new NotFoundError(EntityType.Recipe, recipeId);
+
+        var details = await recipeRepository.FindTrackedRecipeHouseholdDetailsById(detailsId);
+        if (details == null || details.RecipeId != recipeId || details.HouseholdId != userDetails.GetHouseholdId() ||
+            details.UserId != userId)
+            return new NotFoundError(EntityType.RecipeHouseholdDetails, detailsId);
+
+        details.Delete();
+        await dbContext.SaveChangesAsync();
+
+        return null;
+    }
 }

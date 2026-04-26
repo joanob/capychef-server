@@ -144,4 +144,75 @@ public class RecipesController(IRecipeService recipeService, ILoggerFactory logg
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
         return Ok();
     }
+
+    [CheckMembership]
+    [HttpPost("{recipeId}/household-details")]
+    public async Task<ActionResult<RecipeHouseholdDetailsDto>> CreateHouseholdDetails(int recipeId,
+        RecipeHouseholdDetailsCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+        var result = await recipeService.CreateRecipeHouseholdDetails(userDetails, recipeId, cmd);
+        var logger = loggerFactory.CreateLogger("RecipeService.CreateHouseholdDetails");
+        if (result.Failed()) return GlobalErrorHandler.HandleError(result.Error(), logger);
+        return Ok(result.Get());
+    }
+
+    [CheckMembership]
+    [HttpPost("{recipeId}/users/{userId}/household-details")]
+    public async Task<ActionResult<RecipeHouseholdDetailsDto>> CreateUserHouseholdDetails(int recipeId, int userId,
+        RecipeHouseholdDetailsCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+        var result = await recipeService.CreateUserRecipeHouseholdDetails(userDetails, recipeId, userId, cmd);
+        var logger = loggerFactory.CreateLogger("RecipeService.CreateUserHouseholdDetails");
+        if (result.Failed()) return GlobalErrorHandler.HandleError(result.Error(), logger);
+        return Ok(result.Get());
+    }
+
+    [CheckMembership]
+    [HttpPut("{recipeId}/household-details/{detailsId}")]
+    public async Task<ActionResult<RecipeHouseholdDetailsDto>> UpdateHouseholdDetails(int recipeId, int detailsId,
+        RecipeHouseholdDetailsCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+        var result = await recipeService.UpdateRecipeHouseholdDetails(userDetails, recipeId, detailsId, cmd);
+        var logger = loggerFactory.CreateLogger("RecipeService.UpdateHouseholdDetails");
+        if (result.Failed()) return GlobalErrorHandler.HandleError(result.Error(), logger);
+        return Ok(result.Get());
+    }
+
+    [CheckMembership]
+    [HttpPut("{recipeId}/users/{userId}/household-details/{detailsId}")]
+    public async Task<ActionResult<RecipeHouseholdDetailsDto>> UpdateUserHouseholdDetails(int recipeId, int userId,
+        int detailsId, RecipeHouseholdDetailsCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+        var result =
+            await recipeService.UpdateUserRecipeHouseholdDetails(userDetails, recipeId, userId, detailsId, cmd);
+        var logger = loggerFactory.CreateLogger("RecipeService.UpdateUserHouseholdDetails");
+        if (result.Failed()) return GlobalErrorHandler.HandleError(result.Error(), logger);
+        return Ok(result.Get());
+    }
+
+    [CheckMembership]
+    [HttpDelete("{recipeId}/household-details/{detailsId}")]
+    public async Task<ActionResult> DeleteHouseholdDetails(int recipeId, int detailsId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+        var error = await recipeService.DeleteRecipeHouseholdDetails(userDetails, recipeId, detailsId);
+        var logger = loggerFactory.CreateLogger("RecipeService.DeleteHouseholdDetails");
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+        return Ok();
+    }
+
+    [CheckMembership]
+    [HttpDelete("{recipeId}/users/{userId}/household-details/{detailsId}")]
+    public async Task<ActionResult> DeleteUserHouseholdDetails(int recipeId, int userId, int detailsId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+        var error = await recipeService.DeleteUserRecipeHouseholdDetails(userDetails, recipeId, userId, detailsId);
+        var logger = loggerFactory.CreateLogger("RecipeService.DeleteUserHouseholdDetails");
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+        return Ok();
+    }
 }
