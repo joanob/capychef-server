@@ -28,10 +28,12 @@ public class SignupCmd : ICmd
             if (!emailRegex.IsMatch(Email))
                 return new ValidationError("SignupCmd email " + Email + " is invalid");
 
-
             if (string.IsNullOrEmpty(Password))
                 return new ValidationError("SignupCmd password is null or empty when email is provided");
+        }
 
+        if (Password != null)
+        {
             var error = UserPassword.ValidatePassword(Password);
             if (error != null) return error;
         }
