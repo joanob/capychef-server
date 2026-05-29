@@ -16,6 +16,7 @@ public static class JwtService
     private const string JwtSessionCookieName = "CAPYCHEF_AUTH_SESSION";
     private const string JwtRefreshCookieName = "CAPYCHEF_AUTH_REFRESH";
     private const string JwtSecretName = "JWT_SECRET_KEY";
+    private const string JwtIssuer = "capychef-api";
 
     public static void CreateAndSendJwt(AuthUserDetails authUserDetails, HttpResponse response)
     {
@@ -55,6 +56,7 @@ public static class JwtService
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var jwtToken = new JwtSecurityToken(
+            issuer: JwtIssuer,
             claims: claims,
             expires: expiration,
             signingCredentials: signingCredentials
@@ -106,7 +108,8 @@ public static class JwtService
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(jwtSecret),
-            ValidateIssuer = false,
+            ValidateIssuer = true,
+            ValidIssuer = JwtIssuer,
             ValidateAudience = false,
             ClockSkew = TimeSpan.Zero
         };
