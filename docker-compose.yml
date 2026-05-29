@@ -16,6 +16,14 @@ services:
     ports:
       - "4080:80"
       - "2525:25"
+  redis:
+    container_name: capychef-redis
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   db_data:
+  redis_data:

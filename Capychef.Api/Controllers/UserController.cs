@@ -1,7 +1,9 @@
-﻿using Capychef.Api.Errors;
+﻿using Capychef.Api.Auth;
+using Capychef.Api.Errors;
 using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Capychef.Api.Controllers;
 
@@ -10,6 +12,7 @@ namespace Capychef.Api.Controllers;
 public class UserController(IUserService userService, ILoggerFactory loggerFactory) : ControllerBase
 {
     [HttpGet("username/check/{username}")]
+    [EnableRateLimiting(RateLimiterPolicies.UsernameCheck)]
     public async Task<ActionResult<UserDto>> Signup(string username)
     {
         var result = await userService.CheckUserByUsernameAsync(username);

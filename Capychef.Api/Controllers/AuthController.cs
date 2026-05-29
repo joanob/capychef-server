@@ -6,14 +6,19 @@ using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Errors;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Capychef.Api.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(IAuthService authService, ILoggerFactory loggerFactory) : ControllerBase
+public class AuthController(
+    IAuthService authService,
+    ILoggerFactory loggerFactory,
+    ILoginAttemptTracker loginAttemptTracker) : ControllerBase
 {
     [HttpPost("signup")]
+    [EnableRateLimiting(RateLimiterPolicies.Signup)]
     public async Task<ActionResult<ApiResponse<UserDto>>> Signup(SignupCmd cmd)
     {
         var result = await authService.Signup(cmd);
@@ -32,18 +37,24 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<UserDto>>> Login(LoginCmd cmd)
     {
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        if (await loginAttemptTracker.IsBlockedAsync(ip))
+            return new ObjectResult(new ApiResponse<UserDto>(new ApiError(new AppError(ErrorType.Authorization),
+                    "TOO_MANY_FAILED_LOGIN_ATTEMPTS")))
+                { StatusCode = 429 };
+
         var result = await authService.Login(cmd);
 
         var logger = loggerFactory.CreateLogger("AuthService.Login");
 
         if (result.Failed())
         {
-            // Login shouldn't return any error data, only the INCORRECT_LOGIN_DATA code
-
             var error = result.Error();
 
             if (error is NotFoundError)
             {
+                await loginAttemptTracker.RecordFailedAttemptAsync(ip);
                 logger.LogWarning(error.Message);
 
                 return new ObjectResult(new ApiResponse<UserDto>(new ApiError(new AppError(ErrorType.Authorization),
@@ -53,6 +64,8 @@ public class AuthController(IAuthService authService, ILoggerFactory loggerFacto
 
             return HandleError(result.Error(), logger);
         }
+
+        await loginAttemptTracker.ResetAsync(ip);
 
         var (user, userDetails) = result.Get();
 

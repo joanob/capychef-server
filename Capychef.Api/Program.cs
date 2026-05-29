@@ -21,6 +21,11 @@ builder.Host.UseSerilog();
 builder.Services.AddRealtimeDi();
 builder.Services.AddApplicationDi();
 
+var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
+    ?? throw new InvalidOperationException("REDIS_CONNECTION_STRING environment variable not found");
+
+RateLimiterSetup.SetupRateLimiter(builder.Services, redisConnectionString);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("LocalhostFrontend", policy =>
@@ -74,6 +79,8 @@ else
 app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseRateLimiter();
 
 app.UseMiddleware<AuthMiddleware>();
 
