@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Capychef;
+using Capychef.Api;
 using Capychef.Api.Auth;
 using Capychef.Api.Errors;
 using Capychef.Api.Logging;
@@ -21,10 +22,7 @@ builder.Host.UseSerilog();
 builder.Services.AddRealtimeDi();
 builder.Services.AddApplicationDi();
 
-var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
-    ?? throw new InvalidOperationException("REDIS_CONNECTION_STRING environment variable not found");
-
-RateLimiterSetup.SetupRateLimiter(builder.Services, redisConnectionString);
+RateLimiterSetup.SetupRateLimiter(builder.Services, builder.Environment);
 
 builder.Services.AddCors(options =>
 {
@@ -53,7 +51,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDev())
 {
     app.UseCors("LocalhostFrontend");
 

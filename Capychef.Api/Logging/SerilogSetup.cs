@@ -7,7 +7,7 @@ public class SerilogSetup
 {
     public static void SetupSerilog(IWebHostEnvironment environment)
     {
-        var minimumLevel = environment.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Warning;
+        var minimumLevel = environment.IsDev() ? LogEventLevel.Debug : LogEventLevel.Warning;
 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Is(minimumLevel)

@@ -1,12 +1,38 @@
-﻿using RedisRateLimiting;
+﻿using System.Threading.RateLimiting;
+using RedisRateLimiting;
 using StackExchange.Redis;
 
 namespace Capychef.Api.Auth;
 
 public static class RateLimiterSetup
 {
-    public static void SetupRateLimiter(IServiceCollection services, string redisConnectionString)
+    public static void SetupRateLimiter(IServiceCollection services, IWebHostEnvironment environment)
     {
+        if (environment.IsDev())
+            SetupDevRateLimiter(services);
+        else
+            SetupProductionRateLimiter(services);
+    }
+
+    private static void SetupDevRateLimiter(IServiceCollection services)
+    {
+        services.AddSingleton<ILoginAttemptTracker, NoOpLoginAttemptTracker>();
+
+        services.AddRateLimiter(options =>
+        {
+            options.AddPolicy(RateLimiterPolicies.Signup, _ =>
+                RateLimitPartition.GetNoLimiter(RateLimiterPolicies.Signup));
+
+            options.AddPolicy(RateLimiterPolicies.UsernameCheck, _ =>
+                RateLimitPartition.GetNoLimiter(RateLimiterPolicies.UsernameCheck));
+        });
+    }
+
+    private static void SetupProductionRateLimiter(IServiceCollection services)
+    {
+        var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
+            ?? throw new InvalidOperationException("REDIS_CONNECTION_STRING environment variable not found");
+
         var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
 
         services.AddSingleton<IConnectionMultiplexer>(multiplexer);
@@ -38,4 +64,3 @@ public static class RateLimiterSetup
         });
     }
 }
-

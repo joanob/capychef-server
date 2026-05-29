@@ -68,10 +68,12 @@ public static class JwtService
 
     private static void SendJwt(string jwt, string cookieName, HttpResponse response, DateTime expiration)
     {
+        var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == AppEnvironment.Dev;
+
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Secure = false,
+            Secure = !isDevelopment,
             SameSite = SameSiteMode.Strict,
             Expires = expiration
         };

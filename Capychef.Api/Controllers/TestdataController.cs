@@ -9,7 +9,7 @@ public class TestdataController(IServiceScopeFactory serviceScopeFactory) : Cont
     [HttpGet]
     public ActionResult GenerateTestdata()
     {
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development") return NotFound();
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != AppEnvironment.Dev) return NotFound();
 
         Task.Run(async () =>
         {
