@@ -17,7 +17,8 @@ public class HouseholdJoinRequestService(
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
     IUserRepository userRepository,
-    ISubscriptionService subscriptionService) : IHouseholdJoinRequestService
+    ISubscriptionService subscriptionService,
+    IMembershipCache membershipCache) : IHouseholdJoinRequestService
 {
     public async Task<AppError?> CreateJoinRequest(AuthUserDetails userDetails, CreateHouseholdJoinRequestCmd cmd)
     {
@@ -71,6 +72,8 @@ public class HouseholdJoinRequestService(
         await householdMemberRepository.AddHouseholdMemberAsync(member);
 
         await dbContext.SaveChangesAsync();
+
+        await membershipCache.InvalidateAsync(joinRequest.UserId, joinRequest.HouseholdId);
 
         return null;
     }
