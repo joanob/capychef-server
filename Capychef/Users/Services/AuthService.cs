@@ -167,6 +167,44 @@ public class AuthService(
         return null;
     }
 
+    public async Task<Result<(UserDto, AuthUserDetails)>> ChangePassword(AuthUserDetails userDetails,
+        ChangePasswordCmd cmd)
+    {
+        var error = cmd.Validate();
+        if (error != null) return new Result<(UserDto, AuthUserDetails)>(error);
+
+        var user = await userRepository.GetUserById(userDetails.UserId);
+        if (user == null)
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User, userDetails.UserId));
+
+        var currentPassword =
+            await userPasswordRepository.GetTrackedActiveUserPasswordByUserIdAsync(user.Id);
+        if (currentPassword == null)
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.UserPassword, user.Id));
+
+        if (!currentPassword.CheckPassword(cmd.CurrentPassword))
+            return new Result<(UserDto, AuthUserDetails)>(new IncorrectPasswordError(user.Id));
+
+        currentPassword.IsActive = false;
+
+        var newPassword = new UserPassword(user, cmd.NewPassword);
+        await userPasswordRepository.AddUserPasswordAsync(newPassword);
+
+        var userSessions = await userSessionRepository.GetTrackedActiveUserSessionsByUserIdAsync(user.Id);
+        foreach (var session in userSessions) session.IsRevoked = true;
+
+        var newSession = new UserSession(user);
+        await userSessionRepository.AddUserSessionAsync(newSession);
+
+        await dbContext.SaveChangesAsync();
+
+        var newUserDetails = userDetails.HasHouseholdId
+            ? new AuthUserDetails(user.Id, newSession.Id, userDetails.GetHouseholdId())
+            : new AuthUserDetails(user.Id, newSession.Id);
+
+        return new Result<(UserDto, AuthUserDetails)>((new UserDto(user), newUserDetails));
+    }
+
     public async Task<Result<string>> GuestTransference(AuthUserDetails userDetails)
     {
         var user = await userRepository.GetTrackedUserById(userDetails.UserId);

@@ -98,6 +98,24 @@ public class AuthController(
         return Ok();
     }
 
+    [HttpPost("change-password")]
+    public async Task<ActionResult<ApiResponse<UserDto>>> ChangePassword(ChangePasswordCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var result = await authService.ChangePassword(userDetails, cmd);
+
+        var logger = loggerFactory.CreateLogger("AuthService.ChangePassword");
+
+        if (result.Failed()) return HandleError(result.Error(), logger);
+
+        var (user, newUserDetails) = result.Get();
+
+        JwtService.CreateAndSendJwt(newUserDetails, Response);
+
+        return new ApiResponse<UserDto>(user);
+    }
+
     [HttpGet("check")]
     public ActionResult CheckAuthSession()
     {
@@ -155,6 +173,14 @@ public class AuthController(
             logger.LogWarning(error.Message);
 
             return new ObjectResult(new ApiResponse<UserDto>(new ApiError(error, "USERNAME_IN_USE")))
+                { StatusCode = 400 };
+        }
+
+        if (error is IncorrectPasswordError)
+        {
+            logger.LogWarning(error.Message);
+
+            return new ObjectResult(new ApiResponse<UserDto>(new ApiError(error, "INCORRECT_PASSWORD")))
                 { StatusCode = 400 };
         }
 
