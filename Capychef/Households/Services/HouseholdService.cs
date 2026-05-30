@@ -17,7 +17,8 @@ public class HouseholdService(
     IHouseholdRepository householdRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IStorageSpaceRepository storageSpaceRepository,
-    ISubscriptionService subscriptionService
+    ISubscriptionService subscriptionService,
+    IMembershipCache membershipCache
 ) : IHouseholdService
 {
     public async Task<Result<HouseholdDto>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
@@ -129,6 +130,8 @@ public class HouseholdService(
         household.Delete();
 
         await dbContext.SaveChangesAsync();
+
+        await membershipCache.InvalidateOwnershipAsync(userDetails.UserId, userDetails.GetHouseholdId());
 
         return null;
     }

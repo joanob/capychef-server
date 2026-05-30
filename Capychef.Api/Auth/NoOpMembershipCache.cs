@@ -18,4 +18,19 @@ public class NoOpMembershipCache : IMembershipCache
     {
         return Task.CompletedTask;
     }
+
+    public Task<bool?> GetOwnershipAsync(int userId, int householdId)
+    {
+        return Task.FromResult<bool?>(null);
+    }
+
+    public Task SetOwnershipAsync(int userId, int householdId, bool isOwner)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task InvalidateOwnershipAsync(int userId, int householdId)
+    {
+        return Task.CompletedTask;
+    }
 }

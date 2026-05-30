@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Capychef.Api.Authorization;
 
-public class CheckOwnershipFilter(IHouseholdService householdService)
+public class CheckOwnershipFilter(
+    IHouseholdService householdService,
+    ILoggerFactory loggerFactory,
+    IMembershipCache membershipCache)
     : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(
@@ -41,16 +44,33 @@ public class CheckOwnershipFilter(IHouseholdService householdService)
             return;
         }
 
+        var cached = await membershipCache.GetOwnershipAsync(userDetails.UserId, userDetails.GetHouseholdId());
+
+        if (cached == true)
+        {
+            await next();
+            return;
+        }
+
         var error = await householdService.CheckHouseholdOwnership(userDetails);
 
+        var logger = loggerFactory.CreateLogger("OwnershipFilter");
+
         if (error == null)
+        {
+            await membershipCache.SetOwnershipAsync(userDetails.UserId, userDetails.GetHouseholdId(), true);
             await next();
+        }
         else
+        {
+            logger.LogWarning(error.Message);
+
             context.Result = new ObjectResult(new ApiResponse<HouseholdDto>(new ApiError(new NotFoundError(
                 EntityType.Household,
                 userDetails.GetHouseholdId()))))
             {
                 StatusCode = 404
             };
+        }
     }
 }
