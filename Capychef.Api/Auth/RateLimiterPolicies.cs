@@ -4,4 +4,5 @@ public static class RateLimiterPolicies
 {
     public const string Signup = "signup";
     public const string UsernameCheck = "username_check";
+    public const string EmailValidation = "email_validation";
 }

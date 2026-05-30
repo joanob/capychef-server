@@ -25,6 +25,9 @@ public static class RateLimiterSetup
 
             options.AddPolicy(RateLimiterPolicies.UsernameCheck, _ =>
                 RateLimitPartition.GetNoLimiter(RateLimiterPolicies.UsernameCheck));
+
+            options.AddPolicy(RateLimiterPolicies.EmailValidation, _ =>
+                RateLimitPartition.GetNoLimiter(RateLimiterPolicies.EmailValidation));
         });
     }
 
@@ -53,11 +56,21 @@ public static class RateLimiterSetup
 
             options.AddPolicy(RateLimiterPolicies.UsernameCheck, httpContext =>
                 RedisRateLimitPartition.GetFixedWindowRateLimiter(
-                    httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                    _ => new RedisFixedWindowRateLimiterOptions
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new RedisFixedWindowRateLimiterOptions
                     {
                         PermitLimit = 20,
                         Window = TimeSpan.FromMinutes(1),
+                        ConnectionMultiplexerFactory = () => multiplexer
+                    }));
+
+            options.AddPolicy(RateLimiterPolicies.EmailValidation, httpContext =>
+                RedisRateLimitPartition.GetFixedWindowRateLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new RedisFixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromMinutes(10),
                         ConnectionMultiplexerFactory = () => multiplexer
                     }));
 

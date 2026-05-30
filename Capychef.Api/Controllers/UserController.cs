@@ -13,7 +13,7 @@ public class UserController(IUserService userService, ILoggerFactory loggerFacto
 {
     [HttpGet("username/check/{username}")]
     [EnableRateLimiting(RateLimiterPolicies.UsernameCheck)]
-    public async Task<ActionResult<UserDto>> Signup(string username)
+    public async Task<ActionResult<UserDto>> CheckUsername(string username)
     {
         var result = await userService.CheckUserByUsernameAsync(username);
 
@@ -21,6 +21,7 @@ public class UserController(IUserService userService, ILoggerFactory loggerFacto
     }
 
     [HttpGet("email/validate/{token}")]
+    [EnableRateLimiting(RateLimiterPolicies.EmailValidation)]
     public async Task<ActionResult> ValidateEmail(string token)
     {
         var error = await userService.ValidateEmailAsync(token);
