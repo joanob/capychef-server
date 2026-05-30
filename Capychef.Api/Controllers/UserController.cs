@@ -1,5 +1,6 @@
 ﻿using Capychef.Api.Auth;
 using Capychef.Api.Errors;
+using Capychef.Users.Domain.Cmd;
 using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,22 @@ public class UserController(IUserService userService, ILoggerFactory loggerFacto
         var logger = loggerFactory.CreateLogger("UserService.ValidateEmailAsync");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
+
+    [HttpDelete("me")]
+    public async Task<ActionResult> DeleteAccount(DeleteAccountCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await userService.DeleteAccount(userDetails, cmd);
+
+        var logger = loggerFactory.CreateLogger("UserService.DeleteAccount");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        JwtService.DeleteJwt(Response);
 
         return Ok();
     }
