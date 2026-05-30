@@ -34,6 +34,24 @@ public class UserController(IUserService userService, ILoggerFactory loggerFacto
         return Ok();
     }
 
+    [HttpPost("change-password")]
+    public async Task<ActionResult<ApiResponse<UserDto>>> ChangePassword(ChangePasswordCmd cmd)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var result = await userService.ChangePassword(userDetails, cmd);
+
+        var logger = loggerFactory.CreateLogger("AuthService.ChangePassword");
+
+        if (result.Failed()) return GlobalErrorHandler.HandleError(result.Error(), logger);
+
+        var (user, newUserDetails) = result.Get();
+
+        JwtService.CreateAndSendJwt(newUserDetails, Response);
+
+        return new ApiResponse<UserDto>(user);
+    }
+
     [HttpDelete("me")]
     public async Task<ActionResult> DeleteAccount(DeleteAccountCmd cmd)
     {
