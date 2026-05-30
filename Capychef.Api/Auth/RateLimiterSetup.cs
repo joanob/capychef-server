@@ -31,7 +31,8 @@ public static class RateLimiterSetup
     private static void SetupProductionRateLimiter(IServiceCollection services)
     {
         var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
-            ?? throw new InvalidOperationException("REDIS_CONNECTION_STRING environment variable not found");
+                                    ?? throw new InvalidOperationException(
+                                        "REDIS_CONNECTION_STRING environment variable not found");
 
         var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
 
@@ -42,8 +43,8 @@ public static class RateLimiterSetup
         {
             options.AddPolicy(RateLimiterPolicies.Signup, httpContext =>
                 RedisRateLimitPartition.GetFixedWindowRateLimiter(
-                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                    factory: _ => new RedisFixedWindowRateLimiterOptions
+                    httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    _ => new RedisFixedWindowRateLimiterOptions
                     {
                         PermitLimit = 3,
                         Window = TimeSpan.FromHours(1),
@@ -52,8 +53,8 @@ public static class RateLimiterSetup
 
             options.AddPolicy(RateLimiterPolicies.UsernameCheck, httpContext =>
                 RedisRateLimitPartition.GetFixedWindowRateLimiter(
-                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                    factory: _ => new RedisFixedWindowRateLimiterOptions
+                    httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    _ => new RedisFixedWindowRateLimiterOptions
                     {
                         PermitLimit = 20,
                         Window = TimeSpan.FromMinutes(1),

@@ -9,8 +9,18 @@ public static class AppEnvironment
 
 public static class HostEnvironmentExtensions
 {
-    public static bool IsDev(this IWebHostEnvironment env) => env.IsEnvironment(AppEnvironment.Dev);
-    public static bool IsQa(this IWebHostEnvironment env) => env.IsEnvironment(AppEnvironment.Qa);
-    public static bool IsProd(this IWebHostEnvironment env) => env.IsEnvironment(AppEnvironment.Prod);
-}
+    public static bool IsDev(this IWebHostEnvironment env)
+    {
+        return env.IsEnvironment(AppEnvironment.Dev);
+    }
 
+    public static bool IsQa(this IWebHostEnvironment env)
+    {
+        return env.IsEnvironment(AppEnvironment.Qa);
+    }
+
+    public static bool IsProd(this IWebHostEnvironment env)
+    {
+        return env.IsEnvironment(AppEnvironment.Prod);
+    }
+}

@@ -22,11 +22,11 @@ public static class CacheSetup
     private static void SetupProductionCache(IServiceCollection services)
     {
         var redisConnectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING")
-            ?? throw new InvalidOperationException("REDIS_CONNECTION_STRING environment variable not found");
+                                    ?? throw new InvalidOperationException(
+                                        "REDIS_CONNECTION_STRING environment variable not found");
 
         var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
 
         services.AddSingleton<IMembershipCache>(_ => new RedisMembershipCache(multiplexer));
     }
 }
-

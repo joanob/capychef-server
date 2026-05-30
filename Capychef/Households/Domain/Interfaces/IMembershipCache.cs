@@ -6,4 +6,3 @@ public interface IMembershipCache
     Task SetAsync(int userId, int householdId, bool isMember);
     Task InvalidateAsync(int userId, int householdId);
 }
-

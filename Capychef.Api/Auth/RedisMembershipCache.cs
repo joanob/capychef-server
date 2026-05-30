@@ -7,8 +7,6 @@ public class RedisMembershipCache(IConnectionMultiplexer redis) : IMembershipCac
 {
     private static readonly TimeSpan Ttl = TimeSpan.FromMinutes(15);
 
-    private static string Key(int userId, int householdId) => $"membership:{userId}:{householdId}";
-
     public async Task<bool?> GetAsync(int userId, int householdId)
     {
         var db = redis.GetDatabase();
@@ -28,5 +26,9 @@ public class RedisMembershipCache(IConnectionMultiplexer redis) : IMembershipCac
         var db = redis.GetDatabase();
         await db.KeyDeleteAsync(Key(userId, householdId));
     }
-}
 
+    private static string Key(int userId, int householdId)
+    {
+        return $"membership:{userId}:{householdId}";
+    }
+}

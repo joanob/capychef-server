@@ -56,7 +56,7 @@ public static class JwtService
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var jwtToken = new JwtSecurityToken(
-            issuer: JwtIssuer,
+            JwtIssuer,
             claims: claims,
             expires: expiration,
             signingCredentials: signingCredentials

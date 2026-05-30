@@ -7,8 +7,6 @@ public class RedisLoginAttemptTracker(IConnectionMultiplexer redis) : ILoginAtte
     private const int MaxFailedAttempts = 5;
     private static readonly TimeSpan Window = TimeSpan.FromHours(1);
 
-    private static string Key(string ip) => $"login_attempts:{ip}";
-
     public async Task<bool> IsBlockedAsync(string ip)
     {
         var db = redis.GetDatabase();
@@ -30,5 +28,9 @@ public class RedisLoginAttemptTracker(IConnectionMultiplexer redis) : ILoginAtte
         var db = redis.GetDatabase();
         await db.KeyDeleteAsync(Key(ip));
     }
-}
 
+    private static string Key(string ip)
+    {
+        return $"login_attempts:{ip}";
+    }
+}
