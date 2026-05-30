@@ -49,6 +49,7 @@ public class HouseholdJoinRequestController(
         return Ok(joinRequests);
     }
 
+    [CheckOwnership]
     [HttpPut("accept/{joinRequestId}")]
     public async Task<ActionResult> AcceptJoinRequest(int joinRequestId)
     {
@@ -63,6 +64,7 @@ public class HouseholdJoinRequestController(
         return Ok();
     }
 
+    [CheckOwnership]
     [HttpPut("reject/{joinRequestId}")]
     public async Task<ActionResult> RejectJoinRequest(int joinRequestId)
     {
