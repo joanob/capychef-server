@@ -15,7 +15,8 @@ namespace Capychef.Api.Controllers;
 public class AuthController(
     IAuthService authService,
     ILoggerFactory loggerFactory,
-    ILoginAttemptTracker loginAttemptTracker) : ControllerBase
+    ILoginAttemptTracker loginAttemptTracker,
+    IUserSessionService userSessionService) : ControllerBase
 {
     [HttpPost("signup")]
     [EnableRateLimiting(RateLimiterPolicies.Signup)]
@@ -114,6 +115,18 @@ public class AuthController(
         JwtService.CreateAndSendJwt(newUserDetails, Response);
 
         return new ApiResponse<UserDto>(user);
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        await userSessionService.Logout(userDetails);
+
+        JwtService.DeleteJwt(Response);
+
+        return Ok();
     }
 
     [HttpGet("check")]

@@ -1,4 +1,5 @@
 ﻿using Capychef.Common.Auth;
+using Capychef.Common.Errors;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Interfaces;
 
@@ -19,5 +20,18 @@ public class UserSessionService(CapychefDbContext dbContext, IUserSessionReposit
         await dbContext.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<AppError?> Logout(AuthUserDetails userDetails)
+    {
+        var session = await userSessionRepository.GetTrackedUserSessionByIdAsync(userDetails.SessionId);
+
+        if (session != null && !session.IsRevoked)
+        {
+            session.IsRevoked = true;
+            await dbContext.SaveChangesAsync();
+        }
+
+        return null;
     }
 }
