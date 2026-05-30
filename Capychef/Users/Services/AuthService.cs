@@ -33,6 +33,13 @@ public class AuthService(
 
         if (usernameInUse) return new Result<(UserDto, AuthUserDetails)>(new UsernameInUseError(cmd.Username));
 
+        if (!string.IsNullOrEmpty(cmd.Email))
+        {
+            var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
+
+            if (emailInUse) return new Result<(UserDto, AuthUserDetails)>(new EmailInUseError(cmd.Email));
+        }
+
         User user;
 
         if (cmd.Password != null)
@@ -59,10 +66,6 @@ public class AuthService(
 
         if (!string.IsNullOrEmpty(cmd.Email))
         {
-            var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
-
-            if (emailInUse) return new Result<(UserDto, AuthUserDetails)>(new EmailInUseError(cmd.Email));
-
             var userToken = UserToken.CreateEmailValidationUserToken(user);
 
             await userTokenRepository.AddUserTokenAsync(userToken);
