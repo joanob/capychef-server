@@ -76,6 +76,7 @@ public class AuthController(
     }
 
     [HttpGet("recover-password/{email}")]
+    [EnableRateLimiting(RateLimiterPolicies.PasswordRecovery)]
     public async Task<ActionResult> RecoverPassword(string email)
     {
         var error = await authService.RecoverPassword(email);

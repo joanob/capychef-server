@@ -28,6 +28,9 @@ public static class RateLimiterSetup
 
             options.AddPolicy(RateLimiterPolicies.EmailValidation, _ =>
                 RateLimitPartition.GetNoLimiter(RateLimiterPolicies.EmailValidation));
+
+            options.AddPolicy(RateLimiterPolicies.PasswordRecovery, _ =>
+                RateLimitPartition.GetNoLimiter(RateLimiterPolicies.PasswordRecovery));
         });
     }
 
@@ -71,6 +74,16 @@ public static class RateLimiterSetup
                     {
                         PermitLimit = 3,
                         Window = TimeSpan.FromMinutes(10),
+                        ConnectionMultiplexerFactory = () => multiplexer
+                    }));
+
+            options.AddPolicy(RateLimiterPolicies.PasswordRecovery, httpContext =>
+                RedisRateLimitPartition.GetFixedWindowRateLimiter(
+                    httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    _ => new RedisFixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromHours(1),
                         ConnectionMultiplexerFactory = () => multiplexer
                     }));
 
