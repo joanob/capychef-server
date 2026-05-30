@@ -13,6 +13,11 @@ public class UserService(
 {
     public async Task<bool> CheckUserByUsernameAsync(string username)
     {
+        username = username.Trim();
+
+        if (string.IsNullOrEmpty(username) || username.Length > 50)
+            return false;
+
         return await userRepository.CheckUserExistsByUsernameAsync(username);
     }
 
