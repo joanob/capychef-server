@@ -40,6 +40,6 @@ public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFa
         if (error == null)
             await next();
         else
-            GlobalErrorHandler.HandleError(error, logger);
+            context.Result = GlobalErrorHandler.HandleError(error, logger);
     }
 }
