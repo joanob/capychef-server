@@ -81,13 +81,9 @@ public class AuthService(
 
         if (error != null) return new Result<(UserDto, AuthUserDetails)>(error);
 
-        var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
+        var user = await userRepository.GetTrackedUserByUsernameOrEmailAsync(cmd.Username);
         if (user == null)
-        {
-            user = await userRepository.GetTrackedUserByEmailAsync(cmd.Username);
-            if (user == null)
-                return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User, cmd.Username));
-        }
+            return new Result<(UserDto, AuthUserDetails)>(new NotFoundError(EntityType.User, cmd.Username));
 
         var password = await userPasswordRepository.GetActiveUserPasswordByUserIdAsync(user.Id);
         if (password == null)

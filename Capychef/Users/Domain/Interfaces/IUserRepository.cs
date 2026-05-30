@@ -10,6 +10,7 @@ public interface IUserRepository
     Task<bool> CheckUserExistsByUsernameAsync(string username);
     Task<User?> GetUserByUsernameAsync(string username);
     Task<User?> GetTrackedUserByUsernameAsync(string username);
+    Task<User?> GetTrackedUserByUsernameOrEmailAsync(string usernameOrEmail);
     Task<User?> GetUserByEmailAsync(string email);
     Task<User?> GetTrackedUserByEmailAsync(string email);
     Task<bool> CheckUserExistsByEmailAsync(string email);
