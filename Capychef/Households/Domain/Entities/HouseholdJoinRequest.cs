@@ -24,11 +24,11 @@ public class HouseholdJoinRequest
 
     [Column("user_id")] public int UserId { get; init; }
 
-    [Column("is_answered")] public bool IsAnswered { get; set; }
+    [Column("is_answered")] public bool IsAnswered { get; private set; }
 
-    [Column("answered_at")] public DateTime? AnsweredAt { get; set; }
+    [Column("answered_at")] public DateTime? AnsweredAt { get; private set; }
 
-    [Column("is_accepted")] public bool IsAccepted { get; set; }
+    [Column("is_accepted")] public bool IsAccepted { get; private set; }
 
     [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 

@@ -1,6 +1,4 @@
-﻿using StackExchange.Redis;
-
-namespace Capychef.Api.Auth;
+﻿namespace Capychef.Api.Auth;
 
 public class RedisLoginAttemptTracker(IConnectionMultiplexer redis) : ILoginAttemptTracker
 {

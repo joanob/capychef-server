@@ -64,9 +64,7 @@ public class HouseholdJoinRequestService(
         var error = await subscriptionService.CheckUserCanBecomeHouseholdMember(joinRequest.UserId);
         if (error != null) return error;
 
-        joinRequest.IsAnswered = true;
-        joinRequest.AnsweredAt = DateTime.UtcNow;
-        joinRequest.IsAccepted = true;
+        joinRequest.Accept();
 
         var member = new HouseholdMember(joinRequest.HouseholdId, joinRequest.UserId);
 
@@ -85,9 +83,7 @@ public class HouseholdJoinRequestService(
         if (joinRequest == null || joinRequest.IsAnswered)
             return new NotFoundError(EntityType.HouseholdJoinRequest, joinRequestId);
 
-        joinRequest.IsAnswered = true;
-        joinRequest.AnsweredAt = DateTime.UtcNow;
-        joinRequest.IsAccepted = false;
+        joinRequest.Reject();
 
         await dbContext.SaveChangesAsync();
 
