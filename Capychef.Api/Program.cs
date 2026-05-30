@@ -24,16 +24,7 @@ builder.Services.AddApplicationDi();
 
 RateLimiterSetup.SetupRateLimiter(builder.Services, builder.Environment);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("LocalhostFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
+CorsSetup.SetupCors(builder.Services);
 
 builder.Services.AddControllers();
 
@@ -53,8 +44,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDev())
 {
-    app.UseCors("LocalhostFrontend");
-
     try
     {
         var swaggerProvider = app.Services.GetRequiredService<ISwaggerProvider>();
@@ -73,6 +62,8 @@ else
 {
     app.UseHttpsRedirection();
 }
+
+app.UseCors(CorsSetup.PolicyName);
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 
