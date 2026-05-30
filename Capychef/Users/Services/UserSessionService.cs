@@ -15,7 +15,7 @@ public class UserSessionService(CapychefDbContext dbContext, IUserSessionReposit
         if (userSession.UserId != userDetails.UserId) return false;
         if (userSession.IsRevoked) return false;
 
-        userSession.LastRefreshAt = DateTime.Now;
+        userSession.LastRefreshAt = DateTime.UtcNow;
         await dbContext.SaveChangesAsync();
 
         return true;

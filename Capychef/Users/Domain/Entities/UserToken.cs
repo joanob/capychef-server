@@ -56,7 +56,7 @@ public class UserToken
     {
         var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(10);
 
-        var userToken = new UserToken(userId, token, UserTokenType.PasswordRecovery, DateTime.Now.AddDays(1));
+        var userToken = new UserToken(userId, token, UserTokenType.PasswordRecovery, DateTime.UtcNow.AddDays(1));
 
         return userToken;
     }
@@ -65,7 +65,7 @@ public class UserToken
     {
         var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(6);
 
-        var userToken = new UserToken(user, token, UserTokenType.EmailValidation, DateTime.Now.AddDays(30));
+        var userToken = new UserToken(user, token, UserTokenType.EmailValidation, DateTime.UtcNow.AddDays(30));
 
         return userToken;
     }
@@ -74,7 +74,7 @@ public class UserToken
     {
         var token = RandomGenerator.GenerateRandomAlphabetAndNumbersString(8);
 
-        var userToken = new UserToken(userId, token, UserTokenType.GuestAccountTransfer, DateTime.Now.AddDays(1));
+        var userToken = new UserToken(userId, token, UserTokenType.GuestAccountTransfer, DateTime.UtcNow.AddDays(1));
 
         return userToken;
     }
@@ -82,7 +82,7 @@ public class UserToken
     public void MarkUsed()
     {
         IsUsed = true;
-        UsedAt = DateTime.Now;
+        UsedAt = DateTime.UtcNow;
         IsActive = false;
     }
 }

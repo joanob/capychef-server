@@ -65,7 +65,7 @@ public class HouseholdJoinRequestService(
         if (error != null) return error;
 
         joinRequest.IsAnswered = true;
-        joinRequest.AnsweredAt = DateTime.Now;
+        joinRequest.AnsweredAt = DateTime.UtcNow;
         joinRequest.IsAccepted = true;
 
         var member = new HouseholdMember(joinRequest.HouseholdId, joinRequest.UserId);
@@ -86,7 +86,7 @@ public class HouseholdJoinRequestService(
             return new NotFoundError(EntityType.HouseholdJoinRequest, joinRequestId);
 
         joinRequest.IsAnswered = true;
-        joinRequest.AnsweredAt = DateTime.Now;
+        joinRequest.AnsweredAt = DateTime.UtcNow;
         joinRequest.IsAccepted = false;
 
         await dbContext.SaveChangesAsync();

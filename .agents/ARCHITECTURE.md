@@ -152,6 +152,10 @@ return new ApiResponse<UserDto>(new ApiError(error, "CODIGO_ERROR"));
 Todo registrado en `Capychef/DependencyInjection.cs` como `AddScoped`.
 Los servicios de la API (rate limiting, CORS) se registran en `Program.cs` o sus propias clases Setup.
 
+### Huso horario
+
+Todos los tiempos se registran y se utilizan como UTC
+
 ---
 
 ## Entornos

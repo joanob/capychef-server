@@ -26,11 +26,11 @@ public static class JwtService
 
         var jwtSecret = Encoding.UTF8.GetBytes(jwtSecretName);
 
-        var jwtSessionExpiration = DateTime.Now.AddMinutes(JwtSessionExpirationMinutes);
+        var jwtSessionExpiration = DateTime.UtcNow.AddMinutes(JwtSessionExpirationMinutes);
         var jwtSession = CreateJwt(authUserDetails, jwtSecret, jwtSessionExpiration);
         SendJwt(jwtSession, JwtSessionCookieName, response, jwtSessionExpiration);
 
-        var jwtRefreshExpiration = DateTime.Now.AddYears(JwtRefreshExpirationYears);
+        var jwtRefreshExpiration = DateTime.UtcNow.AddYears(JwtRefreshExpirationYears);
         var jwtRefresh = CreateJwt(authUserDetails, jwtSecret, jwtRefreshExpiration);
         SendJwt(jwtRefresh, JwtRefreshCookieName, response, jwtRefreshExpiration);
     }

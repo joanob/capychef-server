@@ -61,7 +61,7 @@ public class AuthService(
         {
             var emailInUse = await userRepository.CheckUserExistsByEmailAsync(cmd.Email);
 
-            if (emailInUse) return new Result<(UserDto, AuthUserDetails)>(new UsernameInUseError(cmd.Email));
+            if (emailInUse) return new Result<(UserDto, AuthUserDetails)>(new EmailInUseError(cmd.Email));
 
             var userToken = UserToken.CreateEmailValidationUserToken(user);
 
