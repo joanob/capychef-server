@@ -20,7 +20,8 @@ public class HouseholdInvitationRepository(CapychefDbContext dbContext) : IHouse
 
     public async Task<List<HouseholdInvitation>> GetHouseholdInvitationsByUserId(int userId)
     {
-        return await dbContext.HouseholdInvitations.Active().Where(x => x.UserId == userId).ToListAsync();
+        return await dbContext.HouseholdInvitations.Active().AsNoTracking().Where(x => x.UserId == userId)
+            .Include(x => x.User).ToListAsync();
     }
 
     public async Task<HouseholdInvitation?> GetTrackedInvitationById(int invitationId, int userId)
