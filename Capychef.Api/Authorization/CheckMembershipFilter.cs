@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Capychef.Api.Authorization;
 
-public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFactory loggerFactory)
+public class CheckMembershipFilter(
+    IHouseholdService householdService,
+    ILoggerFactory loggerFactory,
+    IMembershipCache membershipCache)
     : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(
@@ -33,13 +36,26 @@ public class CheckMembershipFilter(IHouseholdService householdService, ILoggerFa
             return;
         }
 
+        var cached = await membershipCache.GetAsync(userDetails.UserId, userDetails.GetHouseholdId());
+
+        if (cached == true)
+        {
+            await next();
+            return;
+        }
+
         var error = await householdService.CheckHouseholdMembership(userDetails);
 
         var logger = loggerFactory.CreateLogger("MembershipFilter");
 
         if (error == null)
+        {
+            await membershipCache.SetAsync(userDetails.UserId, userDetails.GetHouseholdId(), true);
             await next();
+        }
         else
+        {
             context.Result = GlobalErrorHandler.HandleError(error, logger);
+        }
     }
 }

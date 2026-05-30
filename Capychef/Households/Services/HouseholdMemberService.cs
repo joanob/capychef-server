@@ -11,7 +11,8 @@ namespace Capychef.Households.Services;
 
 public class HouseholdMemberService(
     CapychefDbContext dbContext,
-    IHouseholdMemberRepository householdMemberRepository
+    IHouseholdMemberRepository householdMemberRepository,
+    IMembershipCache membershipCache
 ) : IHouseholdMemberService
 {
     public async Task<Result<List<UserDto>>> GetHouseholdMembers(AuthUserDetails userDetails)
@@ -41,6 +42,8 @@ public class HouseholdMemberService(
 
         await dbContext.SaveChangesAsync();
 
+        await membershipCache.InvalidateAsync(userDetails.UserId, userDetails.GetHouseholdId());
+
         return null;
     }
 
@@ -55,6 +58,8 @@ public class HouseholdMemberService(
         member.Delete();
 
         await dbContext.SaveChangesAsync();
+
+        await membershipCache.InvalidateAsync(member.UserId, member.HouseholdId);
 
         return null;
     }

@@ -24,6 +24,8 @@ builder.Services.AddApplicationDi();
 
 RateLimiterSetup.SetupRateLimiter(builder.Services, builder.Environment);
 
+CacheSetup.SetupCache(builder.Services, builder.Environment);
+
 CorsSetup.SetupCors(builder.Services);
 
 builder.Services.AddControllers();
