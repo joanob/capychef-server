@@ -16,5 +16,5 @@ public interface IHouseholdService
     Task<Result<HouseholdDto>> SelectHousehold(AuthUserDetails userDetails, int householdId);
     Task<Result<HouseholdDto>> UpdateHousehold(AuthUserDetails userDetails, int householdId, HouseholdCmd cmd);
     Task<Result<HouseholdDto>> GetActiveHousehold(AuthUserDetails userDetails);
-    Task<AppError?> DeleteHousehold(AuthUserDetails userDetails);
+    Task<AppError?> DeleteHousehold(AuthUserDetails userDetails, int householdId);
 }

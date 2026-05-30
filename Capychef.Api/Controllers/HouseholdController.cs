@@ -112,7 +112,7 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
-        var error = await householdService.DeleteHousehold(userDetails);
+        var error = await householdService.DeleteHousehold(userDetails, householdId);
 
         var logger = loggerFactory.CreateLogger("HouseholdService.DeleteHousehold");
 

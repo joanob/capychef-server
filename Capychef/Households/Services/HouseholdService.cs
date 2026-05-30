@@ -99,6 +99,9 @@ public class HouseholdService(
     public async Task<Result<HouseholdDto>> UpdateHousehold(AuthUserDetails userDetails, int householdId,
         HouseholdCmd cmd)
     {
+        if (householdId != userDetails.GetHouseholdId())
+            return new Result<HouseholdDto>(new ValidationError("HouseholdId does not match the active household"));
+
         var validationError = cmd.Validate();
         if (validationError != null) return new Result<HouseholdDto>(validationError);
 
@@ -122,8 +125,11 @@ public class HouseholdService(
         return new Result<HouseholdDto>(new HouseholdDto(household));
     }
 
-    public async Task<AppError?> DeleteHousehold(AuthUserDetails userDetails)
+    public async Task<AppError?> DeleteHousehold(AuthUserDetails userDetails, int householdId)
     {
+        if (householdId != userDetails.GetHouseholdId())
+            return new ValidationError("HouseholdId does not match the active household");
+
         var household = await householdRepository.GetTrackedHouseholdById(userDetails.GetHouseholdId());
         if (household == null) return new NotFoundError(EntityType.Household, userDetails.GetHouseholdId());
 
