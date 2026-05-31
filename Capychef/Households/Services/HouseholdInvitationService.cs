@@ -33,6 +33,9 @@ public class HouseholdInvitationService(
         var user = await userRepository.GetTrackedUserByUsernameAsync(cmd.Username);
         if (user == null) return new NotFoundError(EntityType.User, cmd.Username);
 
+        if (await householdMemberRepository.CheckHouseholdMembership(user.Id, household.Id))
+            return new ValidationError("User is already a member of this household");
+
         if (await invitationRepository.CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(household.Id, user.Id))
             return new UserHasUnansweredHouseholdInvitation(user.Id, household.Id);
 

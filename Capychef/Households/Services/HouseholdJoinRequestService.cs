@@ -28,6 +28,9 @@ public class HouseholdJoinRequestService(
         var household = await householdRepository.GetTrackedHouseholdByPublicId(cmd.HouseholdPublicId);
         if (household == null) return new NotFoundError(EntityType.Household, cmd.HouseholdPublicId);
 
+        if (await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, household.Id))
+            return new ValidationError("User is already a member of this household");
+
         var user = await userRepository.GetTrackedUserById(userDetails.UserId);
         if (user == null) return new NotFoundError(EntityType.User, userDetails.UserId);
 
