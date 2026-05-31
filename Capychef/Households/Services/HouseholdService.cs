@@ -55,7 +55,7 @@ public class HouseholdService(
         if (await householdRepository.CheckHouseholdOwnership(userDetails.UserId, userDetails.GetHouseholdId()))
             return null;
 
-        return new HouseholdMembershipError(userDetails.UserId, userDetails.GetHouseholdId());
+        return new HouseholdOwnershipError(userDetails.UserId, userDetails.GetHouseholdId());
     }
 
     public async Task<AppError?> CheckHouseholdMembership(AuthUserDetails userDetails)

@@ -2,6 +2,7 @@
 using Capychef.Api.Authorization;
 using Capychef.Api.Errors;
 using Capychef.Common.Auth;
+using Capychef.Common.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Users.Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,13 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
+        if (householdId != userDetails.GetHouseholdId())
+            return BadRequest(new ApiResponse<List<UserDto>>(
+                new ApiError(new ValidationError("HouseholdId does not match the active household"))));
+
         var members = await householdMemberService.GetHouseholdMembers(userDetails);
 
-        var logger = loggerFactory.CreateLogger("HouseholdService.GetHouseholdMembers");
+        var logger = loggerFactory.CreateLogger("HouseholdMemberService.GetHouseholdMembers");
 
         if (members.Failed()) return GlobalErrorHandler.HandleError(members.Error(), logger);
 
@@ -34,9 +39,14 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
+        if (householdId != userDetails.GetHouseholdId())
+            return BadRequest(
+                new ApiResponse<object>(
+                    new ApiError(new ValidationError("HouseholdId does not match the active household"))));
+
         var error = await householdMemberService.LeaveHousehold(userDetails);
 
-        var logger = loggerFactory.CreateLogger("HouseholdService.LeaveHousehold");
+        var logger = loggerFactory.CreateLogger("HouseholdMemberService.LeaveHousehold");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
@@ -53,7 +63,7 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
 
         var error = await householdMemberService.RemoveMember(userDetails, householdMemberId);
 
-        var logger = loggerFactory.CreateLogger("HouseholdService.LeaveHousehold");
+        var logger = loggerFactory.CreateLogger("HouseholdMemberService.RemoveMember");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 

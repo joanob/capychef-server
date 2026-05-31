@@ -19,6 +19,14 @@ public class HouseholdJoinRequest
         IsAccepted = false;
     }
 
+    public HouseholdJoinRequest(Household household, int userId)
+    {
+        Household = household;
+        UserId = userId;
+        IsAnswered = false;
+        IsAccepted = false;
+    }
+
     [Column("id")] public int Id { get; init; }
 
     [Column("household_id")] public int HouseholdId { get; init; }

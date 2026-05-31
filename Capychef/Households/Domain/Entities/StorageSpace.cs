@@ -37,7 +37,7 @@ public class StorageSpace
 
     [Column("storage_condition")] public StorageConditions StorageCondition { get; set; }
 
-    [Column("created_at")] public DateTime? CreatedAt { get; init; } = DateTime.UtcNow;
+    [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
     [Column("created_by")] public int CreatedBy { get; init; }
 

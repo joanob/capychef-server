@@ -7,7 +7,6 @@ using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
-using Capychef.Users.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Services;
@@ -17,7 +16,6 @@ public class HouseholdJoinRequestService(
     IHouseholdJoinRequestRepository joinRequestRepository,
     IHouseholdMemberRepository householdMemberRepository,
     IHouseholdRepository householdRepository,
-    IUserRepository userRepository,
     ISubscriptionService subscriptionService,
     IMembershipCache membershipCache,
     IHouseholdRealtimeService householdRealtimeService) : IHouseholdJoinRequestService
@@ -37,10 +35,7 @@ public class HouseholdJoinRequestService(
                 userDetails.UserId))
             return new ValidationError("User already has a pending join request for this household");
 
-        var user = await userRepository.GetTrackedUserById(userDetails.UserId);
-        if (user == null) return new NotFoundError(EntityType.User, userDetails.UserId);
-
-        var joinRequest = new HouseholdJoinRequest(household, user);
+        var joinRequest = new HouseholdJoinRequest(household, userDetails.UserId);
 
         await joinRequestRepository.AddJoinRequestAsync(joinRequest);
 
@@ -61,7 +56,12 @@ public class HouseholdJoinRequestService(
     public async Task<List<HouseholdJoinRequestDto>> GetAllHouseholdJoinRequests(AuthUserDetails userDetails)
     {
         var joinRequests = await joinRequestRepository.GetHouseholdJoinRequests(userDetails.GetHouseholdId());
+        return HouseholdJoinRequestDto.ToList(joinRequests);
+    }
 
+    public async Task<List<HouseholdJoinRequestDto>> GetAllHouseholdJoinRequestsHistory(AuthUserDetails userDetails)
+    {
+        var joinRequests = await joinRequestRepository.GetAllHouseholdJoinRequestsHistory(userDetails.GetHouseholdId());
         return HouseholdJoinRequestDto.ToList(joinRequests);
     }
 

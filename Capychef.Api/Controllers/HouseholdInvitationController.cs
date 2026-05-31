@@ -1,6 +1,7 @@
 ﻿using Capychef.Api.Auth;
 using Capychef.Api.Authorization;
 using Capychef.Api.Errors;
+using Capychef.Common.Errors;
 using Capychef.Households.Domain.Cmd;
 using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Interfaces;
@@ -35,7 +36,27 @@ public class HouseholdInvitationController(
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
+        if (householdId != userDetails.GetHouseholdId())
+            return BadRequest(new ApiResponse<List<HouseholdInvitationDto>>(
+                new ApiError(new ValidationError("HouseholdId does not match the active household"))));
+
         var invitations = await householdInvitationService.GetAllHouseholdInvitations(userDetails);
+
+        return Ok(new ApiResponse<List<HouseholdInvitationDto>>(invitations));
+    }
+
+    [CheckOwnership]
+    [HttpGet("household/{householdId}/history")]
+    public async Task<ActionResult<ApiResponse<List<HouseholdInvitationDto>>>> GetHouseholdInvitationsHistory(
+        int householdId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        if (householdId != userDetails.GetHouseholdId())
+            return BadRequest(new ApiResponse<List<HouseholdInvitationDto>>(
+                new ApiError(new ValidationError("HouseholdId does not match the active household"))));
+
+        var invitations = await householdInvitationService.GetAllHouseholdInvitationsHistory(userDetails);
 
         return Ok(new ApiResponse<List<HouseholdInvitationDto>>(invitations));
     }

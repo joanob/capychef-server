@@ -21,7 +21,7 @@ public class HouseholdJoinRequestController(
 
         var error = await householdJoinRequestService.CreateJoinRequest(userDetails, cmd);
 
-        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.CreateJoinRequest");
+        var logger = loggerFactory.CreateLogger("HouseholdJoinRequestService.CreateJoinRequest");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
@@ -35,6 +35,17 @@ public class HouseholdJoinRequestController(
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
         var joinRequests = await householdJoinRequestService.GetAllHouseholdJoinRequests(userDetails);
+
+        return Ok(joinRequests);
+    }
+
+    [CheckOwnership]
+    [HttpGet("household/history")]
+    public async Task<ActionResult<List<HouseholdJoinRequestDto>>> GetHouseholdJoinRequestsHistory()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var joinRequests = await householdJoinRequestService.GetAllHouseholdJoinRequestsHistory(userDetails);
 
         return Ok(joinRequests);
     }
@@ -57,7 +68,7 @@ public class HouseholdJoinRequestController(
 
         var error = await householdJoinRequestService.AcceptJoinRequest(userDetails, joinRequestId);
 
-        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.AcceptJoinRequest");
+        var logger = loggerFactory.CreateLogger("HouseholdJoinRequestService.AcceptJoinRequest");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 
@@ -72,7 +83,7 @@ public class HouseholdJoinRequestController(
 
         var error = await householdJoinRequestService.RejectJoinRequest(userDetails, joinRequestId);
 
-        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.RejectJoinRequest");
+        var logger = loggerFactory.CreateLogger("HouseholdJoinRequestService.RejectJoinRequest");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 

@@ -55,7 +55,12 @@ public class HouseholdInvitationService(
     public async Task<List<HouseholdInvitationDto>> GetAllHouseholdInvitations(AuthUserDetails userDetails)
     {
         var invitations = await invitationRepository.GetHouseholdInvitations(userDetails.GetHouseholdId());
+        return HouseholdInvitationDto.ToList(invitations);
+    }
 
+    public async Task<List<HouseholdInvitationDto>> GetAllHouseholdInvitationsHistory(AuthUserDetails userDetails)
+    {
+        var invitations = await invitationRepository.GetAllHouseholdInvitationsHistory(userDetails.GetHouseholdId());
         return HouseholdInvitationDto.ToList(invitations);
     }
 

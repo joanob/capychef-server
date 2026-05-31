@@ -9,6 +9,7 @@ public interface IHouseholdJoinRequestService
 {
     Task<AppError?> CreateJoinRequest(AuthUserDetails userDetails, CreateHouseholdJoinRequestCmd cmd);
     Task<List<HouseholdJoinRequestDto>> GetAllHouseholdJoinRequests(AuthUserDetails userDetails);
+    Task<List<HouseholdJoinRequestDto>> GetAllHouseholdJoinRequestsHistory(AuthUserDetails userDetails);
     Task<List<HouseholdJoinRequestDto>> GetHouseholdJoinRequestsByUser(AuthUserDetails userDetails);
     Task<AppError?> AcceptJoinRequest(AuthUserDetails userDetails, int invitationId);
     Task<AppError?> RejectJoinRequest(AuthUserDetails userDetails, int invitationId);
