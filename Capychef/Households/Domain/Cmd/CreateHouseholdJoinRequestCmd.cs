@@ -11,6 +11,8 @@ public class CreateHouseholdJoinRequestCmd : ICmd
     {
         if (string.IsNullOrWhiteSpace(HouseholdPublicId)) return new ValidationError("HouseholdPublicId is required");
 
+        if (HouseholdPublicId.Length > 20) return new ValidationError("HouseholdPublicId is too long");
+
         return null;
     }
 }

@@ -10,6 +10,10 @@ public class CreateHouseholdCmd : ICmd
 
     public ValidationError? Validate()
     {
+        if (string.IsNullOrWhiteSpace(Name)) return new ValidationError("Name is required");
+
+        if (Name.Length > 50) return new ValidationError("Name is too long");
+
         return null;
     }
 }
