@@ -30,4 +30,10 @@ public class HouseholdJoinRequestRepository(CapychefDbContext dbContext) : IHous
             .Where(x => x.Id == joinRequestId && x.HouseholdId == householdId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<bool> CheckPendingJoinRequestExistsByHouseholdIdAndUserId(int householdId, int userId)
+    {
+        return await dbContext.HouseholdJoinRequests.AsNoTracking().Active()
+            .Where(x => x.HouseholdId == householdId && x.UserId == userId && !x.IsAnswered).AnyAsync();
+    }
 }

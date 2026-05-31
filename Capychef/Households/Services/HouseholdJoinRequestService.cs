@@ -32,6 +32,10 @@ public class HouseholdJoinRequestService(
         if (await householdMemberRepository.CheckHouseholdMembership(userDetails.UserId, household.Id))
             return new ValidationError("User is already a member of this household");
 
+        if (await joinRequestRepository.CheckPendingJoinRequestExistsByHouseholdIdAndUserId(household.Id,
+                userDetails.UserId))
+            return new ValidationError("User already has a pending join request for this household");
+
         var user = await userRepository.GetTrackedUserById(userDetails.UserId);
         if (user == null) return new NotFoundError(EntityType.User, userDetails.UserId);
 
