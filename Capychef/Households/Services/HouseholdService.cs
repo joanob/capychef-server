@@ -9,6 +9,7 @@ using Capychef.Households.Domain.Entities;
 using Capychef.Households.Domain.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Services;
 
@@ -122,7 +123,7 @@ public class HouseholdService(
         if (household == null)
             return new Result<HouseholdDto>(new NotFoundError(EntityType.Household, userDetails.GetHouseholdId()));
 
-        return new Result<HouseholdDto>(new HouseholdDto(household));
+        return new Result<HouseholdDto>(new HouseholdDto(household, true));
     }
 
     public async Task<AppError?> DeleteHousehold(AuthUserDetails userDetails, int householdId)
