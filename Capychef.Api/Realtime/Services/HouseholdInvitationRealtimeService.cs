@@ -29,7 +29,6 @@ public class HouseholdInvitationRealtimeService : IHouseholdInvitationRealtimeSe
 
         if (!connectionIds.Any()) return;
 
-        foreach (var connectionId in connectionIds)
-            await _hubContext.Clients.Client(connectionId).SendAsync("HouseholdInvitation.Received", payload);
+        await _hubContext.Clients.Clients(connectionIds).SendAsync("HouseholdInvitation.Received", payload);
     }
 }

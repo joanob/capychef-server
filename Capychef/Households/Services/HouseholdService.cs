@@ -149,11 +149,10 @@ public class HouseholdService(
             return;
 
         var selected = await storageSpaceRepository.GetInitialStorageSpacesByIds(cmd.InitialStorageSpaceIds);
-        foreach (var initial in selected)
-        {
-            var s = new StorageSpace(initial.Name, initial.StorageCondition, household, userDetails.UserId);
 
-            await storageSpaceRepository.AddAsync(s);
-        }
+        var spaces = selected.Select(initial =>
+            new StorageSpace(initial.Name, initial.StorageCondition, household, userDetails.UserId));
+
+        await storageSpaceRepository.AddRangeAsync(spaces);
     }
 }

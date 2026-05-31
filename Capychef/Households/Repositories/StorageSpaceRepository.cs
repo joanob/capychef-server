@@ -12,6 +12,11 @@ public class StorageSpaceRepository(CapychefDbContext dbContext) : IStorageSpace
         await dbContext.StorageSpaces.AddAsync(storageSpace);
     }
 
+    public async Task AddRangeAsync(IEnumerable<StorageSpace> storageSpaces)
+    {
+        await dbContext.StorageSpaces.AddRangeAsync(storageSpaces);
+    }
+
     public async Task<StorageSpace?> GetTrackedStorageSpaceById(int id, int householdId)
     {
         return await dbContext.StorageSpaces.Active()

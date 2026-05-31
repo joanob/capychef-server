@@ -5,6 +5,7 @@ namespace Capychef.Households.Domain.Interfaces;
 public interface IStorageSpaceRepository
 {
     public Task AddAsync(StorageSpace storageSpace);
+    public Task AddRangeAsync(IEnumerable<StorageSpace> storageSpaces);
     Task<StorageSpace?> GetTrackedStorageSpaceById(int id, int householdId);
     Task<bool> CheckStorageSpaceExistsById(int cmdStorageSpaceId, int householdId);
     Task<List<StorageSpace>> GetHouseholdStorageSpaces(int householdId);
