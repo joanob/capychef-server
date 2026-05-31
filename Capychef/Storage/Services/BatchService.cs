@@ -68,7 +68,7 @@ public class BatchService(
 
     /**
      * MoveBatch changes the storage space for some quantity of a batch.
-     * 
+     *
      * MoveBatchCmd specifies the quantity to move and the new storage space. If new batch quantity is not provided and the unit of the quantity moved and the unit of the batch differ, the quantity moved is converted to the batch unit to check if all quantity is moved. If the conversion is approximate, the moved quantity is always treated as a partial movement, leaving the original batch with quantity 0.
      */
     public async Task<Result<BatchModificationDto>> MoveBatch(int batchId, MoveBatchCmd cmd,

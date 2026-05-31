@@ -19,7 +19,8 @@ public class HouseholdJoinRequestService(
     IHouseholdRepository householdRepository,
     IUserRepository userRepository,
     ISubscriptionService subscriptionService,
-    IMembershipCache membershipCache) : IHouseholdJoinRequestService
+    IMembershipCache membershipCache,
+    IHouseholdRealtimeService householdRealtimeService) : IHouseholdJoinRequestService
 {
     public async Task<AppError?> CreateJoinRequest(AuthUserDetails userDetails, CreateHouseholdJoinRequestCmd cmd)
     {
@@ -43,7 +44,16 @@ public class HouseholdJoinRequestService(
 
         await joinRequestRepository.AddJoinRequestAsync(joinRequest);
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
+
+        _ = householdRealtimeService.SendJoinRequestReceivedMessage(joinRequest, household.OwnerId);
 
         return null;
     }
@@ -89,6 +99,8 @@ public class HouseholdJoinRequestService(
         }
 
         await membershipCache.InvalidateAsync(joinRequest.UserId, joinRequest.HouseholdId);
+
+        _ = householdRealtimeService.SendMemberJoinedMessage(joinRequest.HouseholdId, joinRequest.UserId);
 
         return null;
     }

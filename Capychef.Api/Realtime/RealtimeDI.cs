@@ -9,6 +9,7 @@ public static class RealtimeDi
     {
         services.AddSingleton<IConnectionMappingStore, InMemoryConnectionMappingStore>();
         services.AddSingleton<IHouseholdInvitationRealtimeService, HouseholdInvitationRealtimeService>();
+        services.AddSingleton<IHouseholdRealtimeService, HouseholdRealtimeService>();
 
         return services;
     }

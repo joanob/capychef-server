@@ -9,7 +9,7 @@ public class ConnectionDetails
         ConnectionId = connectionId;
         UserId = userDetails.UserId;
         SessionId = userDetails.SessionId;
-        HouseholdId = userDetails.GetHouseholdId();
+        HouseholdId = userDetails.HasHouseholdId ? userDetails.GetHouseholdId() : null;
     }
 
     public string ConnectionId { get; private set; }

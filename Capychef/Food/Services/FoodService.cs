@@ -221,7 +221,7 @@ public class FoodService(
 
     /**
      * UpdateFoodUoM sets the list of food units of measure for user's household
-     * 
+     *
      * The list will contain the complete list of food units of measure for the food, not just the ones to be updated. Those units of measure that are in the database but not in the list will be deleted as household food units of measure
      */
     private async Task<AppError?> UpdateFoodUoM(Domain.Entities.Food food, List<FoodUoMCmd> cmd,

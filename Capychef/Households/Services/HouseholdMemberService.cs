@@ -13,7 +13,8 @@ namespace Capychef.Households.Services;
 public class HouseholdMemberService(
     CapychefDbContext dbContext,
     IHouseholdMemberRepository householdMemberRepository,
-    IMembershipCache membershipCache
+    IMembershipCache membershipCache,
+    IHouseholdRealtimeService householdRealtimeService
 ) : IHouseholdMemberService
 {
     public async Task<Result<List<UserDto>>> GetHouseholdMembers(AuthUserDetails userDetails)
@@ -71,6 +72,8 @@ public class HouseholdMemberService(
         }
 
         await membershipCache.InvalidateAsync(member.UserId, member.HouseholdId);
+
+        _ = householdRealtimeService.SendMemberRemovedMessage(member.UserId, member.HouseholdId);
 
         return null;
     }

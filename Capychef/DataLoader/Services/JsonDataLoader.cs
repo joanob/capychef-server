@@ -126,7 +126,7 @@ public class JsonDataLoader(CapychefDbContext dbContext)
 
     /**
      * Food categories is a tree with max depth 3.
-     * 
+     *
      * Categories that don't have any children are leaf categories
      */
     private async Task<List<FoodCategory>> LoadFoodCategories(List<FoodCategoryDataFile>? foodCategoriesData)

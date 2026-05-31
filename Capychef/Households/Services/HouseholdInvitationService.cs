@@ -21,7 +21,8 @@ public class HouseholdInvitationService(
     IUserRepository userRepository,
     ISubscriptionService subscriptionService,
     IHouseholdInvitationRealtimeService householdInvitationRealtimeService,
-    IMembershipCache membershipCache) : IHouseholdInvitationService
+    IMembershipCache membershipCache,
+    IHouseholdRealtimeService householdRealtimeService) : IHouseholdInvitationService
 {
     public async Task<AppError?> CreateInvitation(AuthUserDetails userDetails, CreateHouseholdInvitationCmd cmd)
     {
@@ -91,6 +92,8 @@ public class HouseholdInvitationService(
         }
 
         await membershipCache.InvalidateAsync(invitation.UserId, invitation.HouseholdId);
+
+        _ = householdRealtimeService.SendMemberJoinedMessage(invitation.HouseholdId, invitation.UserId);
 
         return null;
     }

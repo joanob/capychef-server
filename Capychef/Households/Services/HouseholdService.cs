@@ -19,7 +19,8 @@ public class HouseholdService(
     IHouseholdMemberRepository householdMemberRepository,
     IStorageSpaceRepository storageSpaceRepository,
     ISubscriptionService subscriptionService,
-    IMembershipCache membershipCache
+    IMembershipCache membershipCache,
+    IHouseholdRealtimeService householdRealtimeService
 ) : IHouseholdService
 {
     public async Task<Result<HouseholdDto>> CreateHousehold(AuthUserDetails userDetails, CreateHouseholdCmd cmd)
@@ -144,6 +145,8 @@ public class HouseholdService(
         {
             return new ConcurrencyError();
         }
+
+        _ = householdRealtimeService.SendHouseholdDeletedMessage(userDetails.GetHouseholdId());
 
         await membershipCache.InvalidateOwnershipAsync(userDetails.UserId, userDetails.GetHouseholdId());
 
