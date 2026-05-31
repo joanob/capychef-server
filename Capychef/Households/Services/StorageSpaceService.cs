@@ -7,6 +7,7 @@ using Capychef.Households.Domain.DTO;
 using Capychef.Households.Domain.Entities;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Services;
 
@@ -41,6 +42,9 @@ public class StorageSpaceService(
 
         if (storageSpace == null) return new Result<StorageSpaceDto>(new NotFoundError(EntityType.StorageSpace, id));
 
+        if (storageSpace.RowVersion != cmd.RowVersion)
+            return new Result<StorageSpaceDto>(new ConcurrencyError());
+
         if (storageSpace.Name != cmd.Name)
         {
             await storageSpaceModificationHistoryRepository.AddAsync(new StorageSpacesModificationHistory(
@@ -64,7 +68,16 @@ public class StorageSpaceService(
             storageSpace.StorageCondition = storageCondition;
         }
 
-        await dbContext.SaveChangesAsync();
+        storageSpace.RowVersion++;
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new Result<StorageSpaceDto>(new ConcurrencyError());
+        }
 
         return new Result<StorageSpaceDto>(new StorageSpaceDto(storageSpace));
     }
@@ -77,7 +90,14 @@ public class StorageSpaceService(
 
         storageSpace.Delete();
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
 
         return null;
     }

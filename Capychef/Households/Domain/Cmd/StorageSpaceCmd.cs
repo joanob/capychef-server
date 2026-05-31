@@ -9,6 +9,8 @@ public class StorageSpaceCmd : ICmd
 
     public required string StorageCondition { get; init; }
 
+    public required int RowVersion { get; init; }
+
     public ValidationError? Validate()
     {
         if (string.IsNullOrEmpty(Name))

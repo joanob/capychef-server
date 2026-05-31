@@ -6,6 +6,7 @@ using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.DTO;
 using Capychef.Users.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Services;
 
@@ -36,7 +37,14 @@ public class HouseholdMemberService(
 
         member.Leave();
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
 
         await membershipCache.InvalidateAsync(userDetails.UserId, userDetails.GetHouseholdId());
 
@@ -53,7 +61,14 @@ public class HouseholdMemberService(
 
         member.Delete();
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
 
         await membershipCache.InvalidateAsync(member.UserId, member.HouseholdId);
 

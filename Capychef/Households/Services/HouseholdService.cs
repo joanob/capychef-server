@@ -135,7 +135,14 @@ public class HouseholdService(
 
         household.Delete();
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
 
         await membershipCache.InvalidateOwnershipAsync(userDetails.UserId, userDetails.GetHouseholdId());
 

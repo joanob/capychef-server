@@ -9,6 +9,7 @@ using Capychef.Households.Domain.Errors;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Persistence;
 using Capychef.Users.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capychef.Households.Services;
 
@@ -80,7 +81,14 @@ public class HouseholdInvitationService(
 
         await householdMemberRepository.AddHouseholdMemberAsync(member);
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
 
         await membershipCache.InvalidateAsync(invitation.UserId, invitation.HouseholdId);
 
@@ -96,7 +104,14 @@ public class HouseholdInvitationService(
 
         invitation.Reject();
 
-        await dbContext.SaveChangesAsync();
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
 
         return null;
     }

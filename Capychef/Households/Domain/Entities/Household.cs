@@ -43,7 +43,9 @@ public class Household
 
     [Column("created_by")] public int CreatedBy { get; init; }
 
-    [Column("row_version")] public int RowVersion { get; init; }
+    [Column("row_version")]
+    [ConcurrencyCheck]
+    public int RowVersion { get; set; }
 
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
 

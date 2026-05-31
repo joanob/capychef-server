@@ -21,6 +21,8 @@ public static class GlobalErrorHandler
             statusCode = 403;
         else if (error.ErrorType.Equals(ErrorType.NotFound))
             statusCode = 404;
+        else if (error.ErrorType.Equals(ErrorType.Conflict))
+            statusCode = 409;
         else
             statusCode = 500;
 

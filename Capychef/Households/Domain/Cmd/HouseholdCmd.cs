@@ -6,6 +6,7 @@ namespace Capychef.Households.Domain.Cmd;
 public class HouseholdCmd : ICmd
 {
     public required string Name { get; set; }
+    public required int RowVersion { get; init; }
 
     public ValidationError? Validate()
     {

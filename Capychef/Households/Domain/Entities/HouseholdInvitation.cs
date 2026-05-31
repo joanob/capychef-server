@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Users.Domain.Entities;
 
 namespace Capychef.Households.Domain.Entities;
@@ -32,7 +33,9 @@ public class HouseholdInvitation
 
     [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Column("row_version")] public int RowVersion { get; init; }
+    [Column("row_version")]
+    [ConcurrencyCheck]
+    public int RowVersion { get; set; }
 
     [Column("is_deleted")] public bool IsDeleted { get; private set; }
 
