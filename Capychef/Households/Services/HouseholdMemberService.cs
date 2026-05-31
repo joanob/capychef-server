@@ -19,11 +19,7 @@ public class HouseholdMemberService(
     {
         var members = await householdMemberRepository.GetHouseholdMembers(userDetails.GetHouseholdId());
 
-        var users = new List<User>();
-
-        foreach (var member in members)
-            if (member.User != null)
-                users.Add(member.User);
+        var users = members.Select(m => m.User).OfType<User>().ToList();
 
         return new Result<List<UserDto>>(UserDto.ToDtoList(users));
     }
