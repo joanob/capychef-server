@@ -54,7 +54,8 @@ public class HouseholdRepository(CapychefDbContext dbContext) : IHouseholdReposi
 
     public async Task<Household?> GetHouseholdByIdIncludingStorageSpaces(int householdId)
     {
-        return await dbContext.Households.Active().IncludeStorageSpaces().FirstOrDefaultAsync(x => x.Id == householdId);
+        return await dbContext.Households.Active().AsNoTracking().IncludeStorageSpaces()
+            .FirstOrDefaultAsync(x => x.Id == householdId);
     }
 
     public async Task<int> CountOwnedHouseholds(int userId)

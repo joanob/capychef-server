@@ -14,12 +14,14 @@ public class HouseholdJoinRequestRepository(CapychefDbContext dbContext) : IHous
 
     public async Task<List<HouseholdJoinRequest>> GetHouseholdJoinRequests(int householdId)
     {
-        return await dbContext.HouseholdJoinRequests.Active().Where(x => x.HouseholdId == householdId).ToListAsync();
+        return await dbContext.HouseholdJoinRequests.Active().AsNoTracking().Where(x => x.HouseholdId == householdId)
+            .ToListAsync();
     }
 
     public async Task<List<HouseholdJoinRequest>> GetHouseholdJoinRequestsByUserId(int userId)
     {
-        return await dbContext.HouseholdJoinRequests.Active().Where(x => x.UserId == userId).ToListAsync();
+        return await dbContext.HouseholdJoinRequests.Active().AsNoTracking().Where(x => x.UserId == userId)
+            .ToListAsync();
     }
 
     public async Task<HouseholdJoinRequest?> GetTrackedJoinRequestById(int joinRequestId, int householdId)
