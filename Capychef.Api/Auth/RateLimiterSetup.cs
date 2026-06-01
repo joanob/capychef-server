@@ -1,4 +1,6 @@
 ﻿using System.Threading.RateLimiting;
+using RedisRateLimiting;
+using StackExchange.Redis;
 
 namespace Capychef.Api.Auth;
 

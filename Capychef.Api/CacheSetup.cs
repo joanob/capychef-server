@@ -1,5 +1,6 @@
 ﻿using Capychef.Api.Auth;
 using Capychef.Households.Domain.Interfaces;
+using StackExchange.Redis;
 
 namespace Capychef.Api;
 
