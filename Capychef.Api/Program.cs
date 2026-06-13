@@ -11,7 +11,15 @@ using Swashbuckle.AspNetCore.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Env.Load("../.env");
+var environment = GetEnvironment(args, builder.Configuration);
+builder.Environment.EnvironmentName = environment;
+Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", environment);
+
+if (environment == AppEnvironment.Dev)
+{
+    var envFile = $"../.env.{environment.ToLower()}";
+    Env.Load(envFile);
+}
 
 // Add services to the container.
 
@@ -80,3 +88,56 @@ app.MapControllers();
 app.MapHub<RealtimeHub>("/realtime");
 
 app.Run();
+
+static string GetEnvironment(string[] args, IConfiguration configuration)
+{
+    var envVar = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                 ?? configuration["ASPNETCORE_ENVIRONMENT"];
+
+    if (!string.IsNullOrEmpty(envVar) && IsValidEnvironment(envVar))
+    {
+        Console.WriteLine($"Environment from system variable: {envVar.ToUpper()}");
+        return envVar.ToUpper();
+    }
+
+    var environmentArg = args
+        .FirstOrDefault(arg => arg.StartsWith("--environment", StringComparison.OrdinalIgnoreCase)
+                               || arg.StartsWith("-e", StringComparison.OrdinalIgnoreCase));
+
+    if (!string.IsNullOrEmpty(environmentArg))
+    {
+        if (environmentArg.Contains('='))
+        {
+            var value = environmentArg.Split('=')[1].Trim().ToUpper();
+            if (IsValidEnvironment(value))
+            {
+                Console.WriteLine($"Environment from CLI argument: {value}");
+                return value;
+            }
+        }
+        else
+        {
+            var index = Array.IndexOf(args, environmentArg);
+            if (index < args.Length - 1)
+            {
+                var value = args[index + 1].Trim().ToUpper();
+                if (IsValidEnvironment(value))
+                {
+                    Console.WriteLine($"Environment from CLI argument: {value}");
+                    return value;
+                }
+            }
+        }
+    }
+
+    Console.WriteLine(
+        "No environment specified. Using DEV by default. Set ASPNETCORE_ENVIRONMENT or use --environment=<DEV|QA|PROD> to change.");
+    return AppEnvironment.Dev;
+}
+
+static bool IsValidEnvironment(string env)
+{
+    return env.Equals(AppEnvironment.Dev, StringComparison.OrdinalIgnoreCase)
+           || env.Equals(AppEnvironment.Qa, StringComparison.OrdinalIgnoreCase)
+           || env.Equals(AppEnvironment.Prod, StringComparison.OrdinalIgnoreCase);
+}
