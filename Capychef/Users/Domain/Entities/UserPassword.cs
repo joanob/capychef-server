@@ -32,7 +32,7 @@ public class UserPassword
 
     [Column("user_id")] public int UserId { get; init; }
 
-    [Column("password")] [MaxLength(255)] protected string Password { get; init; }
+    [Column("password")] [MaxLength(255)] public string Password { get; init; }
 
     [Column("created_at")] public DateTime CreatedAt { get; init; }
 
