@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Capychef.Food.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Capychef.Shopping.Domain.Entities;
 
@@ -65,9 +66,6 @@ public class ShoppingListItem
 
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    [InverseProperty(nameof(FoodUoM.Food))]
-    public ICollection<FoodUoM> UoM { get; } = new List<FoodUoM>();
-
     public void Purchase(int userId)
     {
         IsPurchased = true;
@@ -115,6 +113,7 @@ public static class ShoppingListItemExtensions
     public static IQueryable<SupermarketFoodDetails> IncludeUoM(this IQueryable<SupermarketFoodDetails> foodDetails,
         int? householdId)
     {
-        return foodDetails.Include(x => x.UoM.Where(u => u.HouseholdId == householdId || u.HouseholdId == null));
+        return foodDetails.Include(x => x.Food)
+            .ThenInclude(f => f.UoM);
     }
 }

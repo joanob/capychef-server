@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+using System.Linq;
 using Capychef.Food.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,8 +53,9 @@ public class SupermarketFoodDetails
 
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    [InverseProperty(nameof(FoodUoM.Food))]
-    public ICollection<FoodUoM> UoM { get; } = new List<FoodUoM>();
+    [ForeignKey(nameof(FoodId))] public Food.Domain.Entities.Food Food { get; init; }
+
+    [NotMapped] public IEnumerable<FoodUoM> UoM => Food?.UoM ?? Enumerable.Empty<FoodUoM>();
 
     public void Delete()
     {
@@ -71,6 +74,7 @@ public static class SupermarketFoodDetailsExtensions
     public static IQueryable<SupermarketFoodDetails> IncludeUoM(this IQueryable<SupermarketFoodDetails> foodDetails,
         int? householdId)
     {
-        return foodDetails.Include(x => x.UoM.Where(u => u.HouseholdId == householdId || u.HouseholdId == null));
+        return foodDetails.Include(x => x.Food)
+            .ThenInclude(f => f.UoM);
     }
 }
