@@ -53,7 +53,7 @@ public class SupermarketFoodDetails
 
     [Column("deleted_at")] public DateTime? DeletedAt { get; private set; }
 
-    [ForeignKey(nameof(FoodId))] public Food.Domain.Entities.Food Food { get; init; }
+    [ForeignKey(nameof(FoodId))] public Food.Domain.Entities.Food? Food { get; init; }
 
     [NotMapped] public IEnumerable<FoodUoM> UoM => Food?.UoM ?? Enumerable.Empty<FoodUoM>();
 

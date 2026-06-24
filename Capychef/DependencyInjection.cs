@@ -3,6 +3,7 @@ using Capychef.Food.Domain.Interfaces;
 using Capychef.Food.Repositories;
 using Capychef.Food.Services;
 using Capychef.Gourmet.Domain.Interfaces;
+using Capychef.Gourmet.Repositories;
 using Capychef.Gourmet.Services;
 using Capychef.Households.Domain.Interfaces;
 using Capychef.Households.Repositories;
@@ -100,9 +101,10 @@ public static class DependencyInjection
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeService, RecipeService>();
 
-        // TESTDATA
+        // Gourmet
         services.AddScoped<ISubscriptionService, SubscriptionService>();
-
+        services.AddScoped<IUserSubscriptionRepository, UserSubscriptionRepository>();
+        
         // TESTDATA
 
         services.AddScoped<TestUsers, TestUsers>();
