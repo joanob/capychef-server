@@ -111,9 +111,6 @@ public class TestUsers(CapychefDbContext dbContext)
 
             var user = User.NewGuestUser(username);
             dbContext.Add(user);
-
-            var userTokens = UserToken.CreateGuestAccountTransferUserToken(user.Id);
-            dbContext.Add(userTokens);
         }
 
         Console.WriteLine("Done");
