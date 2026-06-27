@@ -72,7 +72,9 @@ public class HouseholdService(
     {
         var households = await householdRepository.GetAllHouseholds(userDetails.UserId);
 
-        return HouseholdDto.ToDtoList(households);
+        var memberCounts = await householdMemberRepository.CountMembersByHouseholdIds(households.Select(h => h.Id).ToList());
+
+        return HouseholdDto.ToDtoList(households, memberCounts);
     }
 
     public async Task<Result<HouseholdDto>> GetHouseholdById(AuthUserDetails userDetails, int householdId)
