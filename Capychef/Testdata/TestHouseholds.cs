@@ -97,7 +97,7 @@ public class TestHouseholds(CapychefDbContext dbContext)
                     householdInvitations.All(h => h.UserId != user.Id)) break;
             } while (true);
 
-            var householdInvitation = new HouseholdInvitation(household, user);
+            var householdInvitation = new HouseholdInvitation(household, user, household.User!.Id);
 
             if (RandomGenerator.GenerateRandomBoolPercentage(_deletedHouseholdInvitationsPercent))
                 householdInvitation.Delete();

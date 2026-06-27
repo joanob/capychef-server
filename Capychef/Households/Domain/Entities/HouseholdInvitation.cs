@@ -11,10 +11,11 @@ public class HouseholdInvitation
     {
     }
 
-    public HouseholdInvitation(Household household, User user)
+    public HouseholdInvitation(Household household, User user, int createdBy)
     {
         Household = household;
         User = user;
+        CreatedBy = createdBy;
         IsAnswered = false;
         IsAccepted = false;
     }
@@ -24,6 +25,8 @@ public class HouseholdInvitation
     [Column("household_id")] public int HouseholdId { get; init; }
 
     [Column("user_id")] public int UserId { get; init; }
+
+    [Column("created_by")] public int CreatedBy { get; init; }
 
     [Column("is_answered")] public bool IsAnswered { get; private set; }
 
@@ -44,6 +47,8 @@ public class HouseholdInvitation
     [ForeignKey(nameof(HouseholdId))] public Household? Household { get; private set; }
 
     [ForeignKey(nameof(UserId))] public User? User { get; private set; }
+
+    [ForeignKey(nameof(CreatedBy))] public User? Creator { get; private set; }
 
     public void Delete()
     {

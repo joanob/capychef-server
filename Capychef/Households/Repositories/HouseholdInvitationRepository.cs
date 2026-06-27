@@ -16,19 +16,25 @@ public class HouseholdInvitationRepository(CapychefDbContext dbContext) : IHouse
     {
         return await dbContext.HouseholdInvitations.Active().AsNoTracking()
             .Where(x => x.HouseholdId == householdId && !x.IsAnswered)
-            .Include(x => x.User).ToListAsync();
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Household).ToListAsync();
     }
 
     public async Task<List<HouseholdInvitation>> GetAllHouseholdInvitationsHistory(int householdId)
     {
         return await dbContext.HouseholdInvitations.Active().AsNoTracking().Where(x => x.HouseholdId == householdId)
-            .Include(x => x.User).ToListAsync();
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Household).ToListAsync();
     }
 
     public async Task<List<HouseholdInvitation>> GetHouseholdInvitationsByUserId(int userId)
     {
         return await dbContext.HouseholdInvitations.Active().AsNoTracking().Where(x => x.UserId == userId)
-            .Include(x => x.User).ToListAsync();
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Household).ToListAsync();
     }
 
     public async Task<HouseholdInvitation?> GetTrackedInvitationById(int invitationId, int userId)

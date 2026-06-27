@@ -41,7 +41,7 @@ public class HouseholdInvitationService(
         if (await invitationRepository.CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(household.Id, user.Id))
             return new UserHasUnansweredHouseholdInvitation(user.Id, household.Id);
 
-        var invitation = new HouseholdInvitation(household, user);
+        var invitation = new HouseholdInvitation(household, user, userDetails.UserId);
 
         await invitationRepository.AddInvitationAsync(invitation);
 

@@ -41,6 +41,7 @@ CREATE TABLE household_invitations
     id           SERIAL PRIMARY KEY,
     household_id INTEGER   NOT NULL,
     user_id      INTEGER   NOT NULL,
+    created_by   INTEGER   NOT NULL,
     is_answered  BOOLEAN   NOT NULL,
     answered_at  TIMESTAMP,
     is_accepted  BOOLEAN   NOT NULL,
@@ -49,7 +50,8 @@ CREATE TABLE household_invitations
     is_deleted   BOOLEAN   NOT NULL,
     deleted_at   TIMESTAMP,
     FOREIGN KEY (household_id) REFERENCES households (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
 );
 
 -- HOUSEHOLD JOIN REQUESTS

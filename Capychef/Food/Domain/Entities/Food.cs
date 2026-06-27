@@ -66,7 +66,7 @@ public class Food
 
     [Column("created_at")] public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 
-    [Column("created_by")] public int CreatedBy { get; init; }
+    [Column("created_by")] public int? CreatedBy { get; init; }
 
     [Column("row_version")] public int RowVersion { get; init; }
 

@@ -15,19 +15,24 @@ public class HouseholdJoinRequestRepository(CapychefDbContext dbContext) : IHous
     public async Task<List<HouseholdJoinRequest>> GetHouseholdJoinRequests(int householdId)
     {
         return await dbContext.HouseholdJoinRequests.Pending().AsNoTracking()
-            .Where(x => x.HouseholdId == householdId).ToListAsync();
+            .Where(x => x.HouseholdId == householdId)
+            .Include(x => x.User)
+            .Include(x => x.Household).ToListAsync();
     }
 
     public async Task<List<HouseholdJoinRequest>> GetAllHouseholdJoinRequestsHistory(int householdId)
     {
         return await dbContext.HouseholdJoinRequests.Active().AsNoTracking()
-            .Where(x => x.HouseholdId == householdId).ToListAsync();
+            .Where(x => x.HouseholdId == householdId)
+            .Include(x => x.User)
+            .Include(x => x.Household).ToListAsync();
     }
 
     public async Task<List<HouseholdJoinRequest>> GetHouseholdJoinRequestsByUserId(int userId)
     {
         return await dbContext.HouseholdJoinRequests.Active().AsNoTracking().Where(x => x.UserId == userId)
-            .ToListAsync();
+            .Include(x => x.User)
+            .Include(x => x.Household).ToListAsync();
     }
 
     public async Task<HouseholdJoinRequest?> GetTrackedJoinRequestById(int joinRequestId, int householdId)
