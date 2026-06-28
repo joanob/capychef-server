@@ -44,6 +44,13 @@ public class HouseholdInvitationRepository(CapychefDbContext dbContext) : IHouse
             .FirstOrDefaultAsync();
     }
 
+    public async Task<HouseholdInvitation?> GetTrackedInvitationByIdAndHouseholdId(int invitationId, int householdId)
+    {
+        return await dbContext.HouseholdInvitations.Active()
+            .Where(x => x.Id == invitationId && x.HouseholdId == householdId)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<bool> CheckNonAnsweredInvitationExistsByHouseholdIdAndUserId(int householdId, int userId)
     {
         return await dbContext.HouseholdInvitations.AsNoTracking().Active()

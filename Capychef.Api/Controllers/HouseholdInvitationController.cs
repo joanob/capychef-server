@@ -32,7 +32,7 @@ public class HouseholdInvitationController(
 
     [CheckOwnership]
     [HttpGet("household/{householdId}")]
-    public async Task<ActionResult<ApiResponse<List<HouseholdInvitationDto>>>> GetHousholdInvitations(int householdId)
+    public async Task<ActionResult<ApiResponse<List<HouseholdInvitationDto>>>> GetHouseholdInvitations(int householdId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -62,7 +62,7 @@ public class HouseholdInvitationController(
     }
 
     [HttpGet("user")]
-    public async Task<ActionResult<List<HouseholdInvitationDto>>> GetHousholdInvitationsByUser()
+    public async Task<ActionResult<List<HouseholdInvitationDto>>> GetHouseholdInvitationsByUser()
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
@@ -93,6 +93,21 @@ public class HouseholdInvitationController(
         var error = await householdInvitationService.RejectInvitation(userDetails, invitationId);
 
         var logger = loggerFactory.CreateLogger("HouseholdInvitationService.RejectInvitation");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
+
+    [CheckOwnership]
+    [HttpDelete("{invitationId}")]
+    public async Task<ActionResult> DeleteInvitation(int invitationId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await householdInvitationService.DeleteInvitation(userDetails, invitationId);
+
+        var logger = loggerFactory.CreateLogger("HouseholdInvitationService.DeleteInvitation");
 
         if (error != null) return GlobalErrorHandler.HandleError(error, logger);
 

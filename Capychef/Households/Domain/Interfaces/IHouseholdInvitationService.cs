@@ -13,4 +13,5 @@ public interface IHouseholdInvitationService
     Task<List<HouseholdInvitationDto>> GetHouseholdInvitationsByUser(AuthUserDetails userDetails);
     Task<AppError?> AcceptInvitation(AuthUserDetails userDetails, int invitationId);
     Task<AppError?> RejectInvitation(AuthUserDetails userDetails, int invitationId);
+    Task<AppError?> DeleteInvitation(AuthUserDetails userDetails, int invitationId);
 }

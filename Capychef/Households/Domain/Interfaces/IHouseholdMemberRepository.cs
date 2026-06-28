@@ -10,5 +10,4 @@ public interface IHouseholdMemberRepository
     Task<int> CountHouseholdMemberships(int userId);
     Task<Dictionary<int, int>> CountMembersByHouseholdIds(List<int> householdIds);
     Task<HouseholdMember?> GetTrackedHouseholdMember(int userId, int householdId);
-    Task<HouseholdMember?> GetTrackedByHouseholdMemberId(int householdMemberId, int householdId);
 }

@@ -52,13 +52,13 @@ public class HouseholdMemberService(
         return null;
     }
 
-    public async Task<AppError?> RemoveMember(AuthUserDetails userDetails, int householdMemberId)
+    public async Task<AppError?> RemoveMember(AuthUserDetails userDetails, int userId)
     {
         var member =
-            await householdMemberRepository.GetTrackedByHouseholdMemberId(householdMemberId,
+            await householdMemberRepository.GetTrackedHouseholdMember(userId,
                 userDetails.GetHouseholdId());
 
-        if (member == null) return new NotFoundError(EntityType.HouseholdMember, householdMemberId);
+        if (member == null) return new NotFoundError(EntityType.HouseholdMember, userId);
 
         member.Delete();
 

@@ -56,12 +56,12 @@ public class HouseholdMemberController(IHouseholdMemberService householdMemberSe
     }
 
     [CheckOwnership]
-    [HttpDelete("remove/{householdMemberId}")]
-    public async Task<ActionResult> RemoveMember(int householdMemberId)
+    [HttpDelete("remove/{userId}")]
+    public async Task<ActionResult> RemoveMember(int userId)
     {
         var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
 
-        var error = await householdMemberService.RemoveMember(userDetails, householdMemberId);
+        var error = await householdMemberService.RemoveMember(userDetails, userId);
 
         var logger = loggerFactory.CreateLogger("HouseholdMemberService.RemoveMember");
 

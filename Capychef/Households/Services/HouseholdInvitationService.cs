@@ -123,4 +123,27 @@ public class HouseholdInvitationService(
 
         return null;
     }
+
+    public async Task<AppError?> DeleteInvitation(AuthUserDetails userDetails, int invitationId)
+    {
+        var invitation =
+            await invitationRepository.GetTrackedInvitationByIdAndHouseholdId(invitationId,
+                userDetails.GetHouseholdId());
+
+        if (invitation == null || invitation.IsAnswered)
+            return new NotFoundError(EntityType.HouseholdInvitation, invitationId);
+
+        invitation.Delete();
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
+
+        return null;
+    }
 }
