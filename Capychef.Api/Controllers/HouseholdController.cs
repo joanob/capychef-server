@@ -91,6 +91,18 @@ public class HouseholdController(IHouseholdService householdService, ILoggerFact
         return Ok(household.Get());
     }
 
+    [HttpPost("deselect")]
+    public ActionResult DeselectHousehold()
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        userDetails.DeselectHousehold();
+
+        JwtService.CreateAndSendJwt(userDetails, Response);
+
+        return Ok();
+    }
+
     [CheckOwnership]
     [HttpPut("{householdId}")]
     public async Task<ActionResult<HouseholdDto>> UpdateHousehold(int householdId, HouseholdCmd cmd)

@@ -43,4 +43,9 @@ public class AuthUserDetails
     {
         _householdId = householdId;
     }
+
+    public void DeselectHousehold()
+    {
+        _householdId = null;
+    }
 }
