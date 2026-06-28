@@ -42,6 +42,13 @@ public class HouseholdJoinRequestRepository(CapychefDbContext dbContext) : IHous
             .FirstOrDefaultAsync();
     }
 
+    public async Task<HouseholdJoinRequest?> GetTrackedJoinRequestByIdAndUserId(int joinRequestId, int userId)
+    {
+        return await dbContext.HouseholdJoinRequests.Active()
+            .Where(x => x.Id == joinRequestId && x.UserId == userId)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<bool> CheckPendingJoinRequestExistsByHouseholdIdAndUserId(int householdId, int userId)
     {
         return await dbContext.HouseholdJoinRequests.AsNoTracking().Active()

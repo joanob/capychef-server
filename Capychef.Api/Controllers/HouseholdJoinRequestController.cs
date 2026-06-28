@@ -89,4 +89,18 @@ public class HouseholdJoinRequestController(
 
         return Ok();
     }
+
+    [HttpDelete("{joinRequestId}")]
+    public async Task<ActionResult> DeleteJoinRequest(int joinRequestId)
+    {
+        var userDetails = AuthUserDetailsService.GetAuthUserDetailsFromContext(HttpContext);
+
+        var error = await householdJoinRequestService.DeleteJoinRequest(userDetails, joinRequestId);
+
+        var logger = loggerFactory.CreateLogger("HouseholdJoinRequestService.DeleteJoinRequest");
+
+        if (error != null) return GlobalErrorHandler.HandleError(error, logger);
+
+        return Ok();
+    }
 }

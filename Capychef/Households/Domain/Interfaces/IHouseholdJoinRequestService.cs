@@ -13,4 +13,5 @@ public interface IHouseholdJoinRequestService
     Task<List<HouseholdJoinRequestDto>> GetHouseholdJoinRequestsByUser(AuthUserDetails userDetails);
     Task<AppError?> AcceptJoinRequest(AuthUserDetails userDetails, int invitationId);
     Task<AppError?> RejectJoinRequest(AuthUserDetails userDetails, int invitationId);
+    Task<AppError?> DeleteJoinRequest(AuthUserDetails userDetails, int joinRequestId);
 }

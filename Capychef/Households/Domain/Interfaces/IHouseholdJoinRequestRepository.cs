@@ -9,5 +9,6 @@ public interface IHouseholdJoinRequestRepository
     Task<List<HouseholdJoinRequest>> GetAllHouseholdJoinRequestsHistory(int householdId);
     Task<List<HouseholdJoinRequest>> GetHouseholdJoinRequestsByUserId(int userId);
     Task<HouseholdJoinRequest?> GetTrackedJoinRequestById(int invitationId, int householdId);
+    Task<HouseholdJoinRequest?> GetTrackedJoinRequestByIdAndUserId(int invitationId, int userId);
     Task<bool> CheckPendingJoinRequestExistsByHouseholdIdAndUserId(int householdId, int userId);
 }

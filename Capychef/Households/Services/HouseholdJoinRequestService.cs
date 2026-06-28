@@ -126,4 +126,26 @@ public class HouseholdJoinRequestService(
 
         return null;
     }
+
+    public async Task<AppError?> DeleteJoinRequest(AuthUserDetails userDetails, int joinRequestId)
+    {
+        var joinRequest =
+            await joinRequestRepository.GetTrackedJoinRequestByIdAndUserId(joinRequestId, userDetails.UserId);
+
+        if (joinRequest == null || joinRequest.IsAnswered)
+            return new NotFoundError(EntityType.HouseholdJoinRequest, joinRequestId);
+
+        joinRequest.Delete();
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return new ConcurrencyError();
+        }
+
+        return null;
+    }
 }
