@@ -10,6 +10,7 @@ public class HouseholdDto
         OwnerId = household.OwnerId;
         Name = household.Name;
         MemberCount = memberCount;
+        RowVersion = household.RowVersion;
 
         StorageSpaces = includeStorageSpaces
             ? household.StorageSpaces.Select(x => new StorageSpaceDto(x)).ToList()
@@ -20,6 +21,7 @@ public class HouseholdDto
     public int OwnerId { get; set; }
     public string Name { get; set; }
     public int? MemberCount { get; set; }
+    public int RowVersion { get; set; }
     public List<StorageSpaceDto>? StorageSpaces { get; set; }
 
     public static List<HouseholdDto> ToDtoList(List<Household> households, Dictionary<int, int>? memberCounts = null)
