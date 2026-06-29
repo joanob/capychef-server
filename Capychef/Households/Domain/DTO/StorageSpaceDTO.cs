@@ -9,11 +9,13 @@ public class StorageSpaceDto
         Id = storageSpace.Id;
         Name = storageSpace.Name;
         StorageCondition = storageSpace.StorageCondition.ToString();
+        RowVersion = storageSpace.RowVersion;
     }
 
     public int Id { get; set; }
     public string Name { get; set; }
     public string StorageCondition { get; set; }
+    public int RowVersion { get; set; }
 
     public static List<StorageSpaceDto> ToDtoList(List<StorageSpace> storageSpaces)
     {
